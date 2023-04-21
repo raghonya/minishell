@@ -28,7 +28,7 @@ int	find_dollar(char *s)
 	return (-1);
 }
 
-void	create_line(char **line, t_args arg, t_strs *str)
+void	create_line(char **line, char **env, t_strs *str)
 {
 	int	dollar_ind;
 	int	length;
@@ -46,7 +46,7 @@ void	create_line(char **line, t_args arg, t_strs *str)
 			*line += dollar_ind + length + 1;
 		else
 			*line += dollar_ind + ft_strlen(str->tmp) + 1;
-		str->ret = strjoin_w_free(str->ret, check_env(str->tmp, arg.envp, length));
+		str->ret = strjoin_w_free(str->ret, check_env(str->tmp, env, length));
 		// err_msh (!str->ret, pipes, arg);
 		free(str->until_dlr);
 		free(str->tmp);
@@ -56,7 +56,7 @@ void	create_line(char **line, t_args arg, t_strs *str)
 	// err_pipe (!str->ret, pipes, arg);
 }
 
-char	*expand(char *line, t_args arg)
+char	*expand(char *line, char **env)
 {
 	int		dollar_ind;
 	t_strs	str;
@@ -66,7 +66,7 @@ char	*expand(char *line, t_args arg)
 		return (line);
 	str.to_free = line;
 	str.ret = NULL;
-	create_line(&line, arg, &str);
+	create_line(&line, env, &str);
 	free(str.to_free);
 	return (str.ret);
 }

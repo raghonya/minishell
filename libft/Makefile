@@ -2,32 +2,24 @@ NAME = libft.a
 
 CFLAGS = -Wall -Wextra -Werror
 
-FILES = $(filter-out $(wildcard ft_lst*.c),$(wildcard *.c))
+FILES = $(wildcard *.c)
 
 OBJ = $(FILES:.c=.o)
 
-BONUS = $(wildcard ft_lst*.c)
-
-BONUS_OBJ = $(BONUS:.c=.o)
-
-ifeq ($(shell uname -s), MINGW64_NT-6.1-7601)
-CC	=	gcc
-endif
-
 all: $(NAME)
+
+%.o: %.c libft.h Makefile
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJ)
 	@ar rcs $(NAME) $(OBJ)
 
-bonus: $(BONUS_OBJ)
-	@ar rcs $(NAME) $(BONUS_OBJ)
-
 clean:
-	@rm -f *.o
+	@rm -f $(OBJ)
 
 fclean: clean
-	@rm -f libft.a
+	@rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean bonus re
+.PHONY: all clean fclean re

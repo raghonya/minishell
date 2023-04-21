@@ -72,6 +72,8 @@ char	*strjoin_w_free(char*s1, char *s2)
 
 int	check_varname(char *s)
 {
+	if (!ft_isalpha(*s) && *s != '_')
+		return (1);
 	while (*s && !ft_isspace(*s) && *s != '$')
 	{
 		if (!ft_isdigit(*s) && *s != '_' && !ft_isalpha(*s))
@@ -89,9 +91,11 @@ char	*until_whitespc(char *s, int *length)
 	i = 0;
 	while (s[i] && !ft_isspace(s[i]) && s[i] != '$')
 		i++;
-	if (ft_isdigit(*s) || check_varname(s))
-	{
+	if (check_varname(s))
+	{	
 		*length = i;
+		if (!ft_isalpha(*s) && *s != '_')
+			*length = 0;
 		return (ft_strdup(""));
 	}
 	ret = malloc(sizeof(char) * (i + 1));

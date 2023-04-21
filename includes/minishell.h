@@ -11,14 +11,14 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-typedef struct s_args
-{
-	int		fdin;
-	int		fdout;
-	int		argc;
-	char	**argv;
-	char	**envp;
-}	t_args;
+//typedef struct s_args
+//{
+//	int		fdin;
+//	int		fdout;
+//	int		argc;
+//	char	**argv;
+//	char	**envp;
+//}	t_args;
 
 typedef struct s_strs
 {
@@ -38,9 +38,10 @@ typedef struct s_chars
 
 typedef struct s_shell
 {
-	t_args *arg;
+	//t_args *arg;
 	t_strs *str;
 	t_chars *cnt;
+	t_list	*env;
 	char *line;
 
 }	t_shell;
@@ -49,23 +50,25 @@ char	*parse_line(t_shell *sh);
 
 void	check_pipe(t_shell *sh, int i);
 
-void	free_2d(char **s);
+void	init_env(t_shell *sh, char **env);
 
-void	to_close(int *pipefd, t_args arg);
+//void	free_2d(char **s);
 
-void	err_pipe(int a, int *pipes, t_args arg);
+//void	to_close(int *pipefd, t_args arg);
 
-char	**paths_finder(char **envp);
+//void	err_msh(int a, int *pipes, t_args arg);
 
-char	*path_check(char **paths, char *cmd);
+//char	**paths_finder(char **envp);
 
-void	find_absolute_path(char **args, char **paths);
+//char	*path_check(char **paths, char *cmd);
 
-void	multipipes(t_args arg, char **paths);
+//void	find_absolute_path(char **args, char **paths);
 
-void	here_doc(t_args arg, char **paths);
+//void	multipipes(t_args arg, char **paths);
 
-char	*expand(char *line, t_args arg);
+//void	here_doc(t_args arg, char **paths);
+
+char	*expand(char *line, char **env);
 
 char	*strjoin_w_free(char*s1, char *s2);
 
