@@ -47,6 +47,8 @@ typedef struct s_shell
 
 char	*parse_line(t_shell *sh);
 
+void	check_pipe(t_shell *sh, int i);
+
 void	free_2d(char **s);
 
 void	to_close(int *pipefd, t_args arg);
@@ -63,7 +65,7 @@ void	multipipes(t_args arg, char **paths);
 
 void	here_doc(t_args arg, char **paths);
 
-char	*expand(char *line, t_args arg, int *pipes);
+char	*expand(char *line, t_args arg);
 
 char	*strjoin_w_free(char*s1, char *s2);
 
