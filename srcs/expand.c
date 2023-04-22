@@ -39,21 +39,21 @@ void	create_line(char **line, char **env, t_strs *str)
 		length = 0;
 		str->until_dlr = ft_substr(*line, 0, dollar_ind);
 		str->tmp = until_whitespc(*line + dollar_ind + 1, &length);
-		// err_msh (!str->tmp || !str->until_dlr, pipes, arg);
+		err_msg_w_exit (!str->tmp || !str->until_dlr, 1);
 		str->ret = strjoin_w_free(str->ret, str->until_dlr);
-		// err_msh (!str->ret, pipes, arg);
+		err_msg_w_exit (!str->ret, 1);
 		if (!*str->tmp)
 			*line += dollar_ind + length + 1;
 		else
 			*line += dollar_ind + ft_strlen(str->tmp) + 1;
 		str->ret = strjoin_w_free(str->ret, check_env(str->tmp, env, length));
-		// err_msh (!str->ret, pipes, arg);
+		err_msg_w_exit (!str->ret, 1);
 		free(str->until_dlr);
 		free(str->tmp);
 		dollar_ind = find_dollar(*line);
 	}
 	str->ret = strjoin_w_free(str->ret, *line);
-	// err_pipe (!str->ret, pipes, arg);
+	err_msg_w_exit (!str->ret, 1);
 }
 
 char	*expand(char *line, char **env)

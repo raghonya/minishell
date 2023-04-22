@@ -29,7 +29,6 @@ endif
 all: objdir libs $(NAME)
 
 objdir:
-	@echo $(OBJS)
 	@mkdir -p $(OBJDIR)
 
 $(OBJDIR)/%.o: srcs/%.c $(DEP)

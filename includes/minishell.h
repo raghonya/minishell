@@ -11,15 +11,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-//typedef struct s_args
-//{
-//	int		fdin;
-//	int		fdout;
-//	int		argc;
-//	char	**argv;
-//	char	**envp;
-//}	t_args;
-
 typedef struct s_strs
 {
 	char	*until_dlr;
@@ -38,19 +29,27 @@ typedef struct s_chars
 
 typedef struct s_shell
 {
-	//t_args *arg;
-	t_strs *str;
-	t_chars *cnt;
+	t_strs str;
+	t_chars cnt;
 	t_list	*env;
 	char *line;
 
 }	t_shell;
 
+void	err_msg(int a, char *msg);
+
+void	err_msg_w_exit(int a, int code);
+
 char	*parse_line(t_shell *sh);
 
-void	check_pipe(t_shell *sh, int i);
+void	check_symbols(t_shell *sh);
+
+void	check_pipe(t_shell *sh);
+
+void	check_dquote(t_shell *sh, int *i);
 
 void	init_env(t_shell *sh, char **env);
+
 
 //void	free_2d(char **s);
 
