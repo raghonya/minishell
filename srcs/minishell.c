@@ -17,32 +17,40 @@ void	err_msg(int a, char *msg)
 	}
 }
 
+void	prompt_and_history(char **line, char **prompt)
+{
+	//*prompt = NULL;
+	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
+	*line = readline(*prompt);
+	if (!*line)
+	{
+		printf ("\n");
+		//system("leaks minishell");
+		exit(0);
+	}
+	if (!isspace(**line))
+		add_history(*line);
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	t_shell		sh;
-	char	*prompt;
 
 	init_env(&sh, envp);
 	while (777)
 	{
-		prompt = NULL;
-		prompt = strjoin_w_free(getcwd(prompt, 0), "$ ");
-		sh.line = readline(prompt);
-		add_history(sh.line);
-		if (!sh.line)
-		{
-			printf ("\n");
-			//system("leaks minishell");
-			exit(0);
-		}
-		if (check_quotes(&sh))
+		prompt_and_history(&sh.line, &sh.prompt);
+		if (check_quotes(sh.line))
 		{
 			free(sh.line);
-			free(prompt);
+			free(sh.prompt);
 			continue ;
 		}
 		sh.line = expand(sh.line, envp);
-		free(prompt);
+		printf ("ret: %s\n", sh.line);
+		check_cmd(sh);
+		//sh.line = clear_quotes(sh.line);
+		free(sh.prompt);
 		free(sh.line);
 	}
 }

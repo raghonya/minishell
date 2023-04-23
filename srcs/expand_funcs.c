@@ -12,19 +12,21 @@
 
 #include <minishell.h>
 
-char	*until_symb(char *s, char c)
+char	*until_symb(char *s, char *c)
 {
 	char	*ret;
 	int		i;
 
 	i = 0;
-	while (s[i] != c)
+	while (!ft_strchr(c, s[i]))
+	//while (s[i] != c)
 		i++;
 	ret = malloc(sizeof(char) * (i + 1));
 	if (!ret)
 		return (ret);
 	i = 0;
-	while (*s != c)
+	//while (*s != c)
+	while (!ft_strchr(c, *s))
 		ret[i++] = *s++;
 	ret[i] = 0;
 	return (ret);
@@ -35,9 +37,11 @@ char	*after_symb(char *s, char c)
 	int	i;
 
 	i = 0;
+	//printf ("do return: %s\n", s);
 	while (s[i] != c)
 		i++;
 	i++;
+	//printf ("posle return: %s\n", s + i);
 	return (s + i);
 }
 
@@ -85,7 +89,7 @@ int	check_varname(char *s)
 	return (0);
 }
 
-char	*until_whitespc(char *s, int *length)
+char	*varname(char *s, int *length)
 {
 	char	*ret;
 	int		i;
@@ -123,7 +127,7 @@ char	*check_env(char *line, char **env, int length)
 		return ("$");
 	while (env[i])
 	{
-		tmp = until_symb(env[i], '=');
+		tmp = until_symb(env[i], "=");
 		if (!ft_strcmp(tmp, line))
 		{
 			free(tmp);

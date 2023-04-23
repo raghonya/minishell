@@ -28,6 +28,50 @@ int	find_dollar(char *s)
 	return (-1);
 }
 
+char	*clear_quotes(char *line)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+
+	while (line[++i])
+	{
+		//printf ("%c\n", line[i]);
+		if (line[i] && (line[i] == '\"' || line[i] == '\''))
+		{
+			j = i;
+			while (line[++i] != line[j])
+				;
+			if (line[i + 1] && line[i + 1] != ' ')
+			{
+				j--;
+				while (line[++j + 1])
+					line[j] = line[j + 1];
+				line[j] = 0;
+				printf ("%s\n", line);
+				printf ("%d, %d\n", i, j);
+				j = --i - 1;
+				while (line[++j + 1])
+					line[j] = line[j + 1];
+				line[j] = 0;
+			}
+		}
+	}
+}
+//	i = -1;
+//	while (line[++i])
+//	{
+//		if (line[i] == '\"' || line[i] == '\'')
+//		{
+//			j = i-- - 1;
+//			while (line[++j + 1])
+//				line[j] = line[j + 1];
+//			line[j] = 0;
+//		}
+//	}
+//	return (line);
+
 void	create_line(char **line, char **env, t_strs *str)
 {
 	int	dollar_ind;
@@ -45,7 +89,7 @@ void	create_line(char **line, char **env, t_strs *str)
 	{
 		length = 0;
 		str->until_dlr = ft_substr(*line, 0, dollar_ind);
-		str->tmp = until_whitespc(*line + dollar_ind + 1, &length);
+		str->tmp = varname(*line + dollar_ind + 1, &length);
 		err_msg_w_exit (!str->tmp || !str->until_dlr, 1);
 		str->ret = strjoin_w_free(str->ret, str->until_dlr);
 		err_msg_w_exit (!str->ret, 1);
@@ -90,7 +134,7 @@ char	*expand(char *line, char **env)
 			break ;
 		while (line[++j] != line[i])
 			;
-		until_quote = ft_substr(line, i + 1, j - i - 1);
+		until_quote = ft_substr(line, i, j - i + 1);
 		str.to_free = until_quote;
 		if (line[i] == '\"')
 		{
@@ -105,9 +149,56 @@ char	*expand(char *line, char **env)
 		i = j;
 	}
 	free(line);
-	printf ("ret: *%s*\n", ret_str);
 	return (ret_str);
 }
+
+//char	*expand(char *line, char **env)
+//{
+//	char	*ret_str;
+//	char	*until_quote;
+//	t_strs	str;
+//	int		i;
+
+//	i = -1;
+//	if (find_dollar(line) == -1)
+//	{
+//		return (clear_quotes(line));
+//	}
+//	int	j = -1;
+//	ret_str = NULL;
+//	while (line[++i])
+//	{
+//		while (line[++j] && line[j] != '\"' && line[j] != '\'')
+//			;
+//		until_quote = ft_substr(line, i, j - i);
+//		str.to_free = until_quote;
+//		i = j;
+//		create_line(&until_quote, env, &str);
+//		ret_str = strjoin_w_free(ret_str, str.ret);
+//		free(str.to_free);
+//		free(str.ret);
+//		if (!line[j])
+//			break ;
+//		while (line[++j] != line[i])
+//			;
+//		until_quote = ft_substr(line, i + 1, j - i - 1);
+//		str.to_free = until_quote;
+//		if (line[i] == '\"')
+//		{
+			
+//			create_line(&until_quote, env, &str);
+//			ret_str = strjoin_w_free(ret_str, str.ret);
+//			free(str.ret);
+//		}
+//		else
+//			ret_str = strjoin_w_free(ret_str, until_quote);
+//		free(str.to_free);
+//		i = j;
+//	}
+//	free(line);
+//	//printf ("ret: *%s*\n", ret_str);
+//	return (ret_str);
+//}
 
 //barev aya ay /usr/local/bin:/usr/bin:/bin:/usr/games janhehe $HOME ara: echo
 //barev aya ay /usr/local/bin:/usr/bin:/bin:/usr/games janhehe $HOME ara: im msh

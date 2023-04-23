@@ -30,12 +30,14 @@ typedef struct s_chars
 
 typedef struct s_shell
 {
-	t_strs str;
-	t_chars cnt;
+	t_strs	str;
+	t_chars	cnt;
 	t_list	*env;
-	char *line;
+	char	*line;
+	char	*prompt;
 
 }	t_shell;
+
 
 void	err_msg(int a, char *msg);
 
@@ -47,11 +49,15 @@ void	check_symbols(t_shell *sh);
 
 void	check_pipe(t_shell *sh);
 
-int		check_quotes(t_shell *sh);
+int		check_quotes(char *line);
+
+void	check_cmd(t_shell sh);
+
+char	*clear_quotes(char *line);
 
 void	init_env(t_shell *sh, char **env);
 
-char	*until_symb(char *s, char c);
+char	*until_symb(char *s, char *c);
 
 char	*after_symb(char *s, char c);
 
@@ -71,12 +77,25 @@ char	*after_symb(char *s, char c);
 
 //void	here_doc(t_args arg, char **paths);
 
+int		check_varname(char *s);
+
 char	*expand(char *line, char **env);
 
 char	*strjoin_w_free(char*s1, char *s2);
 
-char	*until_whitespc(char *s, int *length);
+char	*varname(char *s, int *length);
 
 char	*check_env(char *line, char **env, int length);
+
+void	builtin_echo(char *line, char *cmd);
+
+void	builtin_export(t_shell *sh);
+
+void	builtin_pwd(void);
+
+void	builtin_env(t_list *env);
+
+void	builtin_cd(void);
+
 
 #endif 

@@ -1,10 +1,10 @@
 #include <minishell.h>
 
-int	quote_error(t_shell *sh, int *i, char quote)
+int	quote_error(char *line, int *i, char quote)
 {
-	while (sh->line[++(*i)] && sh->line[*i] != quote)
+	while (line[++(*i)] && line[*i] != quote)
 				;
-	if (!sh->line[*i])
+	if (!line[*i])
 	{
 		if (quote == '\"')
 			err_msg(1, "Error: unclosed dquote detected!!!");
@@ -15,16 +15,16 @@ int	quote_error(t_shell *sh, int *i, char quote)
 	return (0);
 }
 
-int	check_quotes(t_shell *sh)
+int	check_quotes(char *line)
 {
 	int	i;
 
 	i = -1;
-	while (sh->line[++i])
+	while (line[++i])
 	{
-		if (sh->line[i] == '\"' && quote_error(sh, &i, '\"'))
+		if (line[i] == '\"' && quote_error(line, &i, '\"'))
 			return (1);
-		else if (sh->line[i] == '\'' && quote_error(sh, &i, '\''))
+		else if (line[i] == '\'' && quote_error(line, &i, '\''))
 			return (1);
 	}
 	return (0);
@@ -39,7 +39,5 @@ void	check_symbols(t_shell *sh)
 {
 	// err_msg (sh->cnt.dquote % 2 || sh->cnt.quote % 2, \
 	// 	"Error: unclosed quote detected!!!");
-	// check_quote()
-	// check_dquote(sh);
 	// check_pipe(sh);
 }
