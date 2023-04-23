@@ -34,6 +34,13 @@ void	create_line(char **line, char **env, t_strs *str)
 	int	length;
 
 	dollar_ind = find_dollar(*line);
+	if (dollar_ind == -1)
+	{
+		str->ret = ft_strdup(*line);
+		err_msg_w_exit (!str->ret, 1);
+		return ;
+	}
+	str->ret = NULL;
 	while (dollar_ind != -1)
 	{
 		length = 0;
@@ -58,15 +65,53 @@ void	create_line(char **line, char **env, t_strs *str)
 
 char	*expand(char *line, char **env)
 {
-	int		dollar_ind;
+	char	*ret_str;
+	char	*until_quote;
 	t_strs	str;
+	int		i;
 
-	dollar_ind = find_dollar(line);
-	if (dollar_ind == -1)
+	i = -1;
+	if (find_dollar(line) == -1)
 		return (line);
-	str.to_free = line;
-	str.ret = NULL;
-	create_line(&line, env, &str);
-	free(str.to_free);
-	return (str.ret);
+	int	j = -1;
+	ret_str = NULL;
+	while (line[++i])
+	{
+		while (line[++j] && line[j] != '\"' && line[j] != '\'')
+			;
+		until_quote = ft_substr(line, i, j - i);
+		str.to_free = until_quote;
+		i = j;
+		create_line(&until_quote, env, &str);
+		ret_str = strjoin_w_free(ret_str, str.ret);
+		free(str.to_free);
+		free(str.ret);
+		if (!line[j])
+			break ;
+		while (line[++j] != line[i])
+			;
+		until_quote = ft_substr(line, i + 1, j - i - 1);
+		str.to_free = until_quote;
+		if (line[i] == '\"')
+		{
+			
+			create_line(&until_quote, env, &str);
+			ret_str = strjoin_w_free(ret_str, str.ret);
+			free(str.ret);
+		}
+		else
+			ret_str = strjoin_w_free(ret_str, until_quote);
+		free(str.to_free);
+		i = j;
+	}
+	free(line);
+	printf ("ret: *%s*\n", ret_str);
+	return (ret_str);
 }
+
+//barev aya ay /usr/local/bin:/usr/bin:/bin:/usr/games janhehe $HOME ara: echo
+//barev aya ay /usr/local/bin:/usr/bin:/bin:/usr/games janhehe $HOME ara: im msh
+
+
+//barev $]BAREV kam /usr/local/bin:/usr/bin:/bin:/usr/games chnayac $HOME el kareli a $-BAREV i het: echo
+//barev $]BAREV kam /usr/local/bin:/usr/bin:/bin:/usr/games chnayac $HOME el kareli a $-BAREV i het: my msh

@@ -26,20 +26,23 @@ int main(int argc, char **argv, char **envp)
 	while (777)
 	{
 		prompt = NULL;
-		prompt = getcwd(prompt, 0);
-		prompt = strjoin_w_free(prompt, "$ ");
+		prompt = strjoin_w_free(getcwd(prompt, 0), "$ ");
 		sh.line = readline(prompt);
 		add_history(sh.line);
 		if (!sh.line)
 		{
 			printf ("\n");
-			// system("leaks minishell");
+			//system("leaks minishell");
 			exit(0);
 		}
+		if (check_quotes(&sh))
+		{
+			free(sh.line);
+			free(prompt);
+			continue ;
+		}
 		sh.line = expand(sh.line, envp);
-		// printf ("%s\n", sh.line);
-		parse_line(&sh);
-		free(sh.line);
 		free(prompt);
+		free(sh.line);
 	}
 }

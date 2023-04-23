@@ -15,6 +15,7 @@ typedef struct s_strs
 {
 	char	*until_dlr;
 	char	*tmp;
+	char	*in_dquotes;
 	char	*to_free;
 	char	*ret;
 }	t_strs;
@@ -46,10 +47,13 @@ void	check_symbols(t_shell *sh);
 
 void	check_pipe(t_shell *sh);
 
-void	check_dquote(t_shell *sh, int *i);
+int		check_quotes(t_shell *sh);
 
 void	init_env(t_shell *sh, char **env);
 
+char	*until_symb(char *s, char c);
+
+char	*after_symb(char *s, char c);
 
 //void	free_2d(char **s);
 

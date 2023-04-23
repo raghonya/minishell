@@ -12,30 +12,30 @@
 
 #include <minishell.h>
 
-char	*until_eq(char *s)
+char	*until_symb(char *s, char c)
 {
 	char	*ret;
 	int		i;
 
 	i = 0;
-	while (s[i] != '=')
+	while (s[i] != c)
 		i++;
 	ret = malloc(sizeof(char) * (i + 1));
 	if (!ret)
 		return (ret);
 	i = 0;
-	while (*s != '=')
+	while (*s != c)
 		ret[i++] = *s++;
 	ret[i] = 0;
 	return (ret);
 }
 
-char	*after_eq(char *s)
+char	*after_symb(char *s, char c)
 {
 	int	i;
 
 	i = 0;
-	while (s[i] != '=')
+	while (s[i] != c)
 		i++;
 	i++;
 	return (s + i);
@@ -51,6 +51,8 @@ char	*strjoin_w_free(char*s1, char *s2)
 
 	if (!s1)
 		return (ft_strdup(s2));
+	else if (!s2)
+		return (ft_strdup(s1));
 	i = -1;
 	k = 0;
 	len1 = ft_strlen(s1);
@@ -121,11 +123,11 @@ char	*check_env(char *line, char **env, int length)
 		return ("$");
 	while (env[i])
 	{
-		tmp = until_eq(env[i]);
+		tmp = until_symb(env[i], '=');
 		if (!ft_strcmp(tmp, line))
 		{
 			free(tmp);
-			return (after_eq(env[i]));
+			return (after_symb(env[i], '='));
 		}
 		free(tmp);
 		i++;
