@@ -36,11 +36,11 @@ int	check_pipes(t_shell *sh)
 	int	i;
 
 	i = 0;
+	sh->pipe_count = 0;
 	if (sh->line[i] == '|')
 		return (err_msg(1, "Pipe at the start of line"));
 	while (sh->line[++i + 1])
 	{
-		printf ("symb: %c\n", sh->line[i]);
 		if (sh->line[i] == '|')
 		{
 			if (sh->line[i - 1] == '|' || sh->line[i + 1] == '|')

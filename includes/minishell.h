@@ -45,7 +45,9 @@ int		check_quotes(char *line);
 
 void	check_line(t_shell sh);
 
-void	clear_quotes(char **lines);
+void	clear_quotes_matrix(char **lines);
+
+void	clear_quotes_line(char *line);
 
 void	init_env(t_shell *sh, char **env);
 

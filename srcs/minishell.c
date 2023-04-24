@@ -18,6 +18,47 @@ int	err_msg(int a, char *msg)
 	}
 }
 
+void	clear_quotes_matrix(char **lines)
+{
+	int	i;
+	int	j;
+	int	k;
+
+	i = -1;
+	while (lines[++i])
+	{
+		j = -1;
+		while (lines[i][++j])
+		{
+			if (lines[i][j] && (lines[i][j] == '\"' || lines[i][j] == '\''))
+			{
+				k = j-- - 1;
+				while (lines[i][++k + 1])
+					lines[i][k] = lines[i][k + 1];
+				lines[i][k] = 0;
+			}
+		}
+	}
+}
+
+void	clear_quotes_line(char *line)
+{
+	int	i;
+	int	k;
+
+	i = -1;
+	while (line[++i])
+	{
+		if (line[i] && (line[i] == '\"' || line[i] == '\''))
+		{
+			k = i-- - 1;
+			while (line[++k + 1])
+				line[k] = line[k + 1];
+			line[k] = 0;
+		}
+	}
+}
+
 void	prompt_and_history(char **line, char **prompt)
 {
 	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
@@ -40,7 +81,7 @@ int main(int argc, char **argv, char **envp)
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);
-		if (check_quotes(sh.line) || check_pipes(&sh))
+		if (!*sh.line || check_quotes(sh.line) || check_pipes(&sh))
 		{
 			free(sh.line);
 			free(sh.prompt);

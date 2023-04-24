@@ -28,29 +28,6 @@ int	find_dollar(char *s)
 	return (-1);
 }
 
-void	clear_quotes(char **lines)
-{
-	int	i;
-	int	j;
-	int	k;
-
-	i = -1;
-	while (lines[++i])
-	{
-		j = -1;
-		while (lines[i][++j])
-		{
-			if (lines[i][j] && (lines[i][j] == '\"' || lines[i][j] == '\''))
-			{
-				k = j-- - 1;
-				while (lines[i][++k + 1])
-					lines[i][k] = lines[i][k + 1];
-				lines[i][k] = 0;
-			}
-		}
-	}
-}
-
 void	create_line(char **line, char **env, t_strs *str)
 {
 	int	dollar_ind;

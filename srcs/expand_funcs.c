@@ -37,11 +37,9 @@ char	*after_symb(char *s, char c)
 	int	i;
 
 	i = 0;
-	//printf ("do return: %s\n", s);
 	while (s[i] != c)
 		i++;
 	i++;
-	//printf ("posle return: %s\n", s + i);
 	return (s + i);
 }
 
