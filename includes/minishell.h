@@ -83,6 +83,8 @@ char	*expand(char *line, char **env);
 
 char	*strjoin_w_free(char*s1, char *s2);
 
+char	**split_wout_quotes(char *s);
+
 char	*varname(char *s, int *length);
 
 char	*check_env(char *line, char **env, int length);

@@ -37,7 +37,6 @@ char	*clear_quotes(char *line)
 
 	while (line[++i])
 	{
-		//printf ("%c\n", line[i]);
 		if (line[i] && (line[i] == '\"' || line[i] == '\''))
 		{
 			j = i;

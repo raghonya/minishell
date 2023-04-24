@@ -19,7 +19,6 @@ void	err_msg(int a, char *msg)
 
 void	prompt_and_history(char **line, char **prompt)
 {
-	//*prompt = NULL;
 	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
 	*line = readline(*prompt);
 	if (!*line)
@@ -28,7 +27,7 @@ void	prompt_and_history(char **line, char **prompt)
 		//system("leaks minishell");
 		exit(0);
 	}
-	if (!isspace(**line))
+	if (!ft_isspace(**line))
 		add_history(*line);
 }
 
@@ -47,8 +46,8 @@ int main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		sh.line = expand(sh.line, envp);
-		printf ("ret: %s\n", sh.line);
-		check_cmd(sh);
+		printf ("ret: %s\n\n", sh.line);
+		check_line(sh);
 		//sh.line = clear_quotes(sh.line);
 		free(sh.prompt);
 		free(sh.line);
