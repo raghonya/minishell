@@ -104,10 +104,12 @@ char	*expand(char *line, char **env)
 		while (line[++j] && line[j] != '\"' && line[j] != '\'')
 			;
 		until_quote = ft_substr(line, i, j - i);
+		//err_msg_w_exit
 		str.to_free = until_quote;
 		i = j;
 		create_line(&until_quote, env, &str);
 		ret_str = strjoin_w_free(ret_str, str.ret);
+		//err_msg_w_exit
 		free(str.to_free);
 		free(str.ret);
 		if (!line[j])
@@ -115,6 +117,7 @@ char	*expand(char *line, char **env)
 		while (line[++j] != line[i])
 			;
 		until_quote = ft_substr(line, i, j - i + 1);
+		//err_msg_w_exit
 		str.to_free = until_quote;
 		if (line[i] == '\"')
 		{
@@ -124,6 +127,7 @@ char	*expand(char *line, char **env)
 		}
 		else
 			ret_str = strjoin_w_free(ret_str, until_quote);
+		//err_msg_w_exit(chka ret_str)
 		free(str.to_free);
 		i = j;
 	}

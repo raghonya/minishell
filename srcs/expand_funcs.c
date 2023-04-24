@@ -55,8 +55,6 @@ char	*strjoin_w_free(char*s1, char *s2)
 
 	if (!s1)
 		return (ft_strdup(s2));
-	else if (!s2)
-		return (ft_strdup(s1));
 	i = -1;
 	k = 0;
 	len1 = ft_strlen(s1);
