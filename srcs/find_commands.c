@@ -1,9 +1,9 @@
 #include <minishell.h>
 
-// void	exec_cmd(char *cmd)
-// {
+void	exec_cmd(char *cmd)
+{
 
-// }
+}
 
 //void	split_line(t_list *cmds, char *line, int *i)
 //{
@@ -21,13 +21,41 @@ void	check_line(t_shell sh)
 
 	i = -1;
 	j = -1;
+	printf ("%s\n", sh.line);
 	cmds = split_wout_quotes(sh.line);
 	err_msg_w_exit(!cmds, 1);
-	printf ("splited:\n");
+	printf ("splited\n--------------\n");
 	while (cmds[++i])
 		printf ("%s\n", (cmds[i]));
-	printf ("\n");
-	clear_quotes(sh.line);
+	printf ("--------------\n");
+
+	clear_quotes(cmds);
+	i  = -1;
+	printf ("after cleaning quotes\n--------------\n");
+	while (cmds[++i])
+		printf ("%s\n", (cmds[i]));
+	printf ("--------------\n");
+
+	if (!ft_strcmp(*cmds, "echo"))
+		builtin_echo(cmds);
+	if (!ft_strcmp(*cmds, "cd"))
+		builtin_cd();
+	else if (!ft_strcmp(*cmds, "pwd"))
+		builtin_pwd();
+	else if (!ft_strcmp(*cmds, "export"))
+		builtin_export(&sh);
+	else if (!ft_strcmp(*cmds, "unset"))
+		;
+	else if (!ft_strcmp(*cmds, "env"))
+		builtin_env(sh.env);
+	else if (!ft_strcmp(*cmds, "exit"))
+		;
+	else
+		exec_cmd(*cmds);
+	i = -1;
+	while (cmds[++i])
+		free(cmds[i]);
+	free(cmds);
 	//printf ("%s\n", sh.line);
 	//while (sh.line[++j])
 	//{
@@ -68,25 +96,5 @@ void	check_line(t_shell sh)
 	// cmd = until_symb(sh.line, " \t\n\r\v\f\"\'");
 	// sh.line += ft_strlen(cmd);
 	//printf ("%s\n", cmd);
-	//if (!ft_strcmp(cmd, "echo"))
-	//	builtin_echo(sh.line, cmd);
-	// if (!ft_strcmp(cmd, "cd"))
-	// 	builtin_cd();
-	// else if (!ft_strcmp(cmd, "pwd"))
-	// 	builtin_pwd();
-	// else if (!ft_strcmp(cmd, "export"))
-	// 	builtin_export(&sh);
-	// else if (!ft_strcmp(cmd, "unset"))
-	// 	;
-	// else if (!ft_strcmp(cmd, "env"))
-	// 	builtin_env(sh.env);
-	// else if (!ft_strcmp(cmd, "exit"))
-	// 	;
-	// else
-	// 	exec_cmd(cmd);
 	// free(cmd);
-	//i = -1;
-	//while (cmds[++i])
-	//	free(cmds[i]);
-	//free(cmds);
 }

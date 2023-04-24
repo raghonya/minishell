@@ -28,33 +28,35 @@ int	find_dollar(char *s)
 	return (-1);
 }
 
-char	*clear_quotes(char *line)
+void	clear_quotes(char **lines)
 {
 	int	i;
 	int	j;
+	int	k;
 
 	i = -1;
-
-	while (line[++i])
+	while (lines[++i])
 	{
-		if (line[i] && (line[i] == '\"' || line[i] == '\''))
+		j = -1;
+		while (lines[i][++j])
 		{
-			j = i;
-			while (line[++i] != line[j])
-				;
-			if (line[i + 1] && line[i + 1] != ' ')
+			if (lines[i][j] && (lines[i][j] == '\"' || lines[i][j] == '\''))
 			{
-				j--;
-				while (line[++j + 1])
-					line[j] = line[j + 1];
-				line[j] = 0;
-				printf ("%s\n", line);
-				printf ("%d, %d\n", i, j);
-				j = --i - 1;
-				while (line[++j + 1])
-					line[j] = line[j + 1];
-				line[j] = 0;
+				k = j-- - 1;
+				while (lines[i][++k + 1])
+					lines[i][k] = lines[i][k + 1];
+				lines[i][k] = 0;
 			}
+			// while (line[++i] != line[j])
+			// 	;
+			// if (line[i + 1] && line[i + 1] != ' ')
+			// {
+			// 	j--;
+			// 	while (line[++j + 1])
+			// 		line[j] = line[j + 1];
+			// 	line[j] = 0;
+			// 	printf ("%s\n", line);
+			// 	printf ("%d, %d\n", i, j);
 		}
 	}
 }
@@ -89,6 +91,7 @@ void	create_line(char **line, char **env, t_strs *str)
 		length = 0;
 		str->until_dlr = ft_substr(*line, 0, dollar_ind);
 		str->tmp = varname(*line + dollar_ind + 1, &length);
+		printf ("untildlr: %s, tmp: %s\n", str->until_dlr, str->tmp);
 		err_msg_w_exit (!str->tmp || !str->until_dlr, 1);
 		str->ret = strjoin_w_free(str->ret, str->until_dlr);
 		err_msg_w_exit (!str->ret, 1);
@@ -137,8 +140,8 @@ char	*expand(char *line, char **env)
 		str.to_free = until_quote;
 		if (line[i] == '\"')
 		{
-			
 			create_line(&until_quote, env, &str);
+			// printf ("%s\n", str.ret);
 			ret_str = strjoin_w_free(ret_str, str.ret);
 			free(str.ret);
 		}
@@ -147,7 +150,8 @@ char	*expand(char *line, char **env)
 		free(str.to_free);
 		i = j;
 	}
-	free(line);
+	printf ("ret_str: %s\n", ret_str);
+	// free(line);
 	return (ret_str);
 }
 

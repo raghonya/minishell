@@ -1,33 +1,21 @@
 #include <minishell.h>
 
-void	builtin_echo(char *line, char *cmd)
+void	builtin_echo(char **cmds)
 {
-	char	**to_print;
+	// char	**to_print;
 	int		i;
 
-	i = -1;
-	while (ft_isspace(*line))
-		line++;
-	to_print = ft_split(line, ' ');
-	err_msg_w_exit(!to_print, 1);
-	if (!ft_strcmp(to_print[++i], "-n"))
-		while (to_print[++i])
-			printf ("%s ", to_print[i]);
+	i = 0;
+	if (!ft_strcmp(cmds[++i], "-n"))
+		while (cmds[++i])
+			printf ("%s ", cmds[i]);
 	else
 	{
-		while (to_print[i])
-			printf ("%s ", to_print[i++]);
+		while (cmds[i])
+			printf ("%s ", cmds[i++]);
 		printf ("\n");
 	}
-	i = -1;
-	while (to_print[++i])
-		free(to_print[i]);
-	free(to_print);
 }
-
-
-//echo "-"n barev
-//echo "-n barev"
 
 void	builtin_cd()
 {

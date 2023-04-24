@@ -51,9 +51,9 @@ void	check_pipe(t_shell *sh);
 
 int		check_quotes(char *line);
 
-void	check_cmd(t_shell sh);
+void	check_line(t_shell sh);
 
-char	*clear_quotes(char *line);
+void	clear_quotes(char **lines);
 
 void	init_env(t_shell *sh, char **env);
 
@@ -89,7 +89,7 @@ char	*varname(char *s, int *length);
 
 char	*check_env(char *line, char **env, int length);
 
-void	builtin_echo(char *line, char *cmd);
+void	builtin_echo(char **cmds);
 
 void	builtin_export(t_shell *sh);
 
