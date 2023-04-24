@@ -26,20 +26,22 @@ static int	word_count(char *s)
 	{
 		while (s[i] && s[i] == ' ')
 			i++;
-		if (!s[i])
+		if (!s[i--])
 			break ;
-		if (s[i] == '\"' || s[i] == '\'')
+		while (s[++i] && s[i] != ' ')
 		{
-			k = i;
-			while (s[++i] != s[k])
-				;
+			if (s[i] == '\"' || s[i] == '\'')
+			{
+				k = i;
+				while (s[++i] != s[k])
+					;
+			}
 		}
 		count++;
-		while (s[++i] && s[i] != ' ')
-			;
 	}
 	return (count);
 }
+//	;
 
 static int	letter_count(char **s, int *count)
 {

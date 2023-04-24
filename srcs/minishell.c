@@ -9,11 +9,12 @@ void	err_msg_w_exit(int a, int code)
 	}
 }
 
-void	err_msg(int a, char *msg)
+int	err_msg(int a, char *msg)
 {
 	if (a)
 	{
-		printf ("minishell: %s\n", msg);
+		printf ("minishell: Error: %s\n", msg);
+		return (1);
 	}
 }
 
@@ -39,7 +40,7 @@ int main(int argc, char **argv, char **envp)
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);
-		if (check_quotes(sh.line))
+		if (check_quotes(sh.line) || check_pipes(&sh))
 		{
 			free(sh.line);
 			free(sh.prompt);
@@ -48,8 +49,14 @@ int main(int argc, char **argv, char **envp)
 		sh.line = expand(sh.line, envp);
 		printf ("ret: %s\n\n", sh.line);
 		check_line(sh);
-		//sh.line = clear_quotes(sh.line);
+		//if (sh.line[0] && fork() == 0)
+		//{
+		//	execve(ft_strjoin("/bin/", ft_split(sh.line, ' ')[0]), ft_split(sh.line, ' '), envp);
+		//	execve(ft_strjoin("/usr/bin/", ft_split(sh.line, ' ')[0]), ft_split(sh.line, ' '), envp);
+		//	exit(1);
+		//}
 		free(sh.prompt);
 		free(sh.line);
 	}
 }
+

@@ -47,31 +47,9 @@ void	clear_quotes(char **lines)
 					lines[i][k] = lines[i][k + 1];
 				lines[i][k] = 0;
 			}
-			// while (line[++i] != line[j])
-			// 	;
-			// if (line[i + 1] && line[i + 1] != ' ')
-			// {
-			// 	j--;
-			// 	while (line[++j + 1])
-			// 		line[j] = line[j + 1];
-			// 	line[j] = 0;
-			// 	printf ("%s\n", line);
-			// 	printf ("%d, %d\n", i, j);
 		}
 	}
 }
-//	i = -1;
-//	while (line[++i])
-//	{
-//		if (line[i] == '\"' || line[i] == '\'')
-//		{
-//			j = i-- - 1;
-//			while (line[++j + 1])
-//				line[j] = line[j + 1];
-//			line[j] = 0;
-//		}
-//	}
-//	return (line);
 
 void	create_line(char **line, char **env, t_strs *str)
 {
@@ -141,7 +119,6 @@ char	*expand(char *line, char **env)
 		if (line[i] == '\"')
 		{
 			create_line(&until_quote, env, &str);
-			// printf ("%s\n", str.ret);
 			ret_str = strjoin_w_free(ret_str, str.ret);
 			free(str.ret);
 		}

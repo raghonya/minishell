@@ -7,9 +7,9 @@ int	quote_error(char *line, int *i, char quote)
 	if (!line[*i])
 	{
 		if (quote == '\"')
-			err_msg(1, "Error: unclosed dquote detected!!!");
+			err_msg(1, "Unclosed dquote detected!!!");
 		else
-			err_msg(1, "Error: unclosed quote detected!!!");
+			err_msg(1, "Unclosed quote detected!!!");
 		return (1);
 	}
 	return (0);
@@ -30,14 +30,25 @@ int	check_quotes(char *line)
 	return (0);
 }
 
-void	check_pipe(t_shell *sh)
-{
-	sh->cnt.pipe++;
-}
 
-void	check_symbols(t_shell *sh)
+int	check_pipes(t_shell *sh)
 {
-	// err_msg (sh->cnt.dquote % 2 || sh->cnt.quote % 2, \
-	// 	"Error: unclosed quote detected!!!");
-	// check_pipe(sh);
+	int	i;
+
+	i = 0;
+	if (sh->line[i] == '|')
+		return (err_msg(1, "Pipe at the start of line"));
+	while (sh->line[++i + 1])
+	{
+		printf ("symb: %c\n", sh->line[i]);
+		if (sh->line[i] == '|')
+		{
+			if (sh->line[i - 1] == '|' || sh->line[i + 1] == '|')
+				return (err_msg(1, "Pipe error"));
+			sh->pipe_count++;
+		}
+	}
+	if (sh->line[i] == '|')
+		return (err_msg(1, "Pipe at the end of line"));
+	return (0);
 }
