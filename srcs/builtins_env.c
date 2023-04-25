@@ -1,6 +1,6 @@
 #include <minishell.h>
 
-void	builtin_export(t_shell *sh)
+int	builtin_export(t_shell *sh)
 {
 	char	**add;
 	int 	i;
@@ -22,18 +22,20 @@ void	builtin_export(t_shell *sh)
 		if (ft_strlen(*add) == (size_t)i)
 			ft_lstadd_back(&sh->env, ft_lstnew(*add++));
 	}
+	return (0);
 }
 
-void	builtin_unset(t_shell *sh)
+int	builtin_unset(t_shell *sh)
 {
-	
+	return (0);
 }
 
-void	builtin_env(t_list *env)
+int	builtin_env(t_list *env)
 {
 	while (env)
 	{
 		printf ("%s\n", env->data);
 		env = env->next;
 	}
+	return (0);
 }

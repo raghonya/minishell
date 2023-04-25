@@ -1,0 +1,10 @@
+Makefile$
+a$
+b$
+e$
+git.sh$
+includes$
+libft$
+minishell$
+obj$
+srcs$

@@ -16,6 +16,7 @@ int	err_msg(int a, char *msg)
 		printf ("minishell: Error: %s\n", msg);
 		return (1);
 	}
+	return (0);
 }
 
 void	clear_quotes_matrix(char **lines)
@@ -73,6 +74,17 @@ void	prompt_and_history(char **line, char **prompt)
 		add_history(*line);
 }
 
+int	free_and_continue(t_shell *sh)
+{
+	if (!*sh->line || check_quotes(sh->line) || check_pipes(sh))
+	{
+		free(sh->line);
+		free(sh->prompt);
+		return (1);
+	}
+	return (0);
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	t_shell		sh;
@@ -81,23 +93,25 @@ int main(int argc, char **argv, char **envp)
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);
-		if (!*sh.line || check_quotes(sh.line) || check_pipes(&sh))
-		{
-			free(sh.line);
-			free(sh.prompt);
+		if (free_and_continue(&sh))
 			continue ;
-		}
 		sh.line = expand(sh.line, envp);
-		printf ("ret: %s\n\n", sh.line);
-		check_line(sh);
-		//if (sh.line[0] && fork() == 0)
-		//{
-		//	execve(ft_strjoin("/bin/", ft_split(sh.line, ' ')[0]), ft_split(sh.line, ' '), envp);
-		//	execve(ft_strjoin("/usr/bin/", ft_split(sh.line, ' ')[0]), ft_split(sh.line, ' '), envp);
-		//	exit(1);
-		//}
+		// check_line(sh);
+		// printf ("ret: %s\n\n", sh.line);
+		// if (check_line(sh));
+		// {
+		// 	free(sh.line);
+		// 	free(sh.prompt);
+		// 	continue ;
+		// }
 		free(sh.prompt);
 		free(sh.line);
 	}
 }
 
+//if (sh.line[0] && fork() == 0)
+//{
+//	execve(ft_strjoin("/bin/", ft_split(sh.line, ' ')[0]), ft_split(sh.line, ' '), envp);
+//	execve(ft_strjoin("/usr/bin/", ft_split(sh.line, ' ')[0]), ft_split(sh.line, ' '), envp);
+//	exit(1);
+//}

@@ -43,7 +43,7 @@ int		check_pipes(t_shell *sh);
 
 int		check_quotes(char *line);
 
-void	check_line(t_shell sh);
+int		check_line(t_shell sh);
 
 void	clear_quotes_matrix(char **lines);
 
@@ -61,25 +61,25 @@ char	*expand(char *line, char **env);
 
 char	*strjoin_w_free(char*s1, char *s2);
 
-char	**split_wout_quotes(char *s);
+char	**split_wout_quotes(char *s, char c);
 
 char	*varname(char *s, int *length);
 
 char	*check_env(char *line, char **env, int length);
 
-void	builtin_echo(char **cmds);
+int		builtin_echo(char **cmds);
 
-void	builtin_exit(void);
+int		builtin_exit(void);
 
-void	builtin_pwd(void);
+int		builtin_pwd(void);
 
-void	builtin_cd(void);
+int		builtin_cd(char **cmds);
 
-void	builtin_env(t_list *env);
+int		builtin_env(t_list *env);
 
-void	builtin_unset(t_shell *sh);
+int		builtin_unset(t_shell *sh);
 
-void	builtin_export(t_shell *sh);
+int		builtin_export(t_shell *sh);
 
 //void	free_2d(char **s);
 

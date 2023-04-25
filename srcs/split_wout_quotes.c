@@ -14,7 +14,7 @@ static int	check_error(char **s, int j)
 	return (j + 1);
 }
 
-static int	word_count(char *s)
+static int	word_count(char *s, char c)
 {
 	int	count;
 	int	i;
@@ -24,11 +24,11 @@ static int	word_count(char *s)
 	i = 0;
 	while (1)
 	{
-		while (s[i] && s[i] == ' ')
+		while (s[i] && s[i] == c)
 			i++;
 		if (!s[i--])
 			break ;
-		while (s[++i] && s[i] != ' ')
+		while (s[++i] && s[i] != c)
 		{
 			if (s[i] == '\"' || s[i] == '\'')
 			{
@@ -41,18 +41,17 @@ static int	word_count(char *s)
 	}
 	return (count);
 }
-//	;
 
-static int	letter_count(char **s, int *count)
+static int	letter_count(char **s, char c, int *count)
 {
 	int	quote;
 	
 	*count = 0;
-	while (**s && **s == ' ')
+	while (**s && **s == c)
 		(*s)++;
 	if (!**s)
 		return (1);
-	while (**s && **s != ' ')
+	while (**s && **s != c)
 	{
 		(*count)++;
 		if (**s == '\"' || **s == '\'')
@@ -67,7 +66,7 @@ static int	letter_count(char **s, int *count)
 	return (0);
 }
 
-static char	*create_lines(char *s, char **split)
+static char	*create_lines(char *s, char c, char **split)
 {
 	int	count;
 	int	i;
@@ -75,7 +74,7 @@ static char	*create_lines(char *s, char **split)
 	i = 0;
 	while (1)
 	{
-		if (letter_count(&s, &count))
+		if (letter_count(&s, c, &count))
 			break ;
 		split[i] = ft_substr(s - count, 0, count);
 		if (!check_error(split, i))
@@ -86,14 +85,14 @@ static char	*create_lines(char *s, char **split)
 	return (split[0]);
 }
 
-char	**split_wout_quotes(char *s)
+char	**split_wout_quotes(char *s, char c)
 {
 	char	**split;
 
-	split = malloc(sizeof(char *) * (word_count(s) + 1));
+	split = malloc(sizeof(char *) * (word_count(s, c) + 1));
 	if (!split)
 		return (split);
-	create_lines(s, split);
+	create_lines(s, c, split);
 	return (split);
 }
 
