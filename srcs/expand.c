@@ -46,7 +46,7 @@ void	create_line(char **line, char **env, t_strs *str)
 		length = 0;
 		str->until_dlr = ft_substr(*line, 0, dollar_ind);
 		str->tmp = varname(*line + dollar_ind + 1, &length);
-		printf ("untildlr: %s, tmp: %s\n", str->until_dlr, str->tmp);
+		// printf ("untildlr: %s, tmp: %s\n", str->until_dlr, str->tmp);
 		err_msg_w_exit (!str->tmp || !str->until_dlr, 1);
 		str->ret = strjoin_w_free(str->ret, str->until_dlr);
 		err_msg_w_exit (!str->ret, 1);
@@ -108,7 +108,7 @@ char	*expand(char *line, char **env)
 		free(str.to_free);
 		i = j;
 	}
-	printf ("ret_str: %s\n", ret_str);
+	//  printf ("ret_str: %s\n", ret_str);
 	// free(line);
 	return (ret_str);
 }
@@ -157,7 +157,7 @@ char	*expand(char *line, char **env)
 //		i = j;
 //	}
 //	free(line);
-//	//printf ("ret: *%s*\n", ret_str);
+//	// ("ret: *%s*\n", ret_str);
 //	return (ret_str);
 //}
 

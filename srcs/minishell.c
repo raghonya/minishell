@@ -96,7 +96,9 @@ int main(int argc, char **argv, char **envp)
 		if (free_and_continue(&sh))
 			continue ;
 		sh.line = expand(sh.line, envp);
-		// check_line(sh);
+		if (free_and_continue(&sh))
+			continue ;
+		check_line(sh);
 		// printf ("ret: %s\n\n", sh.line);
 		// if (check_line(sh));
 		// {
