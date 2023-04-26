@@ -43,10 +43,10 @@ int	check_line(t_shell sh)
 	j = -1;
 	cmds = split_wout_quotes(sh.line, ' ');
 	err_msg_w_exit(!cmds, 1);
-	// printf ("\nsplited\n--------------\n");
-	// while (cmds[++i])
-	// 	printf ("%s\n", (cmds[i]));
-	// printf ("--------------\n");
+	printf ("\nsplited\n--------------\n");
+	while (cmds[++i])
+		printf ("%s\n", (cmds[i]));
+	printf ("--------------\n");
 
 	clear_quotes_matrix(cmds);
 	i  = -1;

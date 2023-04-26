@@ -76,7 +76,7 @@ void	prompt_and_history(char **line, char **prompt)
 
 int	free_and_continue(t_shell *sh)
 {
-	if (!*sh->line || check_quotes(sh->line) || check_pipes(sh))
+	if (check_line(*sh) || check_pipes(sh))
 	{
 		free(sh->line);
 		free(sh->prompt);
@@ -93,13 +93,13 @@ int main(int argc, char **argv, char **envp)
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);
-		if (free_and_continue(&sh))
+		if (!*sh.line || check_quotes(sh.line))
 			continue ;
 		sh.line = expand(sh.line, envp);
+		printf ("ret: %s\n\n", sh.line);
 		if (free_and_continue(&sh))
 			continue ;
-		check_line(sh);
-		// printf ("ret: %s\n\n", sh.line);
+		// check_line(sh);
 		// if (check_line(sh));
 		// {
 		// 	free(sh.line);
