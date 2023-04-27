@@ -12,20 +12,18 @@
 
 #include <minishell.h>
 
-char	**paths_finder(char **envp)
+char	**paths_finder(t_list *envp)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
-		i++;
-	if (!envp[i])
+	while (envp->data && ft_strncmp(envp->data, "PATH=", 5))
+		envp = envp->next;
+	if (!envp->data)
 		return (NULL);
-	j = 0;
-	while (envp[i][j] != '/')
-		j++;
-	return (ft_split(envp[i], ':'));
+	while (envp->data[i] != '/')
+		i++;
+	return (ft_split(envp->data + i, ':'));
 }
 
 char	*path_check(char **paths, char *cmd)

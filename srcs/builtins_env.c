@@ -20,47 +20,75 @@ void	export_w_no_arg(t_list *env)
 			str[k++] = env->data[i];
 		str[k++] = '\"';
 		str[k] = 0;
-		tmp = str;
-		str = ft_strjoin("declare -x ", str);
-		free(tmp);
-		printf ("%s\n", str);
+		tmp = ft_strjoin("declare -x ", str);
+		printf ("%s\n", tmp);
 		free(str);
+		free(tmp);
 		env = env->next;
 	}
 }
 
-int	builtin_export(t_shell *sh)
+int	builtin_export(char **add, t_shell *sh)
 {
-	char	**add;
 	int		i;
 
-	i = -1;
-	add = ft_split(sh->line, ' ');
-	err_msg_w_exit(!add, 1);
 	if (!add[1])
 		export_w_no_arg(sh->env);
 	else
 	{
 		while (*add)
 		{
-			if (!ft_strchr(*add, '=') || ft_isdigit(**add))
+			if (!ft_strchr(*add, '=') || ft_isdigit(**add) || **add == '=')
 			{
 				add++;
 				continue ;
 			}
-			while ((*add)[++i])
+			i = -1;
+			while ((*add)[++i] && (*add)[i] != '=')
 				if (!ft_isalpha((*add)[i]) && !ft_isdigit((*add)[i]) \
 					&& (*add)[i] != '_')
 					break ;
-			if (ft_strlen(*add) == (size_t)i)
+			if ((*add)[i] && (*add)[i] == '=')
 				ft_lstadd_back(&sh->env, ft_lstnew(*add++));
 		}
 	}
 	return (0);
 }
 
-int	builtin_unset(t_shell *sh)
+// int	builtin_unset(t_list *env)
+int	builtin_unset(char **cmds, t_list **env)
 {
+	t_list	*tmp;
+	t_list	*head;
+	t_list	*tmp_prev = NULL;
+	char	*tmp_str;
+	int		i;
+
+	i = 0;
+	while (cmds[++i])
+	{
+		head = *env;
+		tmp_str = ft_strjoin(cmds[i], "=");
+		while (*env)
+		{
+			if (!ft_strncmp((*env)->data, tmp_str, ft_strlen(tmp_str)))
+			{
+				printf ("data: %s, cmd: %s, len: %lu\n", (*env)->data, tmp_str, ft_strlen(tmp_str));
+				tmp = (*env)->next;
+				if (head == *env)
+					head = tmp;
+				free(*env);
+				*env = tmp;
+				if (tmp_prev)
+					tmp_prev->next = *env;
+				break ;
+			}
+			tmp_prev = *env;
+			*env = (*env)->next;
+		}
+		free(tmp_str);
+		*env = head;
+	}
 	return (0);
 }
 

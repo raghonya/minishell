@@ -28,43 +28,42 @@ int	find_dollar(char *s)
 	return (-1);
 }
 
-void	create_line(char **line, char **env, t_strs *str)
+void	create_line(char **line, t_list *env, t_strs *str)
 {
-	int	dollar_ind;
+	int	dollar_index;
 	int	length;
 
-	dollar_ind = find_dollar(*line);
-	if (dollar_ind == -1)
+	dollar_index = find_dollar(*line);
+	if (dollar_index == -1)
 	{
 		str->ret = ft_strdup(*line);
 		err_msg_w_exit (!str->ret, 1);
 		return ;
 	}
 	str->ret = NULL;
-	while (dollar_ind != -1)
+	while (dollar_index != -1)
 	{
 		length = 0;
-		str->until_dlr = ft_substr(*line, 0, dollar_ind);
-		str->tmp = varname(*line + dollar_ind + 1, &length);
-		// printf ("untildlr: %s, tmp: %s\n", str->until_dlr, str->tmp);
+		str->until_dlr = ft_substr(*line, 0, dollar_index);
+		str->tmp = varname(*line + dollar_index + 1, &length);
 		err_msg_w_exit (!str->tmp || !str->until_dlr, 1);
 		str->ret = strjoin_w_free(str->ret, str->until_dlr);
 		err_msg_w_exit (!str->ret, 1);
 		if (!*str->tmp)
-			*line += dollar_ind + length + 1;
+			*line += dollar_index + length + 1;
 		else
-			*line += dollar_ind + ft_strlen(str->tmp) + 1;
+			*line += dollar_index + ft_strlen(str->tmp) + 1;
 		str->ret = strjoin_w_free(str->ret, check_env(str->tmp, env, length));
 		err_msg_w_exit (!str->ret, 1);
 		free(str->until_dlr);
 		free(str->tmp);
-		dollar_ind = find_dollar(*line);
+		dollar_index = find_dollar(*line);
 	}
 	str->ret = strjoin_w_free(str->ret, *line);
 	err_msg_w_exit (!str->ret, 1);
 }
 
-char	*expand(char *line, char **env)
+char	*expand(char *line, t_list *env)
 {
 	char	*ret_str;
 	char	*until_quote;

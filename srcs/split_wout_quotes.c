@@ -66,7 +66,7 @@ static int	letter_count(char **s, char c, int *count)
 	return (0);
 }
 
-static char	*create_lines(char *s, char c, char **split)
+static char	**create_lines(char *s, char c, char **split)
 {
 	int	count;
 	int	i;
@@ -82,7 +82,7 @@ static char	*create_lines(char *s, char c, char **split)
 		i++;
 	}
 	split[i] = NULL;
-	return (split[0]);
+	return (split);
 }
 
 char	**split_wout_quotes(char *s, char c)
@@ -92,7 +92,7 @@ char	**split_wout_quotes(char *s, char c)
 	split = malloc(sizeof(char *) * (word_count(s, c) + 1));
 	if (!split)
 		return (split);
-	create_lines(s, c, split);
+	split = create_lines(s, c, split);
 	return (split);
 }
 

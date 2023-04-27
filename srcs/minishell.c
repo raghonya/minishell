@@ -42,23 +42,23 @@ void	clear_quotes_matrix(char **lines)
 	}
 }
 
-void	clear_quotes_line(char *line)
-{
-	int	i;
-	int	k;
+// void	clear_quotes_line(char *line)
+// {
+// 	int	i;
+// 	int	k;
 
-	i = -1;
-	while (line[++i])
-	{
-		if (line[i] && (line[i] == '\"' || line[i] == '\''))
-		{
-			k = i-- - 1;
-			while (line[++k + 1])
-				line[k] = line[k + 1];
-			line[k] = 0;
-		}
-	}
-}
+// 	i = -1;
+// 	while (line[++i])
+// 	{
+// 		if (line[i] && (line[i] == '\"' || line[i] == '\''))
+// 		{
+// 			k = i-- - 1;
+// 			while (line[++k + 1])
+// 				line[k] = line[k + 1];
+// 			line[k] = 0;
+// 		}
+// 	}
+// }
 
 void	prompt_and_history(char **line, char **prompt)
 {
@@ -95,7 +95,7 @@ int main(int argc, char **argv, char **envp)
 		prompt_and_history(&sh.line, &sh.prompt);
 		if (!*sh.line || check_quotes(sh.line))
 			continue ;
-		sh.line = expand(sh.line, envp);
+		sh.line = expand(sh.line, sh.env);
 		printf ("ret: %s\n\n", sh.line);
 		if (free_and_continue(&sh))
 			continue ;

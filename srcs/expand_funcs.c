@@ -113,24 +113,22 @@ char	*varname(char *s, int *length)
 	return (ret);
 }
 
-char	*check_env(char *line, char **env, int length)
+char	*check_env(char *line, t_list *env, int length)
 {
 	char	*tmp;
-	int		i;
 
-	i = 0;
 	if (!*line && length == 0)
 		return ("$");
-	while (env[i])
+	while (env->data)
 	{
-		tmp = until_symb(env[i], "=");
+		tmp = until_symb(env->data, "=");
 		if (!ft_strcmp(tmp, line))
 		{
 			free(tmp);
-			return (after_symb(env[i], '='));
+			return (after_symb(env->data, '='));
 		}
 		free(tmp);
-		i++;
+		env = env->next;
 	}
 	return ("");
 }

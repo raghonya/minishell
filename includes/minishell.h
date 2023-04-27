@@ -57,7 +57,7 @@ char	*after_symb(char *s, char c);
 
 int		check_varname(char *s);
 
-char	*expand(char *line, char **env);
+char	*expand(char *line, t_list *env);
 
 char	*strjoin_w_free(char*s1, char *s2);
 
@@ -65,7 +65,9 @@ char	**split_wout_quotes(char *s, char c);
 
 char	*varname(char *s, int *length);
 
-char	*check_env(char *line, char **env, int length);
+char	*check_env(char *line, t_list *env, int length);
+
+//	BUILTINS
 
 int		builtin_echo(char **cmds);
 
@@ -77,9 +79,17 @@ int		builtin_cd(char **cmds);
 
 int		builtin_env(t_list *env);
 
-int		builtin_unset(t_shell *sh);
+int		builtin_unset(char **cmds, t_list **env);
 
-int		builtin_export(t_shell *sh);
+int		builtin_export(char **cmds, t_shell *sh);
+
+// BUILTINS END
+
+char	**paths_finder(t_list *envp);
+
+char	*path_check(char **paths, char *cmd);
+
+void	find_absolute_path(char **args, char **paths);
 
 //void	free_2d(char **s);
 
