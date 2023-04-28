@@ -26,6 +26,7 @@ void	put_value(t_strs *str, char **line, int dollar_index, t_list *env)
 		*line += dollar_index + length + 1;
 	else
 		*line += dollar_index + ft_strlen(str->tmp) + 1;
+	printf ("%s, %d\n", str->tmp, length);
 	str->part = strjoin_w_free(str->part, check_env(str->tmp, env, length));
 	err_msg_w_exit (!str->part, 1);
 }
@@ -58,7 +59,7 @@ void	before_quotes(t_shell *sh, char *line, int *i, int *j)
 	char	*until_quote;
 
 	while (line[++(*j)] && line[(*j)] != '\"' && line[(*j)] != '\'')
-			;
+		;
 	until_quote = ft_substr(line, *i, *j - *i);
 	err_msg_w_exit(!until_quote, 1);
 	sh->str.to_free = until_quote;
@@ -75,7 +76,7 @@ void	in_qoutes(t_shell *sh, char *line, int *i, int *j)
 	char	*in_quote;
 
 	while (line[++(*j)] != line[*i])
-			;
+		;
 	in_quote = ft_substr(line, *i, *j - *i + 1);
 	err_msg_w_exit(!in_quote, 1);
 	sh->str.to_free = in_quote;
@@ -96,11 +97,12 @@ char	*expand(t_shell *sh, char *line)
 {
 	char	*until_quote;
 	int		i;
+	int		j;
 
 	i = -1;
+	j = -1;
 	if (find_dollar(line) == -1)
 		return (line);
-	int	j = -1;
 	sh->str.ret_str = NULL;
 	while (line[++i])
 	{
@@ -109,7 +111,5 @@ char	*expand(t_shell *sh, char *line)
 			break ;
 		in_qoutes(sh, line, &i, &j);
 	}
-	//  printf ("str.ret_str: %s\n", str.ret_str);
-	// free(line);
 	return (sh->str.ret_str);
 }

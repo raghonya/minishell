@@ -35,13 +35,11 @@ char	*until_symb(char *s, char *c)
 
 	i = 0;
 	while (!ft_strchr(c, s[i]))
-	//while (s[i] != c)
 		i++;
 	ret = malloc(sizeof(char) * (i + 1));
 	if (!ret)
 		return (ret);
 	i = 0;
-	//while (*s != c)
 	while (!ft_strchr(c, *s))
 		ret[i++] = *s++;
 	ret[i] = 0;

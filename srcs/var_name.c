@@ -47,7 +47,7 @@ char	*check_env(char *line, t_list *env, int length)
 
 	if (!*line && length == 0)
 		return ("$");
-	while (env->data)
+	while (env)
 	{
 		tmp = until_symb(env->data, "=");
 		if (!ft_strcmp(tmp, line))
