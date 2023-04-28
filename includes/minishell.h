@@ -17,7 +17,8 @@ typedef struct s_strs
 	char	*tmp;
 	char	*in_dquotes;
 	char	*to_free;
-	char	*ret;
+	char	*part;
+	char	*ret_str;
 }	t_strs;
 
 typedef struct s_shell
@@ -31,7 +32,7 @@ typedef struct s_shell
 }	t_shell;
 
 
-int	err_msg(int a, char *msg);
+int		err_msg(int a, char *msg);
 
 void	err_msg_w_exit(int a, int code);
 
@@ -51,19 +52,21 @@ void	clear_quotes_line(char *line);
 
 void	init_env(t_shell *sh, char **env);
 
+int		find_dollar(char *s);
+
 char	*until_symb(char *s, char *c);
 
 char	*after_symb(char *s, char c);
 
 int		check_varname(char *s);
 
-char	*expand(char *line, t_list *env);
+char	*varname(char *s, int *length);
+
+char	*expand(t_shell *sh, char *line);
 
 char	*strjoin_w_free(char*s1, char *s2);
 
 char	**split_wout_quotes(char *s, char c);
-
-char	*varname(char *s, int *length);
 
 char	*check_env(char *line, t_list *env, int length);
 

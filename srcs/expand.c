@@ -12,157 +12,104 @@
 
 #include <minishell.h>
 
-int	find_dollar(char *s)
+void	put_value(t_strs *str, char **line, int dollar_index, t_list *env)
 {
-	int	i;
+	int	length;
 
-	i = 0;
-	if (!s)
-		return (-1);
-	while (s[i])
-	{
-		if (s[i] == '$')
-			return (i);
-		i++;
-	}
-	return (-1);
+	length = 0;
+	str->until_dlr = ft_substr(*line, 0, dollar_index);
+	str->tmp = varname(*line + dollar_index + 1, &length);
+	err_msg_w_exit (!str->tmp || !str->until_dlr, 1);
+	str->part = strjoin_w_free(str->part, str->until_dlr);
+	err_msg_w_exit (!str->part, 1);
+	if (!*str->tmp)
+		*line += dollar_index + length + 1;
+	else
+		*line += dollar_index + ft_strlen(str->tmp) + 1;
+	str->part = strjoin_w_free(str->part, check_env(str->tmp, env, length));
+	err_msg_w_exit (!str->part, 1);
 }
 
 void	create_line(char **line, t_list *env, t_strs *str)
 {
 	int	dollar_index;
-	int	length;
 
 	dollar_index = find_dollar(*line);
 	if (dollar_index == -1)
 	{
-		str->ret = ft_strdup(*line);
-		err_msg_w_exit (!str->ret, 1);
+		str->part = ft_strdup(*line);
+		err_msg_w_exit (!str->part, 1);
 		return ;
 	}
-	str->ret = NULL;
+	str->part = NULL;
 	while (dollar_index != -1)
 	{
-		length = 0;
-		str->until_dlr = ft_substr(*line, 0, dollar_index);
-		str->tmp = varname(*line + dollar_index + 1, &length);
-		err_msg_w_exit (!str->tmp || !str->until_dlr, 1);
-		str->ret = strjoin_w_free(str->ret, str->until_dlr);
-		err_msg_w_exit (!str->ret, 1);
-		if (!*str->tmp)
-			*line += dollar_index + length + 1;
-		else
-			*line += dollar_index + ft_strlen(str->tmp) + 1;
-		str->ret = strjoin_w_free(str->ret, check_env(str->tmp, env, length));
-		err_msg_w_exit (!str->ret, 1);
+		put_value(str, line, dollar_index, env);
 		free(str->until_dlr);
 		free(str->tmp);
 		dollar_index = find_dollar(*line);
 	}
-	str->ret = strjoin_w_free(str->ret, *line);
-	err_msg_w_exit (!str->ret, 1);
+	str->part = strjoin_w_free(str->part, *line);
+	err_msg_w_exit (!str->part, 1);
 }
 
-char	*expand(char *line, t_list *env)
+void	before_quotes(t_shell *sh, char *line, int *i, int *j)
 {
-	char	*ret_str;
 	char	*until_quote;
-	t_strs	str;
+
+	while (line[++(*j)] && line[(*j)] != '\"' && line[(*j)] != '\'')
+			;
+	until_quote = ft_substr(line, *i, *j - *i);
+	err_msg_w_exit(!until_quote, 1);
+	sh->str.to_free = until_quote;
+	*i = *j;
+	create_line(&until_quote, sh->env, &sh->str);
+	sh->str.ret_str = strjoin_w_free(sh->str.ret_str, sh->str.part);
+	err_msg_w_exit(!sh->str.ret_str, 1);
+	free(sh->str.to_free);
+	free(sh->str.part);
+}
+
+void	in_qoutes(t_shell *sh, char *line, int *i, int *j)
+{
+	char	*in_quote;
+
+	while (line[++(*j)] != line[*i])
+			;
+	in_quote = ft_substr(line, *i, *j - *i + 1);
+	err_msg_w_exit(!in_quote, 1);
+	sh->str.to_free = in_quote;
+	if (line[*i] == '\"')
+	{
+		create_line(&in_quote, sh->env, &sh->str);
+		sh->str.ret_str = strjoin_w_free(sh->str.ret_str, sh->str.part);
+		free(sh->str.part);
+	}
+	else
+		sh->str.ret_str = strjoin_w_free(sh->str.ret_str, in_quote);
+	err_msg_w_exit(!sh->str.ret_str, 1);
+	free(sh->str.to_free);
+	*i = *j;
+}
+
+char	*expand(t_shell *sh, char *line)
+{
+	char	*until_quote;
 	int		i;
 
 	i = -1;
 	if (find_dollar(line) == -1)
 		return (line);
 	int	j = -1;
-	ret_str = NULL;
+	sh->str.ret_str = NULL;
 	while (line[++i])
 	{
-		while (line[++j] && line[j] != '\"' && line[j] != '\'')
-			;
-		until_quote = ft_substr(line, i, j - i);
-		//err_msg_w_exit
-		str.to_free = until_quote;
-		i = j;
-		create_line(&until_quote, env, &str);
-		ret_str = strjoin_w_free(ret_str, str.ret);
-		//err_msg_w_exit
-		free(str.to_free);
-		free(str.ret);
+		before_quotes(sh, line, &i, &j);
 		if (!line[j])
 			break ;
-		while (line[++j] != line[i])
-			;
-		until_quote = ft_substr(line, i, j - i + 1);
-		//err_msg_w_exit
-		str.to_free = until_quote;
-		if (line[i] == '\"')
-		{
-			create_line(&until_quote, env, &str);
-			ret_str = strjoin_w_free(ret_str, str.ret);
-			free(str.ret);
-		}
-		else
-			ret_str = strjoin_w_free(ret_str, until_quote);
-		//err_msg_w_exit(chka ret_str)
-		free(str.to_free);
-		i = j;
+		in_qoutes(sh, line, &i, &j);
 	}
-	//  printf ("ret_str: %s\n", ret_str);
+	//  printf ("str.ret_str: %s\n", str.ret_str);
 	// free(line);
-	return (ret_str);
+	return (sh->str.ret_str);
 }
-
-//char	*expand(char *line, char **env)
-//{
-//	char	*ret_str;
-//	char	*until_quote;
-//	t_strs	str;
-//	int		i;
-
-//	i = -1;
-//	if (find_dollar(line) == -1)
-//	{
-//		return (clear_quotes(line));
-//	}
-//	int	j = -1;
-//	ret_str = NULL;
-//	while (line[++i])
-//	{
-//		while (line[++j] && line[j] != '\"' && line[j] != '\'')
-//			;
-//		until_quote = ft_substr(line, i, j - i);
-//		str.to_free = until_quote;
-//		i = j;
-//		create_line(&until_quote, env, &str);
-//		ret_str = strjoin_w_free(ret_str, str.ret);
-//		free(str.to_free);
-//		free(str.ret);
-//		if (!line[j])
-//			break ;
-//		while (line[++j] != line[i])
-//			;
-//		until_quote = ft_substr(line, i + 1, j - i - 1);
-//		str.to_free = until_quote;
-//		if (line[i] == '\"')
-//		{
-			
-//			create_line(&until_quote, env, &str);
-//			ret_str = strjoin_w_free(ret_str, str.ret);
-//			free(str.ret);
-//		}
-//		else
-//			ret_str = strjoin_w_free(ret_str, until_quote);
-//		free(str.to_free);
-//		i = j;
-//	}
-//	free(line);
-//	// ("ret: *%s*\n", ret_str);
-//	return (ret_str);
-//}
-
-//barev aya ay /usr/local/bin:/usr/bin:/bin:/usr/games janhehe $HOME ara: echo
-//barev aya ay /usr/local/bin:/usr/bin:/bin:/usr/games janhehe $HOME ara: im msh
-
-
-//barev $]BAREV kam /usr/local/bin:/usr/bin:/bin:/usr/games chnayac $HOME el kareli a $-BAREV i het: echo
-//barev $]BAREV kam /usr/local/bin:/usr/bin:/bin:/usr/games chnayac $HOME el kareli a $-BAREV i het: my msh

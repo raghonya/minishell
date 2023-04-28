@@ -45,7 +45,7 @@ static int	word_count(char *s, char c)
 static int	letter_count(char **s, char c, int *count)
 {
 	int	quote;
-	
+
 	*count = 0;
 	while (**s && **s == c)
 		(*s)++;

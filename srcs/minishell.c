@@ -1,24 +1,5 @@
 #include <minishell.h>
 
-void	err_msg_w_exit(int a, int code)
-{
-	if (a)
-	{
-		perror ("minishell: Error");
-		exit (code);
-	}
-}
-
-int	err_msg(int a, char *msg)
-{
-	if (a)
-	{
-		printf ("minishell: Error: %s\n", msg);
-		return (1);
-	}
-	return (0);
-}
-
 void	clear_quotes_matrix(char **lines)
 {
 	int	i;
@@ -95,7 +76,7 @@ int main(int argc, char **argv, char **envp)
 		prompt_and_history(&sh.line, &sh.prompt);
 		if (!*sh.line || check_quotes(sh.line))
 			continue ;
-		sh.line = expand(sh.line, sh.env);
+		sh.line = expand(&sh, sh.line);
 		printf ("ret: %s\n\n", sh.line);
 		if (free_and_continue(&sh))
 			continue ;
@@ -110,10 +91,3 @@ int main(int argc, char **argv, char **envp)
 		free(sh.line);
 	}
 }
-
-//if (sh.line[0] && fork() == 0)
-//{
-//	execve(ft_strjoin("/bin/", ft_split(sh.line, ' ')[0]), ft_split(sh.line, ' '), envp);
-//	execve(ft_strjoin("/usr/bin/", ft_split(sh.line, ' ')[0]), ft_split(sh.line, ' '), envp);
-//	exit(1);
-//}
