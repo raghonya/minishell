@@ -10,6 +10,7 @@ static int	check_error(char **s, int j)
 		while (--j >= 0)
 			free(s[j]);
 		free(s);
+		s = NULL;
 	}
 	return (j + 1);
 }
@@ -66,7 +67,7 @@ static int	letter_count(char **s, char c, int *count)
 	return (0);
 }
 
-static char	**create_lines(char *s, char c, char **split)
+static void	create_lines(char *s, char c, char **split)
 {
 	int	count;
 	int	i;
@@ -78,11 +79,10 @@ static char	**create_lines(char *s, char c, char **split)
 			break ;
 		split[i] = ft_substr(s - count, 0, count);
 		if (!check_error(split, i))
-			return (NULL);
+			return ;
 		i++;
 	}
 	split[i] = NULL;
-	return (split);
 }
 
 char	**split_wout_quotes(char *s, char c)
@@ -92,14 +92,7 @@ char	**split_wout_quotes(char *s, char c)
 	split = malloc(sizeof(char *) * (word_count(s, c) + 1));
 	if (!split)
 		return (split);
-	split = create_lines(s, c, split);
+	create_lines(s, c, split);
 	return (split);
 }
 
-// int main()
-// {
-// 	char **s = split_wout_quotes(" \" g  j   j \" p ' l'p a  ");
-// 	while (*s)
-// 		printf ("-%s-\n", *s++);
-
-// }

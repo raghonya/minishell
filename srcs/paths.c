@@ -17,9 +17,9 @@ char	**paths_finder(t_list *envp)
 	int	i;
 
 	i = 0;
-	while (envp->data && ft_strncmp(envp->data, "PATH=", 5))
+	while (envp && ft_strncmp(envp->data, "PATH=", 5))
 		envp = envp->next;
-	if (!envp->data)
+	if (!envp)
 		return (NULL);
 	while (envp->data[i] != '/')
 		i++;
@@ -53,16 +53,10 @@ void	find_absolute_path(char **args, char **paths)
 	int		i;
 
 	i = -1;
-	if (*args)
+	if (*args && !ft_strchr(*args, '/'))
 	{
-		while ((*args)[++i])
-			if ((*args)[i] == '/')
-				break ;
-		if ((size_t)i == ft_strlen(*args))
-		{
-			tmp = ft_strjoin("/", *args);
-			free(*args);
-			*args = path_check(paths, tmp);
-		}
+		tmp = ft_strjoin("/", *args);
+		free(*args);
+		*args = path_check(paths, tmp);
 	}
 }
