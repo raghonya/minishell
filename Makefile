@@ -6,7 +6,7 @@ f		=	-fsanitize=address -g
 
 DEP		=	Makefile includes/minishell.h
 
-# SRCSDIR	=	src
+SRCSDIR	=	srcs
 
 OBJDIR	=	obj
 
@@ -18,7 +18,7 @@ IFLAGS	=	-I$(LIB) -Iincludes
 
 LFLAGS	=	-L$(LIB) -lft -lreadline
 
-OBJS	=	$(SRCS:srcs/%.c=$(OBJDIR)/%.o)
+OBJS	=	$(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 
 CMD		=	$(MAKECMDGOALS)
 
