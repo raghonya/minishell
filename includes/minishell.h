@@ -44,7 +44,7 @@ int		check_pipes(t_shell *sh);
 
 int		check_quotes(char *line);
 
-int		check_line(t_shell sh);
+int		check_line(t_shell *sh);
 
 void	clear_quotes_matrix(char **lines);
 

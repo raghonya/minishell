@@ -32,7 +32,7 @@ void	exec_cmd(int pipe_count, char *line)
 	free(pipes);
 }
 
-int	check_line(t_shell sh)
+int	check_line(t_shell *sh)
 {
 	char	**cmds;
 	int		i;
@@ -40,7 +40,7 @@ int	check_line(t_shell sh)
 
 	i = -1;
 	j = -1;
-	cmds = split_wout_quotes(sh.line, ' ');
+	cmds = split_wout_quotes(sh->line, ' ');
 	err_msg_w_exit(!cmds, 1);
 	// printf ("\nsplited\n--------------\n");
 	// while (cmds[++i])
@@ -61,11 +61,11 @@ int	check_line(t_shell sh)
 	else if (!ft_strcmp(*cmds, "pwd"))
 		return (builtin_pwd());
 	else if (!ft_strcmp(*cmds, "export"))
-		return (builtin_export(cmds, &sh));
+		return (builtin_export(cmds, sh));
 	else if (!ft_strcmp(*cmds, "unset"))
-		return (builtin_unset(cmds, &sh.env));
+		return (builtin_unset(cmds, &sh->env));
 	else if (!ft_strcmp(*cmds, "env"))
-		return (builtin_env(sh.env));
+		return (builtin_env(sh->env));
 	else if (!ft_strcmp(*cmds, "exit"))
 		return (builtin_exit());
 	else
