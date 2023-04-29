@@ -7,5 +7,5 @@ void	init_env(t_shell *sh, char **envp)
 	i = -1;
 	sh->env = NULL;
 	while (envp[++i])
-		ft_lstadd_back(&sh->env, ft_lstnew(envp[i]));
+		ft_lstadd_back(&sh->env, ft_lstnew(ft_strdup(envp[i])));
 }

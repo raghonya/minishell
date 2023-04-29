@@ -71,17 +71,15 @@ int main(int argc, char **argv, char **envp)
 	t_shell		sh;
 
 	init_env(&sh, envp);
-	printf ("%p\n", sh.env);
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);
 		if (!*sh.line || check_quotes(sh.line))
 			continue ;
 		sh.line = expand(&sh, sh.line);
-		printf ("ret: %s\n\n", sh.line);
+		// printf ("ret: %s\n\n", sh.line);
 		if (free_and_continue(&sh))
 			continue ;
-		printf ("w whilee: %p\n", sh.env);
 		// t_list *tmp = sh.env;
 		// while (tmp)
 		// {

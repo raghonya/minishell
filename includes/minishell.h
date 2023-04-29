@@ -78,7 +78,7 @@ int		builtin_exit(void);
 
 int		builtin_pwd(void);
 
-int		builtin_cd(char **cmds);
+int		builtin_cd(char **cmds, t_list *env);
 
 int		builtin_env(t_list *env);
 

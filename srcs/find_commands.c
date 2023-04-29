@@ -57,7 +57,7 @@ int	check_line(t_shell *sh)
 	if (!ft_strcmp(*cmds, "echo"))
 		return (builtin_echo(cmds));
 	if (!ft_strcmp(*cmds, "cd"))
-		return (builtin_cd(cmds));
+		return (builtin_cd(cmds, sh->env));
 	else if (!ft_strcmp(*cmds, "pwd"))
 		return (builtin_pwd());
 	else if (!ft_strcmp(*cmds, "export"))
