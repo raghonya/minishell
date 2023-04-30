@@ -32,44 +32,6 @@ typedef struct s_shell
 }	t_shell;
 
 
-int		err_msg(int a, char *msg);
-
-void	err_msg_w_exit(int a, int code);
-
-char	*parse_line(t_shell *sh);
-
-void	check_symbols(t_shell *sh);
-
-int		check_pipes(t_shell *sh);
-
-int		check_quotes(char *line);
-
-int		check_line(t_shell *sh);
-
-void	clear_quotes_matrix(char **lines);
-
-void	clear_quotes_line(char *line);
-
-void	init_env(t_shell *sh, char **env);
-
-int		find_dollar(char *s);
-
-char	*until_symb(char *s, char *c);
-
-char	*after_symb(char *s, char c);
-
-int		check_varname(char *s);
-
-char	*varname(char *s, int *length);
-
-char	*expand(t_shell *sh, char *line);
-
-char	*strjoin_w_free(char*s1, char *s2);
-
-char	**split_wout_quotes(char *s, char c);
-
-char	*check_env(char *line, t_list *env, int length);
-
 //	BUILTINS
 
 int		builtin_echo(char **cmds);
@@ -86,7 +48,51 @@ int		builtin_unset(char **cmds, t_list **env);
 
 int		builtin_export(char **cmds, t_shell *sh);
 
-// BUILTINS END
+// Error messages
+
+int		err_msg(int a, char *msg);
+
+void	err_msg_w_exit(int a, int code);
+
+// Parsing
+
+char	*parse_line(t_shell *sh);
+
+void	check_symbols(t_shell *sh);
+
+int		check_pipes(t_shell *sh);
+
+int		check_quotes(char *line);
+
+int		check_line(t_shell *sh);
+
+void	clear_quotes_matrix(char **lines);
+
+void	clear_quotes_line(char *line);
+
+char	*until_symb(char *s, char *c);
+
+char	*after_symb(char *s, char c);
+
+char	*strjoin_w_free(char*s1, char *s2);
+
+char	**split_wout_quotes(char *s, char c);
+
+// env and variables
+
+int		find_dollar(char *s);
+
+int		check_varname(char *s);
+
+char	*varname(char *s, int *length);
+
+char	*expand(t_shell *sh, char *line);
+
+void	init_env(t_shell *sh, char **env);
+
+char	*check_env(char *line, t_list *env, int length);
+
+// Paths
 
 char	**paths_finder(t_list *envp);
 
