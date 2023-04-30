@@ -2,7 +2,7 @@ NAME	=	minishell
 
 CFLAGS	=	#-Wall -Wextra -Werror
 
-f		=	-fsanitize=address -g
+f		=	#-fsanitize=address -g
 
 DEP		=	Makefile includes/minishell.h
 
@@ -26,6 +26,7 @@ SRCS	=	srcs/builtins/builtin_export.c \
 			srcs/check/errors.c \
 			srcs/check/find_commands.c \
 			srcs/check/split_wout_quotes.c \
+			srcs/redirection/redirections.c \
 			srcs/main/minishell.c 
 			
 LIB		=	./libft
@@ -50,7 +51,8 @@ OBJS	=	obj/builtin_export.o \
 			obj/errors.o \
 			obj/find_commands.o \
 			obj/minishell.o \
-			obj/split_wout_quotes.o
+			obj/split_wout_quotes.o \
+			obj/redirections.o
 
 CMD		=	$(MAKECMDGOALS)
 

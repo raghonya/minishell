@@ -42,13 +42,14 @@ int	check_line(t_shell *sh)
 	j = -1;
 	sh->cmds = split_wout_quotes(sh->line, ' ');
 	err_msg_w_exit(!sh->cmds, 1);
-	// printf ("\nsplited\n--------------\n");
-	// while (sh->cmds[++i])
-	// 	printf ("%s\n", (sh->cmds[i]));
-	// printf ("--------------\n");
+	 printf ("\nsplited\n--------------\n");
+	 while (sh->cmds[++i])
+	 	printf ("%s\n", (sh->cmds[i]));
+	 printf ("--------------\n");
 
 	clear_quotes_matrix(sh->cmds);
 	i  = -1;
+	check_redirections(sh);
 	// printf ("\nsplited wout quotes\n--------------\n");
 	// while (sh->cmds[++i])
 	// 	printf ("%s\n", (sh->cmds[i]));

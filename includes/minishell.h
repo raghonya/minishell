@@ -101,6 +101,11 @@ char	*path_check(char **paths, char *cmd);
 
 void	find_absolute_path(char **args, char **paths);
 
+// Redirections
+
+void	check_redirections(t_shell *sh);
+
+
 //void	free_2d(char **s);
 
 //void	to_close(int *pipefd, t_args arg);
