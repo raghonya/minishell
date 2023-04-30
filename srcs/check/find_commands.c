@@ -34,40 +34,40 @@ void	exec_cmd(int pipe_count, char *line)
 
 int	check_line(t_shell *sh)
 {
-	char	**cmds;
+	//char	**cmds;
 	int		i;
 	int		j;
 
 	i = -1;
 	j = -1;
-	cmds = split_wout_quotes(sh->line, ' ');
-	err_msg_w_exit(!cmds, 1);
+	sh->cmds = split_wout_quotes(sh->line, ' ');
+	err_msg_w_exit(!sh->cmds, 1);
 	// printf ("\nsplited\n--------------\n");
-	// while (cmds[++i])
-	// 	printf ("%s\n", (cmds[i]));
+	// while (sh->cmds[++i])
+	// 	printf ("%s\n", (sh->cmds[i]));
 	// printf ("--------------\n");
 
-	clear_quotes_matrix(cmds);
+	clear_quotes_matrix(sh->cmds);
 	i  = -1;
 	// printf ("\nsplited wout quotes\n--------------\n");
-	// while (cmds[++i])
-	// 	printf ("%s\n", (cmds[i]));
+	// while (sh->cmds[++i])
+	// 	printf ("%s\n", (sh->cmds[i]));
 	// printf ("--------------\n");
-	i  = -1;
-	if (!ft_strcmp(*cmds, "echo"))
-		return (builtin_echo(cmds));
-	if (!ft_strcmp(*cmds, "cd"))
-		return (builtin_cd(cmds, sh->env));
-	else if (!ft_strcmp(*cmds, "pwd"))
+	//i  = -1;
+	if (!ft_strcmp(*sh->cmds, "echo"))
+		return (builtin_echo(sh->cmds));
+	if (!ft_strcmp(*sh->cmds, "cd"))
+		return (builtin_cd(sh->cmds, sh->env));
+	else if (!ft_strcmp(*sh->cmds, "pwd"))
 		return (builtin_pwd());
-	else if (!ft_strcmp(*cmds, "export"))
-		return (builtin_export(cmds, sh));
-	else if (!ft_strcmp(*cmds, "unset"))
-		return (builtin_unset(cmds, &sh->env));
-	else if (!ft_strcmp(*cmds, "env"))
+	else if (!ft_strcmp(*sh->cmds, "export"))
+		return (builtin_export(sh->cmds, sh));
+	else if (!ft_strcmp(*sh->cmds, "unset"))
+		return (builtin_unset(sh->cmds, &sh->env));
+	else if (!ft_strcmp(*sh->cmds, "env"))
 		return (builtin_env(sh->env));
-	else if (!ft_strcmp(*cmds, "exit"))
-		return (builtin_exit());
+	else if (!ft_strcmp(*sh->cmds, "exit"))
+		return (builtin_exit(sh->cmds));
 	else
 		return (0);
 	// i = -1;

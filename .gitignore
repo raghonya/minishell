@@ -4,6 +4,7 @@
 minishell
 *.o
 obj
+
 # Object files
 *.o
 *.ko

@@ -27,6 +27,7 @@ typedef struct s_shell
 	t_list	*env;
 	char	*line;
 	char	*prompt;
+	char	**cmds;
 	int		pipe_count;
 
 }	t_shell;
@@ -34,15 +35,15 @@ typedef struct s_shell
 
 //	BUILTINS
 
-int		builtin_echo(char **cmds);
-
-int		builtin_exit(void);
+int		builtin_cd(char **cmds, t_list *env);
 
 int		builtin_pwd(void);
 
-int		builtin_cd(char **cmds, t_list *env);
-
 int		builtin_env(t_list *env);
+
+int		builtin_exit(char **cmds);
+
+int		builtin_echo(char **cmds);
 
 int		builtin_unset(char **cmds, t_list **env);
 
