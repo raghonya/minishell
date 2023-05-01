@@ -6,7 +6,7 @@
 /*   By: raghonya <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 20:12:02 by raghonya          #+#    #+#             */
-/*   Updated: 2023/04/18 20:12:03 by raghonya         ###   ########.fr       */
+/*   Updated: 2023/05/01 13:08:58 by raghonya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	put_value(t_strs *str, char **line, int dollar_index, t_list *env)
 		*line += dollar_index + length + 1;
 	else
 		*line += dollar_index + ft_strlen(str->tmp) + 1;
-	//printf ("%s, %d\n", str->tmp, length);
 	str->part = strjoin_w_free(str->part, check_env(str->tmp, env, length));
 	err_msg_w_exit (!str->part, 1);
 }
@@ -95,7 +94,6 @@ void	in_qoutes(t_shell *sh, char *line, int *i, int *j)
 
 char	*expand(t_shell *sh, char *line)
 {
-	char	*until_quote;
 	int		i;
 	int		j;
 

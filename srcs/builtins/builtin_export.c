@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_export.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: raghonya <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/01 13:07:15 by raghonya          #+#    #+#             */
+/*   Updated: 2023/05/01 13:07:42 by raghonya         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <minishell.h>
 
 void	export_w_no_arg(t_list *env)
@@ -76,8 +88,9 @@ int	builtin_export(char **add, t_shell *sh)
 					&& (*add)[i] != '_')
 					break ;
 			if ((*add)[i] && (*add)[i] == '=')
-				ft_lstadd_back(&sh->env, ft_lstnew(*add++));
+				ft_lstadd_back(&sh->env, ft_lstnew(ft_strdup(*add++)));
 		}
 	}
+	printf ("%p\n", sh->env);
 	return (0);
 }

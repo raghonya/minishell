@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: raghonya <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/01 13:09:26 by raghonya          #+#    #+#             */
+/*   Updated: 2023/05/01 13:09:28 by raghonya         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <minishell.h>
 
 void	clear_quotes_matrix(char **lines)
@@ -38,7 +50,7 @@ void	prompt_and_history(char **line, char **prompt)
 		free(*prompt);
 	prev_line = *line;
 	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
-	printf ("prev cmd: %s\n", prev_line);
+	// printf ("prev cmd: %s\n", prev_line);
 	*line = readline(*prompt);
 	if (!*line)
 	{
@@ -67,18 +79,18 @@ int	free_and_continue(t_shell *sh)
 	if (check_line(sh) || check_pipes(sh))
 	{
 		free_info(sh);
-		//free(sh->line);
-		//free(sh->prompt);
 		return (1);
 	}
 	free_info(sh);
 	return (0);
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	t_shell		sh;
 
+	(void)argc;
+	(void)argv;
 	init_env(&sh, envp);
 	sh.line = NULL;
 	sh.prompt = NULL;
