@@ -12,31 +12,32 @@
 
 #include <minishell.h>
 
+void	print_args(char **cmds, int fd, int i)
+{
+	while (cmds[i])
+	{
+		if (cmds[i + 1])
+		{
+			ft_putstr_fd(cmds[i++], fd);
+			ft_putstr_fd(" ", fd);
+		}
+		else
+			ft_putstr_fd(cmds[i++], fd);
+	}
+}
+
 int	builtin_echo(char **cmds)
 {
 	int		i;
 
 	i = 0;
+	int	fd = 1;
 	if (!ft_strcmp(cmds[++i], "-n"))
-	{
-		while (cmds[++i])
-		{
-			if (cmds[i + 1])
-				printf ("%s ", cmds[i]);
-			else
-				printf ("%s", cmds[i]);
-		}
-	}
+		print_args(cmds, fd, i + 1);
 	else
 	{
-		while (cmds[i])
-		{
-			if (cmds[i + 1])
-				printf ("%s ", cmds[i++]);
-			else
-				printf ("%s", cmds[i++]);
-		}
-		printf ("\n");
+		print_args(cmds, fd, i);
+		ft_putstr_fd ("\n", fd);
 	}
 	return (0);
 }

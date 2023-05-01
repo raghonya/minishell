@@ -46,7 +46,7 @@ void	exec_cmd(int pipe_count, char *line)
 
 int	check_line(t_shell *sh)
 {
-	//char	**cmds;
+	char	**red;
 	int		i;
 	int		j;
 
@@ -57,6 +57,13 @@ int	check_line(t_shell *sh)
 	printf ("\nsplited\n--------------\n");
 	while (sh->cmds[++i])
 		printf ("%s\n", (sh->cmds[i]));
+	printf ("--------------\n");
+	i = -1;
+	red = split_wout_quotes(sh->line, '<');
+	err_msg_w_exit(!sh->cmds, 1);
+	printf ("\nsplited w < \n--------------\n");
+	while (red[++i])
+		printf ("%s\n", (red[i]));
 	printf ("--------------\n");
 
 	clear_quotes_matrix(sh->cmds);
@@ -88,3 +95,4 @@ int	check_line(t_shell *sh)
 	// 	free(cmds[i]);
 	// free(cmds);
 }
+//	echo >a >b >c  -n >d >e >f  barev >a iuytresdfghj
