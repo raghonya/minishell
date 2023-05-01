@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-int	cd_errors(char **cmds, char **oldpwd)
+int	cd_errors(char **cmds, char **oldpwd, t_list *env)
 {
 	int		i;
 
@@ -22,11 +22,19 @@ int	cd_errors(char **cmds, char **oldpwd)
 			|| err_msg(i > 2, "too many arguments"))
 			return (1);
 	*oldpwd = getcwd(NULL, 0);
-	if (err_msg(chdir(cmds[1]) == -1, "Cant change directory!!!"))
+	if (cmds[1] && err_msg(chdir(cmds[1]) == -1, "Cant change directory!!!"))
 	{
 		free(*oldpwd);
 		return (1);
 	}
+	// else if (!cmds[1])
+	// {
+	// 	while (env)
+	// 	{
+	// 		if (!ft_strncmp())
+	// 	}
+
+	// }
 	return (0);
 }
 
