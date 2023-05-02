@@ -29,9 +29,9 @@ void	print_args(char **cmds, int fd, int i)
 int	builtin_echo(char **cmds)
 {
 	int		i;
+	int	fd = 1;
 
 	i = 0;
-	int	fd = 1;
 	if (!ft_strcmp(cmds[++i], "-n"))
 		print_args(cmds, fd, i + 1);
 	else

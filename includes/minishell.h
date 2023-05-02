@@ -29,6 +29,8 @@ typedef struct s_shell
 	char	*prompt;
 	char	**cmds;
 	int		pipe_count;
+	int		fdin;
+	int		fdout;
 
 }	t_shell;
 
@@ -71,6 +73,8 @@ void	clear_quotes_matrix(char **lines);
 
 void	clear_quotes_line(char *line);
 
+void	clear_quotes_line(char *line);
+
 char	*until_symb(char *s, char *c);
 
 char	*after_symb(char *s, char c);
@@ -103,7 +107,7 @@ void	find_absolute_path(char **args, char **paths);
 
 // Redirections
 
-void	check_redirections(t_shell *sh);
+int	check_redirections(t_shell *sh, char *line);
 
 
 //void	free_2d(char **s);

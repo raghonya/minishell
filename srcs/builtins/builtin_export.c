@@ -91,6 +91,6 @@ int	builtin_export(char **add, t_shell *sh)
 				ft_lstadd_back(&sh->env, ft_lstnew(ft_strdup(*add++)));
 		}
 	}
-	printf ("%p\n", sh->env);
+	// printf ("%p\n", sh->env);
 	return (0);
 }

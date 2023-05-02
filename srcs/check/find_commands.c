@@ -46,29 +46,31 @@ void	exec_cmd(int pipe_count, char *line)
 
 int	check_line(t_shell *sh)
 {
-	char	**red;
 	int		i;
 	int		j;
 
 	i = -1;
 	j = -1;
+
 	sh->cmds = split_wout_quotes(sh->line, ' ');
 	err_msg_w_exit(!sh->cmds, 1);
+	if (check_redirections(sh, ft_strdup(sh->line)))
+		return (1);
 	printf ("\nsplited\n--------------\n");
 	while (sh->cmds[++i])
 		printf ("%s\n", (sh->cmds[i]));
 	printf ("--------------\n");
 	i = -1;
-	red = split_wout_quotes(sh->line, '<');
-	err_msg_w_exit(!sh->cmds, 1);
-	printf ("\nsplited w < \n--------------\n");
-	while (red[++i])
-		printf ("%s\n", (red[i]));
-	printf ("--------------\n");
+	// red = split_wout_quotes(sh->line, '<');
+	// err_msg_w_exit(!sh->cmds, 1);
+	// printf ("\nsplited w < \n--------------\n");
+	// while (red[++i])
+	// 	printf ("%s\n", (red[i]));
+	// printf ("--------------\n");
 
-	clear_quotes_matrix(sh->cmds);
+	// clear_quotes_matrix(sh->cmds);
+
 	i = -1;
-	check_redirections(sh);
 	// printf ("\nsplited wout quotes\n--------------\n");
 	// while (sh->cmds[++i])
 	// 	printf ("%s\n", (sh->cmds[i]));

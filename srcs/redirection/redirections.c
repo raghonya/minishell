@@ -17,12 +17,12 @@ char	*filename(char *str)
 	char	*name;
 	int		i;
 
-	printf ("str do <>: %s\n", str);
+	// printf ("str do <>: %s\n", str);
 	i = -1;
 	while (ft_isspace(str[++i]))
 		;
 	str += ++i;
-	printf ("str after <>: %s\n", str);
+	// printf ("str after <>: %s\n", str);
 	i = 0;
 	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_' \
 		|| str[i] == '-' || str[i] == '.'))
@@ -34,26 +34,93 @@ char	*filename(char *str)
 		|| *str == '-' || *str == '.'))
 		name[i++] = *str++;
 	name[i] = 0;
-	printf ("name of the file: %s\n", name);
+	// printf ("name of the file: %s\n", name);
 	return (name);
 }
 
-void	check_redirections(t_shell *sh)
+// check filename, arajin elementy inch kara lini
+
+char	*find_filename(char *line)
 {
-	char	*name;
+	char	*redir;
+	char	*tmp;
+	int		aft_spc;
 	int		i;
-	int		j;
 
 	i = -1;
-	while (sh->cmds[++i])
+	while (ft_isspace(line[++i]))
+		;
+	aft_spc = i;
+	while (line[i] && (line[i] == '_' || \
+		line[i] == '.' || line[i] == '-' || ft_isalnum(line[i])))
+		i++;
+	redir = ft_substr(line, aft_spc, i - aft_spc);
+	tmp = redir;
+	redir = ft_strtrim(redir, " \t\n\r\v\f");
+	free(tmp);
+	return (redir);
+}
+
+int	heredoc_or_append(t_shell *sh, char *line, int i)
+{
+	char	*redir;
+
+	redir = find_filename(line + i + 1);
+	printf ("heredoc/append:,,,%s,,,\n", redir);
+	return (0);
+}
+
+int	redirect_io(t_shell *sh, char *line, int i)
+{
+	char	*redir;
+
+	redir = find_filename(line + i + 1);
+	printf ("filename:,,,%s,,,\n", redir);
+	if (line[i] == '<')
 	{
-		j = -1;
-		while (sh->cmds[i][++j])
+		sh->fdin = open(redir, O_RDONLY);
+		free(redir);
+		if (err_msg (sh->fdin == -1, "No such file or directory"))
+			return (1);
+	}
+	else
+	{
+		sh->fdout = open(redir, O_WRONLY | O_CREAT | O_TRUNC);
+		free(redir);
+		if (err_msg (sh->fdout == -1, "No such file or directory"))
+			return (1);
+	}
+	return (0);
+}
+
+int	check_redirections(t_shell *sh, char *line)
+{
+	// char	*name;
+	int		i;
+
+	i = -1;
+	clear_quotes_line(line);
+	printf ("line wthout quotes: %s\n", line);
+	while (line[++i])
+	{
+		if (line[i] == '<' || line[i] == '>')
 		{
-			if (sh->cmds[i][j] == '<' || sh->cmds[i][j] == '>')
+			if (err_msg((line[i] == '<' && line[i + 1] == '>') \
+				|| (line[i] == '>' && line[i + 1] == '<'), \
+				"Syntax error"))
+					return (1);
+			if (line[i + 1] == line[i])
 			{
-				name = filename(sh->cmds[i] + j);
+				if (heredoc_or_append(sh, line, ++i))
+					return (1);
+			}
+			else
+			{
+				if (redirect_io(sh, line, i))
+					return (1);
 			}
 		}
 	}
+	free(line);
+	return (0);
 }
