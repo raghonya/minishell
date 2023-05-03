@@ -67,6 +67,7 @@ int	heredoc_or_append(t_shell *sh, char *line, int i)
 	char	*redir;
 
 	redir = find_filename(line + i + 1);
+	clear_quotes_line(redir);
 	printf ("heredoc/append:,,,%s,,,\n", redir);
 	return (0);
 }
@@ -76,6 +77,7 @@ int	redirect_io(t_shell *sh, char *line, int i)
 	char	*redir;
 
 	redir = find_filename(line + i + 1);
+	clear_quotes_line(redir);
 	printf ("filename:`%s`\n", redir);
 	if (line[i] == '<')
 	{
@@ -101,8 +103,7 @@ int	check_redirections(t_shell *sh, char *line)
 	int		i;
 
 	i = -1;
-	clear_quotes_line(line);
-	printf ("line wthout quotes: %s\n", line);
+	// printf ("line wthout quotes: %s\n", line);
 	while (line[++i])
 	{
 		if (line[i] == '<' || line[i] == '>')

@@ -91,21 +91,21 @@ void	free_info(t_shell *sh)
 	int	i;
 
 	i = -1;
-	while (sh->cmds[++i])
-		free(sh->cmds[i]);
-	free(sh->cmds);
+	while (sh->spl_pipe[++i])
+		free(sh->spl_pipe[i]);
+	free(sh->spl_pipe);
 }
 
-int	free_and_continue(t_shell *sh)
-{
-	if (check_line(sh) || check_pipes(sh))
-	{
-		free_info(sh);
-		return (1);
-	}
-	free_info(sh);
-	return (0);
-}
+// int	free_and_continue(t_shell *sh)
+// {
+// 	if (check_line(sh))
+// 	{
+// 		free_info(sh);
+// 		return (1);
+// 	}
+// 	free_info(sh);
+// 	return (0);
+// }
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -119,11 +119,17 @@ int	main(int argc, char **argv, char **envp)
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);
-		if (!*sh.line || check_quotes(sh.line))
+		if (!*sh.line || check_quotes(sh.line) || check_pipes(&sh))
 			continue ;
 		sh.line = expand(&sh, sh.line);
 		//printf ("ret: %s\n\n", sh.line);
-		if (free_and_continue(&sh))
-			continue ;
+		check_line(&sh);
+		free_info(&sh);
+		// system("leaks minishell");
+		// if (free_and_continue(&sh))
+		// 	continue ;
 	}
 }
+
+// <a echo <"b" >c barev"ner"sdzezex bayrner \
+	| cat srcs/paths/pa"th's".c  | cat >a

@@ -52,49 +52,84 @@ int	check_line(t_shell *sh)
 	i = -1;
 	j = -1;
 
-	sh->cmds = split_wout_quotes(sh->line, ' ');
-	err_msg_w_exit(!sh->cmds, 1);
-	if (check_redirections(sh, ft_strdup(sh->line)))
-		return (1);
-	printf ("\nsplited\n--------------\n");
-	while (sh->cmds[++i])
-		printf ("%s\n", (sh->cmds[i]));
-	printf ("--------------\n");
-	i = -1;
+	sh->spl_pipe = split_wout_quotes(sh->line, '|');
+	err_msg_w_exit(!sh->spl_pipe, 1);
+	while (sh->spl_pipe[++i])
+	{
+		printf ("splited line wth pipes: %s\n", sh->spl_pipe[i]);
+		if (check_redirections(sh, ft_strdup(sh->spl_pipe[i])))
+			return (1);
+		sh->cmd = split_wout_quotes(sh->spl_pipe[i], ' ');
+		err_msg_w_exit(!sh->cmd, 1);
+		j = -1;
+		printf ("\nspl line wth spaces\n");
+		while (sh->cmd[++j])
+			printf ("%s\n", sh->cmd[j]);
+		printf ("\n");
+		if (!ft_strcmp(*sh->cmd, "echo"))
+			builtin_echo(sh->cmd);
+		else if (!ft_strcmp(*sh->cmd, "cd"))
+			builtin_cd(sh->cmd, sh->env);
+		else if (!ft_strcmp(*sh->cmd, "pwd"))
+			builtin_pwd();
+		else if (!ft_strcmp(*sh->cmd, "export"))
+			builtin_export(sh->cmd, sh);
+		else if (!ft_strcmp(*sh->cmd, "unset"))
+			builtin_unset(sh->cmd, &sh->env);
+		else if (!ft_strcmp(*sh->cmd, "env"))
+			builtin_env(sh->env);
+		else if (!ft_strcmp(*sh->cmd, "exit"))
+			builtin_exit(sh->cmd);
+		else
+		{
+			;
+		}
+		j = -1;
+		while (sh->cmd[++j])
+			free(sh->cmd[j]);
+		free(sh->cmd);
+	}
+	// sh->cmd = split_wout_quotes(sh->line, ' ');
+	// if (check_redirections(sh, ft_strdup(sh->line)))
+	// 	return (1);
+	// printf ("\nsplited\n--------------\n");
+	// while (sh->cmd[++i])
+	// 	printf ("%s\n", (sh->cmd[i]));
+	// printf ("--------------\n");
+	// i = -1;
 	// red = split_wout_quotes(sh->line, '<');
-	// err_msg_w_exit(!sh->cmds, 1);
+	// err_msg_w_exit(!sh->cmd, 1);
 	// printf ("\nsplited w < \n--------------\n");
 	// while (red[++i])
 	// 	printf ("%s\n", (red[i]));
 	// printf ("--------------\n");
 
-	// clear_quotes_matrix(sh->cmds);
+	// clear_quotes_matrix(sh->cmd);
 
-	i = -1;
+	// i = -1;
 	// printf ("\nsplited wout quotes\n--------------\n");
-	// while (sh->cmds[++i])
-	// 	printf ("%s\n", (sh->cmds[i]));
+	// while (sh->cmd[++i])
+	// 	printf ("%s\n", (sh->cmd[i]));
 	// printf ("--------------\n");
 	//i  = -1;
-	if (!ft_strcmp(*sh->cmds, "echo"))
-		return (builtin_echo(sh->cmds));
-	if (!ft_strcmp(*sh->cmds, "cd"))
-		return (builtin_cd(sh->cmds, sh->env));
-	else if (!ft_strcmp(*sh->cmds, "pwd"))
-		return (builtin_pwd());
-	else if (!ft_strcmp(*sh->cmds, "export"))
-		return (builtin_export(sh->cmds, sh));
-	else if (!ft_strcmp(*sh->cmds, "unset"))
-		return (builtin_unset(sh->cmds, &sh->env));
-	else if (!ft_strcmp(*sh->cmds, "env"))
-		return (builtin_env(sh->env));
-	else if (!ft_strcmp(*sh->cmds, "exit"))
-		return (builtin_exit(sh->cmds));
-	else
-		return (0);
+	// if (!ft_strcmp(*sh->cmd, "echo"))
+	// 	return (builtin_echo(sh->cmd));
+	// if (!ft_strcmp(*sh->cmd, "cd"))
+	// 	return (builtin_cd(sh->cmd, sh->env));
+	// else if (!ft_strcmp(*sh->cmd, "pwd"))
+	// 	return (builtin_pwd());
+	// else if (!ft_strcmp(*sh->cmd, "export"))
+	// 	return (builtin_export(sh->cmd, sh));
+	// else if (!ft_strcmp(*sh->cmd, "unset"))
+	// 	return (builtin_unset(sh->cmd, &sh->env));
+	// else if (!ft_strcmp(*sh->cmd, "env"))
+	// 	return (builtin_env(sh->env));
+	// else if (!ft_strcmp(*sh->cmd, "exit"))
+	// 	return (builtin_exit(sh->cmd));
+	// else
+	// 	return (0);
 	// i = -1;
-	// while (cmds[++i])
-	// 	free(cmds[i]);
-	// free(cmds);
+	return (0);
 }
+
 //	echo >a >b >c  -n >d >e >f  barev >a iuytresdfghj

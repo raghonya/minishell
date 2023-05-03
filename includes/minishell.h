@@ -27,7 +27,8 @@ typedef struct s_shell
 	t_list	*env;
 	char	*line;
 	char	*prompt;
-	char	**cmds;
+	char	**spl_pipe;
+	char	**cmd;
 	int		pipe_count;
 	int		fdin;
 	int		fdout;
