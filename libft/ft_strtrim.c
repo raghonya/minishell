@@ -29,6 +29,7 @@ void	st_end(char const *s1, char const *set, int *start, int *end)
 	int	i;
 
 	i = -1;
+
 	while (s1[++i])
 	{
 		if (!check(set, s1[i]))
@@ -61,7 +62,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	if (!s1 || !set)
 		return (NULL);
 	st_end (s1, set, &start, &end);
-	if (start == 0 && start == end)
+	if (start == 0 && check (set, s1[start]) && start == end)
 		return (ft_strdup(""));
 	s = malloc (sizeof(char) * (end - start + 2));
 	if (!s)

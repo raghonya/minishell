@@ -57,6 +57,7 @@ char	*find_filename(char *line)
 	redir = ft_substr(line, aft_spc, i - aft_spc);
 	tmp = redir;
 	redir = ft_strtrim(redir, " \t\n\r\v\f");
+	// printf ("aft trim: '%s'\n", redir);
 	free(tmp);
 	return (redir);
 }
@@ -75,10 +76,11 @@ int	redirect_io(t_shell *sh, char *line, int i)
 	char	*redir;
 
 	redir = find_filename(line + i + 1);
-	printf ("filename:,,,%s,,,\n", redir);
+	printf ("filename:`%s`\n", redir);
 	if (line[i] == '<')
 	{
 		sh->fdin = open(redir, O_RDONLY);
+		// printf ("filename%s\n", redir);
 		free(redir);
 		if (err_msg (sh->fdin == -1, "No such file or directory"))
 			return (1);
