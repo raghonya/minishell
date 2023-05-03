@@ -131,5 +131,5 @@ int	main(int argc, char **argv, char **envp)
 	}
 }
 
-// <a echo <"b" >c barev"ner"sdzezex bayrner \
-	| cat srcs/paths/pa"th's".c  | cat >a
+// <a echo <"b" >c barev"ner"sdzezex bayrner 
+	//| cat srcs/paths/pa"th's".c  | cat >a

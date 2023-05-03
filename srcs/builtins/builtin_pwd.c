@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-int	builtin_pwd(void)
+int	builtin_pwd(t_shell *sh)
 {
 	char	*tmp;
 

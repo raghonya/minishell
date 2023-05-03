@@ -66,7 +66,7 @@ int	check_var_existence(char *add, t_shell *sh)
 	return (0);
 }
 
-int	builtin_export(char **add, t_shell *sh)
+int	builtin_export(t_shell *sh, char **add)
 {
 	int		i;
 

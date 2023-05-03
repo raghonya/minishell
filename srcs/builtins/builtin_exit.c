@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-int	builtin_exit(char **cmds)
+int	builtin_exit(t_shell *sh, char **cmds)
 {
 	int	i;
 

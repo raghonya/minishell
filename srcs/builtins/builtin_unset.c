@@ -26,7 +26,7 @@ int	delete_var(t_list **tmp_prev, t_list **env, t_list **head)
 	return (1);
 }
 
-int	builtin_unset(char **cmds, t_list **env)
+int	builtin_unset(t_shell *sh, char **cmds, t_list **env)
 {
 	t_list	*head;
 	t_list	*tmp_prev;

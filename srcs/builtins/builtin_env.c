@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-int	builtin_env(t_list *env)
+int	builtin_env(t_shell *sh, t_list *env)
 {
 	while (env)
 	{

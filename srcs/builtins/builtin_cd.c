@@ -71,7 +71,7 @@ int	cd_init_oldpwd(t_list *env, char *oldpwd)
 	return (0);
 }
 
-int	builtin_cd(char **cmds, t_list *env)
+int	builtin_cd(t_shell *sh, char **cmds, t_list *env)
 {
 	char	*oldpwd;
 
