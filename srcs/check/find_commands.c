@@ -74,24 +74,15 @@ void	exec_one(t_shell *sh)
 	int		i;
 
 	envp = create_envp(*sh);
-	// i = -1;
-	// while (envp[++i])
-	// 	printf ("%s\n", envp[i]);
-	// printf ("\n");
-	// printf ("cpid: %d\n", cpid);
 	cpid = fork();
 	err_msg_w_exit (cpid == -1, 1);
 	if (!cpid)
 	{
-		// printf ("env hasce: %s\n", sh->env->data);
-		// printf ("%d, %d\n", sh->fdin, sh->fdout);
 		err_msg_w_exit(dup2(sh->fdin, 0) == -1, 1);
 		err_msg_w_exit(dup2(sh->fdout, 1) == -1, 1);
 		find_absolute_path(sh->cmd, sh->paths);
-		// printf ("cmd: %s\n", *sh->cmd);
 		execve(*sh->cmd, sh->cmd, envp);
 		i = -1;
-
 		while (envp[++i])
 			free(envp[i]);
 		free(envp);

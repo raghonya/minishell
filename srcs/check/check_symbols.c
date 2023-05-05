@@ -60,7 +60,9 @@ int	check_redirection(t_shell *sh)
 		|| (sh->line[i - 1] == '<' && sh->line[i] == '<' && sh->line[i + 1] == '<') \
 		, "Syntax error near unexpected token `<' || `>'"))
 			return (1);
+		i++;
 	}
+	return (0);
 }
 
 int	check_pipes(t_shell *sh)

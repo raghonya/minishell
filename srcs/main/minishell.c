@@ -121,7 +121,8 @@ int	main(int argc, char **argv, char **envp)
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);
-		if (!*sh.line || check_quotes(sh.line) || check_pipes(&sh))
+		if (!*sh.line || check_quotes(sh.line) \
+		|| check_pipes(&sh) || check_redirection(&sh))
 			continue ;
 		sh.line = expand(&sh, sh.line);
 		//printf ("ret: %s\n\n", sh.line);
