@@ -20,4 +20,6 @@ void	init_env(t_shell *sh, char **envp)
 	sh->env = NULL;
 	while (envp[++i])
 		ft_lstadd_back(&sh->env, ft_lstnew(ft_strdup(envp[i])));
+	sh->paths = paths_finder(sh->env);
+	err_msg_w_exit(!sh->paths, 1);
 }

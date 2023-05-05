@@ -116,6 +116,8 @@ int	main(int argc, char **argv, char **envp)
 	init_env(&sh, envp);
 	sh.line = NULL;
 	sh.prompt = NULL;
+	sh.fdin = 0;
+	sh.fdout = 1;
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);
@@ -125,6 +127,8 @@ int	main(int argc, char **argv, char **envp)
 		//printf ("ret: %s\n\n", sh.line);
 		check_line(&sh);
 		free_info(&sh);
+		while (wait(NULL) != -1)
+			;
 		// system("leaks minishell");
 		// if (free_and_continue(&sh))
 		// 	continue ;

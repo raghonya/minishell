@@ -29,6 +29,7 @@ typedef struct s_shell
 	char	*prompt;
 	char	**spl_pipe;
 	char	**cmd;
+	char	**paths;
 	int		pipe_count;
 	int		fdin;
 	int		fdout;
@@ -69,6 +70,8 @@ int		check_pipes(t_shell *sh);
 int		check_quotes(char *line);
 
 int		check_line(t_shell *sh);
+
+int		check_redirection(t_shell *sh);
 
 void	clear_quotes_matrix(char **lines);
 

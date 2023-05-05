@@ -42,6 +42,26 @@ int	check_quotes(char *line)
 	return (0);
 }
 
+int	check_redirection(t_shell *sh)
+{
+	int	i;
+
+	i = 1;
+	while (sh->line[i + 1])
+	{
+		if (err_msg \
+		  ((sh->line[i - 1] == '>' && sh->line[i] == '>' && sh->line[i + 1] == '>') \
+		|| (sh->line[i - 1] == '>' && sh->line[i] == '>' && sh->line[i + 1] == '<') \
+		|| (sh->line[i - 1] == '>' && sh->line[i] == '<' && sh->line[i + 1] == '>') \
+		|| (sh->line[i - 1] == '>' && sh->line[i] == '<' && sh->line[i + 1] == '<') \
+		|| (sh->line[i - 1] == '<' && sh->line[i] == '>' && sh->line[i + 1] == '>') \
+		|| (sh->line[i - 1] == '<' && sh->line[i] == '>' && sh->line[i + 1] == '<') \
+		|| (sh->line[i - 1] == '<' && sh->line[i] == '<' && sh->line[i + 1] == '>') \
+		|| (sh->line[i - 1] == '<' && sh->line[i] == '<' && sh->line[i + 1] == '<') \
+		, "Syntax error near unexpected token `<' || `>'"))
+			return (1);
+	}
+}
 
 int	check_pipes(t_shell *sh)
 {
