@@ -31,6 +31,7 @@ typedef struct s_shell
 	char	**spl_pipe;
 	char	**cmd;
 	char	**paths;
+	int		*pipe;
 	int		pipe_count;
 	int		fdin;
 	int		fdout;

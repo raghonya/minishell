@@ -128,8 +128,6 @@ int	main(int argc, char **argv, char **envp)
 		//printf ("ret: %s\n\n", sh.line);
 		check_line(&sh);
 		free_info(&sh);
-		while (wait(NULL) != -1)
-			;
 		// system("leaks minishell");
 		// if (free_and_continue(&sh))
 		// 	continue ;

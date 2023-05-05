@@ -69,9 +69,9 @@ char	**create_envp(t_shell sh)
 
 void	exec_one(t_shell *sh)
 {
-	char	**envp;
-	int		cpid;
-	int		i;
+	char		**envp;
+	pid_t		cpid;
+	int			i;
 
 	envp = create_envp(*sh);
 	cpid = fork();
@@ -87,24 +87,23 @@ void	exec_one(t_shell *sh)
 			free(envp[i]);
 		free(envp);
 		err_msg_w_exit(1, 1);
-
-
 	}
+	waitpid(cpid, NULL, 1024);
 }
 
-int	one_cmd(t_shell *sh)
+void	one_cmd(t_shell *sh)
 {
 	int	j;
 
 	if (check_redirections(sh, ft_strdup(sh->spl_pipe[0])))
-		return (1);
+		return ;
 	sh->cmd = split_wout_quotes(sh->spl_pipe[0], ' ');
 	err_msg_w_exit(!sh->cmd, 1);
-	j = -1;
-	printf ("\nspl line wth spaces 1 hati hamar\n");
-	while (sh->cmd[++j])
-		printf ("'%s'\n", sh->cmd[j]);
-	printf ("\n");
+	// j = -1;
+	// printf ("\nspl line wth spaces 1 hati hamar\n");
+	// while (sh->cmd[++j])
+	// 	printf ("'%s'\n", sh->cmd[j]);
+	// printf ("\n");
 	if (!ft_strcmp(*sh->cmd, "echo"))
 		builtin_echo(sh, sh->cmd);
 	else if (!ft_strcmp(*sh->cmd, "cd"))
@@ -121,6 +120,49 @@ int	one_cmd(t_shell *sh)
 		builtin_exit(sh, sh->cmd);
 	else
 		exec_one(sh);
+	// return (0);
+}
+
+void	multipipes(t_shell *sh)
+{
+	sh->pipes = malloc(sizeof(int) * (sh->pipe_count * 2));
+	err_msg_w_exit(!pipes, 1);
+	i = -1;
+	while (sh->spl_pipe[++i])
+	{
+		if (check_redirections(sh, ft_strdup(sh->spl_pipe[0])))
+			return ;
+		printf ("splited line wth pipes: %s\n", sh->spl_pipe[i]);
+		sh->cmd = split_wout_quotes(sh->spl_pipe[i], ' ');
+		err_msg_w_exit(!sh->cmd, 1);
+		j = -1;
+		printf ("\nspl line wth spaces\n");
+		while (sh->cmd[++j])
+			printf ("%s\n", sh->cmd[j]);
+		printf ("\n");
+		if (!ft_strcmp(*sh->cmd, "echo"))
+			builtin_echo(sh, sh->cmd);
+		else if (!ft_strcmp(*sh->cmd, "cd"))
+			builtin_cd(sh, sh->cmd, sh->env);
+		else if (!ft_strcmp(*sh->cmd, "pwd"))
+			builtin_pwd(sh);
+		else if (!ft_strcmp(*sh->cmd, "export"))
+			builtin_export(sh, sh->cmd);
+		else if (!ft_strcmp(*sh->cmd, "unset"))
+			builtin_unset(sh, sh->cmd, &sh->env);
+		else if (!ft_strcmp(*sh->cmd, "env"))
+			builtin_env(sh, sh->env);
+		else if (!ft_strcmp(*sh->cmd, "exit"))
+			builtin_exit(sh, sh->cmd);
+		else
+		{
+			exec_cmd(sh->cmd, i);
+		}
+		j = -1;
+		while (sh->cmd[++j])
+			free(sh->cmd[j]);
+		free(sh->cmd);
+	}
 }
 
 int	check_line(t_shell *sh)
@@ -136,47 +178,12 @@ int	check_line(t_shell *sh)
 	err_msg_w_exit(!sh->spl_pipe, 1);
 	while (sh->spl_pipe[++i])
 		;
-	if (i == 1)
+	sh->pipe_count = i - 1;
+	if (sh->pipe_count == 0)
 		one_cmd(sh);
 	else
-	{	
-		sh->pipe_count = i - 1;
-		pipes = malloc(sizeof(int) * (sh->pipe_count * 2));
-		err_msg_w_exit(!pipes, 1);
-		i = -1;
-		while (sh->spl_pipe[++i])
-		{
-			printf ("splited line wth pipes: %s\n", sh->spl_pipe[i]);
-			sh->cmd = split_wout_quotes(sh->spl_pipe[i], ' ');
-			err_msg_w_exit(!sh->cmd, 1);
-			j = -1;
-			printf ("\nspl line wth spaces\n");
-			while (sh->cmd[++j])
-				printf ("%s\n", sh->cmd[j]);
-			printf ("\n");
-			if (!ft_strcmp(*sh->cmd, "echo"))
-				builtin_echo(sh, sh->cmd);
-			else if (!ft_strcmp(*sh->cmd, "cd"))
-				builtin_cd(sh, sh->cmd, sh->env);
-			else if (!ft_strcmp(*sh->cmd, "pwd"))
-				builtin_pwd(sh);
-			else if (!ft_strcmp(*sh->cmd, "export"))
-				builtin_export(sh, sh->cmd);
-			else if (!ft_strcmp(*sh->cmd, "unset"))
-				builtin_unset(sh, sh->cmd, &sh->env);
-			else if (!ft_strcmp(*sh->cmd, "env"))
-				builtin_env(sh, sh->env);
-			else if (!ft_strcmp(*sh->cmd, "exit"))
-				builtin_exit(sh, sh->cmd);
-			else
-			{
-				exec_cmd(sh->cmd, i);
-			}
-			j = -1;
-			while (sh->cmd[++j])
-				free(sh->cmd[j]);
-			free(sh->cmd);
-		}
+	{
+		multipipes(sh);
 	}
 	// sh->cmd = split_wout_quotes(sh->line, ' ');
 	// if (check_redirections(sh, ft_strdup(sh->line)))

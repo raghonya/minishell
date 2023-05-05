@@ -32,8 +32,6 @@ long long	ft_atoll(char *str)
 		str++;
 	if (err_msg(ft_strlen(str) > 19, "numeric argument required"))
 		exit (255);
-	// err_msg_w_exit(ft_strlen(str) > 19, 255);
-	// err_push_for_lib (ft_strlen(str) > 10);
 	while (ft_isdigit(*str))
 		num = num * 10 + (*(str++) - 48);
 	if (sign == -1 && num == LONG_MIN)
