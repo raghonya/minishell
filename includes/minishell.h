@@ -8,6 +8,7 @@
 # include <unistd.h>
 # include <signal.h>
 # include <sys/wait.h>
+# include <sys/types.h>
 # include <sys/signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -33,6 +34,8 @@ typedef struct s_shell
 	char	**paths;
 	int		*pipe;
 	int		pipe_count;
+	int		exit_stat;
+	int		status;
 	int		fdin;
 	int		fdout;
 

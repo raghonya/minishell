@@ -47,6 +47,8 @@ int	check_redirection(t_shell *sh)
 	int	i;
 
 	i = 1;
+	if (!sh->line[1])
+		return (0);
 	while (sh->line[i + 1])
 	{
 		if (err_msg \
@@ -69,9 +71,9 @@ int	check_pipes(t_shell *sh)
 {
 	int	i;
 
-	i = 0;
+	i = -1;
 	sh->pipe_count = 0;
-	if (sh->line[i] == '|')
+	if (sh->line[0] == '|')
 		return (err_msg(1, "Pipe at the start of line"));
 	while (sh->line[++i + 1])
 	{
@@ -79,7 +81,6 @@ int	check_pipes(t_shell *sh)
 		{
 			if (sh->line[i - 1] == '|' || sh->line[i + 1] == '|')
 				return (err_msg(1, "Pipe error"));
-			sh->pipe_count++;
 		}
 	}
 	if (sh->line[i] == '|')

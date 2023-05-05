@@ -58,7 +58,6 @@ char	**create_envp(t_shell sh)
 	err_msg_w_exit (!envp, 1);
 	while (++i < size)
 	{
-		// printf ("%s\n", head->data);
 		envp[i] = ft_strdup(head->data);
 		head = head->next;
 	}
@@ -82,13 +81,14 @@ void	exec_one(t_shell *sh)
 		err_msg_w_exit(dup2(sh->fdout, 1) == -1, 1);
 		find_absolute_path(sh->cmd, sh->paths);
 		execve(*sh->cmd, sh->cmd, envp);
-		i = -1;
-		while (envp[++i])
-			free(envp[i]);
-		free(envp);
 		err_msg_w_exit(1, 1);
 	}
-	waitpid(cpid, NULL, 1024);
+	i = -1;
+	while (envp[++i])
+		free(envp[i]);
+	free(envp);
+	waitpid(cpid, &sh->status, 0);
+	sh->exit_stat = WEXITSTATUS(sh->status);
 }
 
 void	one_cmd(t_shell *sh)
@@ -99,6 +99,7 @@ void	one_cmd(t_shell *sh)
 		return ;
 	sh->cmd = split_wout_quotes(sh->spl_pipe[0], ' ');
 	err_msg_w_exit(!sh->cmd, 1);
+	clear_quotes_matrix(sh->cmd);
 	// j = -1;
 	// printf ("\nspl line wth spaces 1 hati hamar\n");
 	// while (sh->cmd[++j])
@@ -120,13 +121,20 @@ void	one_cmd(t_shell *sh)
 		builtin_exit(sh, sh->cmd);
 	else
 		exec_one(sh);
+	j = -1;
+	while (sh->cmd[++j])
+		free(sh->cmd[j]);
+	free(sh->cmd);
 	// return (0);
 }
 
 void	multipipes(t_shell *sh)
 {
-	sh->pipes = malloc(sizeof(int) * (sh->pipe_count * 2));
-	err_msg_w_exit(!pipes, 1);
+	int	i;
+	int	j;
+
+	sh->pipe = malloc(sizeof(int) * (sh->pipe_count * 2));
+	err_msg_w_exit(!sh->pipe, 1);
 	i = -1;
 	while (sh->spl_pipe[++i])
 	{
@@ -135,6 +143,7 @@ void	multipipes(t_shell *sh)
 		printf ("splited line wth pipes: %s\n", sh->spl_pipe[i]);
 		sh->cmd = split_wout_quotes(sh->spl_pipe[i], ' ');
 		err_msg_w_exit(!sh->cmd, 1);
+		clear_quotes_matrix(sh->cmd);
 		j = -1;
 		printf ("\nspl line wth spaces\n");
 		while (sh->cmd[++j])
@@ -185,6 +194,7 @@ int	check_line(t_shell *sh)
 	{
 		multipipes(sh);
 	}
+
 	// sh->cmd = split_wout_quotes(sh->line, ' ');
 	// if (check_redirections(sh, ft_strdup(sh->line)))
 	// 	return (1);
