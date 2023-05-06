@@ -33,6 +33,7 @@ typedef struct s_shell
 	char	**cmd;
 	char	**paths;
 	int		*pipe;
+	int		*childs_pid;
 	int		pipe_count;
 	int		exit_stat;
 	int		status;
