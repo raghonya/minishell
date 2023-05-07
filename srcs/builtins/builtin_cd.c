@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-int	cd_errors(char **cmds, char **oldpwd)
+int	cd_errors(char **cmds, char **oldpwd, t_list *env)
 {
 	int		i;
 
@@ -27,14 +27,23 @@ int	cd_errors(char **cmds, char **oldpwd)
 		free(*oldpwd);
 		return (1);
 	}
-	// else if (!cmds[1])
-	// {
-	// 	while (env)
-	// 	{
-	// 		if (!ft_strncmp())
-	// 	}
-	// }
-	return (0);
+	else if (!cmds[1])
+	{
+		while (env)
+		{
+			if (!ft_strncmp(env->data, "HOME=", 5))
+			{
+				if (err_msg(chdir(after_symb(env->data, '=')) == -1, "Cant change directory!!!"))
+				{
+					free(*oldpwd);
+					return (1);
+				}
+				return (0);
+			}
+			env = env->next;
+		}
+	}
+	return (err_msg(!env, "cd: HOME not set"));
 }
 
 char	*find_pwd(t_list *env, char *oldpwd)
@@ -75,7 +84,7 @@ int	builtin_cd(t_shell *sh, char **cmds, t_list *env)
 {
 	char	*oldpwd;
 
-	if (cd_errors(cmds, &oldpwd))
+	if (cd_errors(cmds, &oldpwd, env))
 		return (1);
 	cd_init_oldpwd(env, oldpwd);
 	while (env)

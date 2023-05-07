@@ -180,10 +180,6 @@ void	exec_multi(t_shell *sh, int indicator)
 	//err_msg_w_exit(cpid == -1, 1);
 	if (!cpid)
 	{
-		//if (sh->fdin != 0)
-		//else
-
-		//err_msg_w_exit(dup2(sh->fdout, 1) == -1, 1);
 		direct_cmd(sh, indicator);
 		find_absolute_path(sh->cmd, sh->paths);
 		execve(*sh->cmd, sh->cmd, envp);
@@ -194,7 +190,6 @@ void	exec_multi(t_shell *sh, int indicator)
 	while (envp[++i])
 		free(envp[i]);
 	free(envp);
-	sh->exit_stat = WEXITSTATUS(sh->status);
 
 }
 
@@ -253,10 +248,8 @@ void	multipipes(t_shell *sh)
 	free(sh->pipe);
 	i = 0;
 	while (i < sh->pipe_count + 1)
-	{
-		waitpid(sh->childs_pid[i], &sh->status, 0);
-		i++;
-	}
+		waitpid(sh->childs_pid[i++], &sh->status, 0);
+	sh->exit_stat = WEXITSTATUS(sh->status);
 	//printf ("%s\n", *sh->spl_pipe);
 	//	printf ("%d, ", sh->childs_pid[i]);
 	//printf ("\n");
