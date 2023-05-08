@@ -65,18 +65,14 @@ void	prompt_and_history(char **line, char **prompt)
 {
 	char	*prev_line;
 
-	//prev_line = ft_strdup(*line);
-	//if (*line)
-	//	free(*line);
 	if (*prompt)
 		free(*prompt);
 	prev_line = *line;
 	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
-	// printf ("prev cmd: %s\n", prev_line);
 	*line = readline(*prompt);
 	if (!*line)
 	{
-		printf ("\n");
+		printf ("exit\n");
 		free(prev_line);
 		//system("leaks minishell");
 		exit(0);
@@ -96,16 +92,16 @@ void	free_info(t_shell *sh)
 	free(sh->spl_pipe);
 }
 
-// int	free_and_continue(t_shell *sh)
-// {
-// 	if (check_line(sh))
-// 	{
-// 		free_info(sh);
-// 		return (1);
-// 	}
-// 	free_info(sh);
-// 	return (0);
-// }
+int	free_and_continue(t_shell *sh)
+{
+	if (check_line(sh))
+	{
+		free_info(sh);
+		return (1);
+	}
+	free_info(sh);
+	return (0);
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -118,6 +114,7 @@ int	main(int argc, char **argv, char **envp)
 	sh.prompt = NULL;
 	sh.fdin = 0;
 	sh.fdout = 1;
+	//sh.exit_stat = 0;
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);
@@ -125,9 +122,10 @@ int	main(int argc, char **argv, char **envp)
 		|| check_pipes(&sh) || check_redirection(&sh))
 			continue ;
 		sh.line = expand(&sh, sh.line);
+		printf ("expanded line: *%s*\n", sh.line);
 		//printf ("ret: %s\n\n", sh.line);
-		check_line(&sh);
-		free_info(&sh);
+		if (free_and_continue(&sh))
+			continue ;
 		// system("leaks minishell");
 		// if (free_and_continue(&sh))
 		// 	continue ;

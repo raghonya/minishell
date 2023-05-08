@@ -17,7 +17,9 @@ void	put_value(t_strs *str, char **line, int dollar_index, t_list *env)
 	int	length;
 
 	length = 0;
+	printf ("line: %s\n", *line);
 	str->until_dlr = ft_substr(*line, 0, dollar_index);
+	printf ("unt dlr: %s\n", str->until_dlr);
 	str->tmp = varname(*line + dollar_index + 1, &length);
 	err_msg_w_exit (!str->tmp || !str->until_dlr, 1);
 	str->part = strjoin_w_free(str->part, str->until_dlr);
@@ -56,14 +58,21 @@ void	create_line(char **line, t_list *env, t_strs *str)
 void	before_quotes(t_shell *sh, char *line, int *i, int *j)
 {
 	char	*until_quote;
+	//int		esim;
 
 	while (line[++(*j)] && line[(*j)] != '\"' && line[(*j)] != '\'')
 		;
 	until_quote = ft_substr(line, *i, *j - *i);
+	//printf ("j - i = %d\n", *j - *i);
 	err_msg_w_exit(!until_quote, 1);
 	sh->str.to_free = until_quote;
+	//esim = *i;
 	*i = *j;
+	//printf ("i and j = %d\n", *i);
 	create_line(&until_quote, sh->env, &sh->str);
+	//printf ("ret: %s\n", sh->str.part);
+	if (line[*j - 1] == '$' && (line[*j] == '\'' || line[*j] == '\"'))
+		sh->str.part[ft_strlen(sh->str.part) - 1] = 0;
 	sh->str.ret_str = strjoin_w_free(sh->str.ret_str, sh->str.part);
 	err_msg_w_exit(!sh->str.ret_str, 1);
 	free(sh->str.to_free);

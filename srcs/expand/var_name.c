@@ -33,6 +33,7 @@ char	*varname(char *s, int *length)
 	i = 0;
 	while (s[i] && !ft_isspace(s[i]) && s[i] != '$' && *s != '\"')
 		i++;
+		printf ("in cunc: '%s'\n", s);
 	if (check_varname(s))
 	{	
 		*length = i;

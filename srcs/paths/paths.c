@@ -58,5 +58,6 @@ void	find_absolute_path(char **args, char **paths)
 		tmp = ft_strjoin("/", *args);
 		free(*args);
 		*args = path_check(paths, tmp);
+		printf ("null???: %s\n", *args);
 	}
 }

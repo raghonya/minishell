@@ -33,6 +33,7 @@ typedef struct s_shell
 	char	**cmd;
 	char	**paths;
 	int		*pipe;
+	int		heredoc[2];
 	int		*childs_pid;
 	int		pipe_count;
 	int		exit_stat;
@@ -60,6 +61,8 @@ int		builtin_unset(t_shell *sh, char **cmds, t_list **env);
 int		builtin_export(t_shell *sh, char **cmds);
 
 // Error messages
+
+int		err_msg_w_close(int a, char *msg, int count, t_shell *sh);
 
 int		err_msg(int a, char *msg);
 

@@ -16,7 +16,8 @@ int	builtin_env(t_shell *sh, t_list *env)
 {
 	while (env)
 	{
-		printf ("%s\n", env->data);
+		ft_putendl_fd (env->data, sh->fdout);
+		//printf ("%s\n", env->data);
 		env = env->next;
 	}
 	return (0);

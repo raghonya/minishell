@@ -58,20 +58,21 @@ char	**create_envp(t_shell sh)
 
 }
 
-void	exec_one(t_shell *sh)
+int	exec_one(t_shell *sh)
 {
 	char		**envp;
 	pid_t		cpid;
 	int			i;
 
 	envp = create_envp(*sh);
+	find_absolute_path(sh->cmd, sh->paths);
 	cpid = fork();
-	err_msg_w_exit (cpid == -1, 1);
+	if (err_msg (cpid == -1, "Fork error"))
+		return (1);
 	if (!cpid)
 	{
 		err_msg_w_exit(dup2(sh->fdin, 0) == -1, 1);
 		err_msg_w_exit(dup2(sh->fdout, 1) == -1, 1);
-		find_absolute_path(sh->cmd, sh->paths);
 		execve(*sh->cmd, sh->cmd, envp);
 		err_msg_w_exit(1, 1);
 	}
@@ -81,43 +82,49 @@ void	exec_one(t_shell *sh)
 	free(envp);
 	waitpid(cpid, &sh->status, 0);
 	sh->exit_stat = WEXITSTATUS(sh->status);
+	return (0);
 }
 
-void	one_cmd(t_shell *sh)
+// exit status when execve fails X
+
+int	one_cmd(t_shell *sh)
 {
+	int	ret;
 	int	j;
 
+	ret = 0;
+	//printf ("cmd mmd: %s\n", *sh->cmd);
 	if (check_redirections(sh, ft_strdup(sh->spl_pipe[0])))
-		return ;
+		return 1;
 	sh->cmd = split_wout_quotes(sh->spl_pipe[0], ' ');
 	err_msg_w_exit(!sh->cmd, 1);
+	printf ("\nspl line wth spaces 1 hati hamar\n");
+	 j = -1;
+	 while (sh->cmd[++j])
+	 	printf ("'%s'\n", sh->cmd[j]);
+	 printf ("\n");
 	clear_quotes_matrix(sh->cmd);
-	// j = -1;
-	// printf ("\nspl line wth spaces 1 hati hamar\n");
-	// while (sh->cmd[++j])
-	// 	printf ("'%s'\n", sh->cmd[j]);
-	// printf ("\n");
 	if (!ft_strcmp(*sh->cmd, "echo"))
-		builtin_echo(sh, sh->cmd);
+		ret = builtin_echo(sh, sh->cmd);
 	else if (!ft_strcmp(*sh->cmd, "cd"))
-		builtin_cd(sh, sh->cmd, sh->env);
+		ret = builtin_cd(sh, sh->cmd, sh->env);
 	else if (!ft_strcmp(*sh->cmd, "pwd"))
-		builtin_pwd(sh);
+		ret = builtin_pwd(sh);
 	else if (!ft_strcmp(*sh->cmd, "export"))
-		builtin_export(sh, sh->cmd);
+		ret = builtin_export(sh, sh->cmd);
 	else if (!ft_strcmp(*sh->cmd, "unset"))
-		builtin_unset(sh, sh->cmd, &sh->env);
+		ret = builtin_unset(sh, sh->cmd, &sh->env);
 	else if (!ft_strcmp(*sh->cmd, "env"))
-		builtin_env(sh, sh->env);
+		ret = builtin_env(sh, sh->env);
 	else if (!ft_strcmp(*sh->cmd, "exit"))
-		builtin_exit(sh, sh->cmd);
+		ret = builtin_exit(sh, sh->cmd);
 	else
-		exec_one(sh);
+		ret = exec_one(sh);
 	j = -1;
 	while (sh->cmd[++j])
 		free(sh->cmd[j]);
 	free(sh->cmd);
-	// return (0);
+	return (ret);
 }
 
 // indicator: 0 ... pipe_count
@@ -168,20 +175,20 @@ void	direct_cmd(t_shell *sh, int indicator)
 	free(sh->pipe);
 }
 
-void	exec_multi(t_shell *sh, int indicator)
+int	exec_multi(t_shell *sh, int indicator)
 {
 	char	**envp;
 	pid_t	cpid;
 	int		i;
 
 	envp = create_envp(*sh);
+	find_absolute_path(sh->cmd, sh->paths);
 	cpid = fork();
-	// err exit wth closing pipes
-	//err_msg_w_exit(cpid == -1, 1);
+	if (err_msg_w_close (cpid == -1, "Fork error", sh->pipe_count, sh))
+		return (1);
 	if (!cpid)
 	{
 		direct_cmd(sh, indicator);
-		find_absolute_path(sh->cmd, sh->paths);
 		execve(*sh->cmd, sh->cmd, envp);
 		err_msg_w_exit(1, 1);
 	}
@@ -190,26 +197,29 @@ void	exec_multi(t_shell *sh, int indicator)
 	while (envp[++i])
 		free(envp[i]);
 	free(envp);
+	return (0);
 
 }
 
-void	multipipes(t_shell *sh)
+int	multipipes(t_shell *sh)
 {
+	int	ret;
 	int	i;
 	int	j;
 
+	ret = 0;
 	sh->pipe = malloc(sizeof(int) * (sh->pipe_count * 2));
 	err_msg_w_exit(!sh->pipe, 1);
 	i = -1;
 	while (++i < sh->pipe_count)
-		err_msg_w_exit(pipe(sh->pipe + (i * 2)) == -1, 1);
+		err_msg_w_close (pipe(sh->pipe + (i * 2)) == -1, "Pipe error", i, sh);
 	sh->childs_pid = malloc(sizeof(int) * (sh->pipe_count + 1));
 	err_msg_w_exit(!sh->childs_pid, 1);
 	i = -1;
 	while (sh->spl_pipe[++i])
 	{
 		if (check_redirections(sh, ft_strdup(sh->spl_pipe[i])))
-			return ;
+			return 1;
 		printf ("splited line wth pipes: %s\n", sh->spl_pipe[i]);
 		sh->cmd = split_wout_quotes(sh->spl_pipe[i], ' ');
 		err_msg_w_exit(!sh->cmd, 1);
@@ -220,32 +230,36 @@ void	multipipes(t_shell *sh)
 			printf ("%s\n", sh->cmd[j]);
 		printf ("\n");
 		if (!ft_strcmp(*sh->cmd, "echo"))
-			builtin_echo(sh, sh->cmd);
+			ret = builtin_echo(sh, sh->cmd);
 		else if (!ft_strcmp(*sh->cmd, "cd"))
-			builtin_cd(sh, sh->cmd, sh->env);
+			ret = builtin_cd(sh, sh->cmd, sh->env);
 		else if (!ft_strcmp(*sh->cmd, "pwd"))
-			builtin_pwd(sh);
+			ret = builtin_pwd(sh);
 		else if (!ft_strcmp(*sh->cmd, "export"))
-			builtin_export(sh, sh->cmd);
+			ret = builtin_export(sh, sh->cmd);
 		else if (!ft_strcmp(*sh->cmd, "unset"))
-			builtin_unset(sh, sh->cmd, &sh->env);
+			ret = builtin_unset(sh, sh->cmd, &sh->env);
 		else if (!ft_strcmp(*sh->cmd, "env"))
-			builtin_env(sh, sh->env);
+			ret = builtin_env(sh, sh->env);
 		else if (!ft_strcmp(*sh->cmd, "exit"))
-			builtin_exit(sh, sh->cmd);
+			ret = builtin_exit(sh, sh->cmd);
 		else
 		{
-			exec_multi(sh, i);
+			ret = exec_multi(sh, i);
 		}
 		j = -1;
 		while (sh->cmd[++j])
 			free(sh->cmd[j]);
 		free(sh->cmd);
+		if (ret)
+		{
+			i = -1;
+			while (++i < sh->pipe_count * 2)
+				close(sh->pipe[i]);
+			free(sh->pipe);
+			return (1);
+		}
 	}
-	i = -1;
-	while (++i < sh->pipe_count * 2)
-		close(sh->pipe[i]);
-	free(sh->pipe);
 	i = 0;
 	while (i < sh->pipe_count + 1)
 		waitpid(sh->childs_pid[i++], &sh->status, 0);
@@ -254,6 +268,7 @@ void	multipipes(t_shell *sh)
 	//	printf ("%d, ", sh->childs_pid[i]);
 	//printf ("\n");
 	//return (0);
+	return (0);
 }
 
 int	check_line(t_shell *sh)
@@ -272,11 +287,9 @@ int	check_line(t_shell *sh)
 		;
 	sh->pipe_count = i - 1;
 	if (sh->pipe_count == 0)
-		one_cmd(sh);
+		return (one_cmd(sh));
 	else
-		multipipes(sh);
-	return (0);
-
+		return (multipipes(sh));
 	// sh->cmd = split_wout_quotes(sh->line, ' ');
 	// if (check_redirections(sh, ft_strdup(sh->line)))
 	// 	return (1);
@@ -317,7 +330,7 @@ int	check_line(t_shell *sh)
 	// else
 	// 	return (0);
 	// i = -1;
-	return (0);
+	//return (0);
 }
 
 //	echo >a >b >c  -n >d >e >f  barev >a iuytresdfghj

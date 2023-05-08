@@ -21,11 +21,29 @@ void	err_msg_w_exit(int a, int code)
 	}
 }
 
+int	err_msg_w_close(int a, char *msg, int count, t_shell *sh)
+{
+	int	i;
+
+	i = -1;
+	if (a)
+	{
+		while (++i < count * 2)
+			close (sh->pipe[i]);
+		free(sh->pipe);
+		ft_putstr_fd ("minishell: Error:", 2);
+		ft_putendl_fd (msg, 2);
+		return (1);
+	}
+	return (0);
+}
+
 int	err_msg(int a, char *msg)
 {
 	if (a)
 	{
-		printf ("minishell: Error: %s\n", msg);
+		ft_putstr_fd ("minishell: Error:", 2);
+		ft_putendl_fd (msg, 2);
 		return (1);
 	}
 	return (0);
