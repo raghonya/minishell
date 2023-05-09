@@ -12,6 +12,25 @@
 
 #include <minishell.h>
 
+int	check_home(t_list *env, char **oldpwd)
+{
+	while (env)
+	{
+		if (!ft_strncmp(env->data, "HOME=", 5))
+		{
+			if (err_msg(chdir(after_symb(env->data, '=')) == -1, \
+			"Cant change directory!!!"))
+			{
+				free(*oldpwd);
+				return (1);
+			}
+			return (0);
+		}
+		env = env->next;
+	}
+	return (err_msg(!env, "cd: HOME not set"));
+}
+
 int	cd_errors(char **cmds, char **oldpwd, t_list *env)
 {
 	int		i;
@@ -28,22 +47,8 @@ int	cd_errors(char **cmds, char **oldpwd, t_list *env)
 		return (1);
 	}
 	else if (!cmds[1])
-	{
-		while (env)
-		{
-			if (!ft_strncmp(env->data, "HOME=", 5))
-			{
-				if (err_msg(chdir(after_symb(env->data, '=')) == -1, "Cant change directory!!!"))
-				{
-					free(*oldpwd);
-					return (1);
-				}
-				return (0);
-			}
-			env = env->next;
-		}
-	}
-	return (err_msg(!env, "cd: HOME not set"));
+		return (check_home(env, oldpwd));
+	return (0);
 }
 
 char	*find_pwd(t_list *env, char *oldpwd)
@@ -61,22 +66,26 @@ char	*find_pwd(t_list *env, char *oldpwd)
 	return (oldpwd);
 }
 
-int	cd_init_oldpwd(t_list *env, char *oldpwd)
+int	cd_init_oldpwd(t_list **env, char *oldpwd)
 {
-	oldpwd = find_pwd(env, oldpwd);
-	while (env)
+	t_list	*head;
+
+	head = *env;
+	oldpwd = find_pwd(*env, oldpwd);
+	while (*env)
 	{
-		if (!ft_strncmp(env->data, "OLDPWD=", 7))
+		if (!ft_strncmp((*env)->data, "OLDPWD=", 7))
 		{
-			free(env->data);
-			env->data = ft_strjoin("OLDPWD=", oldpwd);
+			free((*env)->data);
+			(*env)->data = ft_strjoin("OLDPWD=", oldpwd);
 			break ;
 		}
-		env = env->next;
+		*env = (*env)->next;
 	}
-	if (!env)
-		ft_lstadd_back(&env, ft_lstnew(ft_strjoin("OLDPWD=", oldpwd)));
+	if (!*env)
+		ft_lstadd_back(&head, ft_lstnew(ft_strjoin("OLDPWD=", oldpwd)));
 	free(oldpwd);
+	*env = head;
 	return (0);
 }
 
@@ -86,7 +95,7 @@ int	builtin_cd(t_shell *sh, char **cmds, t_list *env)
 
 	if (cd_errors(cmds, &oldpwd, env))
 		return (1);
-	cd_init_oldpwd(env, oldpwd);
+	cd_init_oldpwd(&sh->env, oldpwd);
 	while (env)
 	{
 		if (!ft_strncmp(env->data, "PWD=", 4))
