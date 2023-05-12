@@ -25,8 +25,8 @@ void	direct_cmd(t_shell *sh, int indicator)
 	int i;
 
 	i = -1;
-	printf ("fdin: %d, fdout: %d\n", sh->fdin, sh->fdout);
 	printf ("pipe_count: %d, indicator: %d\n", sh->pipe_count, indicator);
+	printf ("fdin: %d, fdout: %d\n", sh->fdin, sh->fdout);
 	if (indicator == 0 || indicator == sh->pipe_count)
 		direct_first_last(sh, indicator);
 	else
@@ -89,7 +89,7 @@ int	multipipes(t_shell *sh)
 	{
 		sh->fdin = 0;
 		sh->fdout = 1;
-		if (check_redirections(sh, ft_strdup(sh->spl_pipe[i])))
+		if (redirections(sh, &sh->spl_pipe[i]))
 			return (1);
 		// printf ("splited line wth pipes: %s\n", sh->spl_pipe[i]);
 		sh->cmd = split_wout_quotes(sh->spl_pipe[i], ' ');
@@ -106,13 +106,13 @@ int	multipipes(t_shell *sh)
 			free(sh->cmd[j]);
 		free(sh->cmd);
 	}
+	i = -1;
+	while (++i < sh->pipe_count * 2)
+		close(sh->pipe[i]);
+	free(sh->pipe);
 	i = 0;
 	while (i < sh->pipe_count + 1)
 		waitpid(sh->childs_pid[i++], &sh->status, 0);
 	sh->exit_stat = WEXITSTATUS(sh->status);
-	//printf ("%s\n", *sh->spl_pipe);
-	//	printf ("%d, ", sh->childs_pid[i]);
-	//printf ("\n");
-	//return (0);
 	return (0);
 }

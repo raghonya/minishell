@@ -12,31 +12,31 @@
 
 #include <minishell.h>
 
-char	*filename(char *str)
-{
-	char	*name;
-	int		i;
+//char	*filename(char *str)
+//{
+//	char	*name;
+//	int		i;
 
-	// printf ("str do <>: %s\n", str);
-	i = -1;
-	while (ft_isspace(str[++i]))
-		;
-	str += ++i;
-	// printf ("str after <>: %s\n", str);
-	i = 0;
-	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_' \
-		|| str[i] == '-' || str[i] == '.'))
-		i++;
-	name = malloc(sizeof(char) * (i + 1));
-	i = 0;
-	err_msg_w_exit(!name, 1);
-	while (*str && (ft_isalnum(*str) || *str == '_' \
-		|| *str == '-' || *str == '.'))
-		name[i++] = *str++;
-	name[i] = 0;
-	// printf ("name of the file: %s\n", name);
-	return (name);
-}
+//	// printf ("str do <>: %s\n", str);
+//	i = -1;
+//	while (ft_isspace(str[++i]))
+//		;
+//	str += ++i;
+//	// printf ("str after <>: %s\n", str);
+//	i = 0;
+//	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_' \
+//		|| str[i] == '-' || str[i] == '.'))
+//		i++;
+//	name = malloc(sizeof(char) * (i + 1));
+//	i = 0;
+//	err_msg_w_exit(!name, 1);
+//	while (*str && (ft_isalnum(*str) || *str == '_' \
+//		|| *str == '-' || *str == '.'))
+//		name[i++] = *str++;
+//	name[i] = 0;
+//	// printf ("name of the file: %s\n", name);
+//	return (name);
+//}
 
 // check filename, arajin elementy inch kara lini
 
@@ -64,6 +64,7 @@ int	find_filename(char *line, char **redir, int *index)
 		i++;
 	}
 	*index = i;
+	printf ("index: %d\n", *index);
 	*redir = ft_substr(line, aft_spc, i - aft_spc);
 	tmp = *redir;
 	*redir = ft_strtrim(*redir, " \t\n\r\v\f");
@@ -74,24 +75,43 @@ int	find_filename(char *line, char **redir, int *index)
 	return (0);
 }
 
-int	heredoc_or_append(t_shell *sh, char *line, int i)
+char	*clear_redirection(char *line, int start, int end)
+{
+	char	*ret;
+	int		i;
+
+	i = -1;
+	ret = malloc(sizeof(char) * (ft_strlen(line) - (end - start + 1) + 1));
+	err_msg_w_exit (!ret, EXIT_FAILURE);
+	while (++i != start)
+		ret[i] = line[i];
+	i = end;
+	while (line[++i])
+		ret[start++] = line[i];
+	free(line);
+	ret[start] = 0;
+	return (ret);
+}
+
+int	heredoc_or_append(t_shell *sh, char **line, int i)
 {
 	int		to_clear;
 	char	*redir;
 
-	find_filename(line + i + 1, &redir, &to_clear);
-	// clear_quotes_line(redir);
+	i++;
+	find_filename(*line + i + 1, &redir, &to_clear);
 	printf ("heredoc/append:,,,%s,,,\n", redir);
+	*line = clear_redirection(*line, i - 1, to_clear + i - 1);
 	return (0);
 }
 
-int	redirect_io(t_shell *sh, char *line, int i)
+int	redirect_io(t_shell *sh, char **line, int i)
 {
 	int		to_clear;
 	char	*redir;
 
-	find_filename(line + i + 1, &redir, &to_clear);
-	if (line[i] == '<')
+	find_filename(*line + i + 1, &redir, &to_clear);
+	if ((*line)[i] == '<')
 	{
 		sh->fdin = open(redir, O_RDONLY);
 		free(redir);
@@ -100,40 +120,53 @@ int	redirect_io(t_shell *sh, char *line, int i)
 	}
 	else
 	{
-		sh->fdout = open(redir, O_WRONLY | O_CREAT | O_TRUNC);
+		sh->fdout = open(redir, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		free(redir);
 		if (err_msg (sh->fdout == -1, "No such file or directory"))
 			return (1);
 	}
-	// clear_redirection(i, to_clear);
+	*line = clear_redirection(*line, i, to_clear + i);
+	printf ("aranc redir: %s\n", *line);
 	return (0);
 }
 
-int	check_redirections(t_shell *sh, char *line)
+int	redirections(t_shell *sh, char **line)
 {
-	int		i;
+	int	i;
+	int	k;
 
 	i = -1;
-	while (line[++i])
+	while ((*line)[++i])
 	{
-		if (line[i] == '<' || line[i] == '>')
+		if ((*line)[i] == '\"' || (*line)[i] == '\'')
 		{
-			if (err_msg((line[i] == '<' && line[i + 1] == '>') \
-				|| (line[i] == '>' && line[i + 1] == '<'), \
+			k = i;
+			while ((*line)[++i] != (*line)[k])
+				;
+			i++;
+		}
+		if ((*line)[i] == '<' || (*line)[i] == '>')
+		{
+			if (err_msg(((*line)[i] == '<' && (*line)[i + 1] == '>') \
+				|| ((*line)[i] == '>' && (*line)[i + 1] == '<'), \
 				"Syntax error"))
 					return (1);
-			if (line[i + 1] == line[i])
+			printf ("symb: %c\n", (*line)[i]);
+			if ((*line)[i + 1] == (*line)[i])
 			{
-				if (heredoc_or_append(sh, line, ++i))
+				//printf ("vr mexqis hamar\n");
+				if (heredoc_or_append(sh, line, i--))
 					return (1);
 			}
 			else
 			{
-				if (redirect_io(sh, line, i))
+				printf ("xi ara\n");
+				if (redirect_io(sh, line, i--))
 					return (1);
 			}
+			printf ("verjum i = %d\n", i );
 		}
 	}
-	free(line);
+	//free(line);
 	return (0);
 }

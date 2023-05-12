@@ -39,8 +39,10 @@ int	one_cmd(t_shell *sh)
 	//printf ("cmd mmd: %s\n", *sh->cmd);
 	sh->fdin = 0;
 	sh->fdout = 1;
-	if (check_redirections(sh, ft_strdup(sh->spl_pipe[0])))
+	if (redirections(sh, &sh->spl_pipe[0]))
 		return (1);
+	printf ("one cmd pipe: %s\n", sh->spl_pipe[0]);
+	
 	sh->cmd = split_wout_quotes(sh->spl_pipe[0], ' ');
 	err_msg_w_exit(!sh->cmd, 1);
 	printf ("\nspl line wth spaces 1 hati hamar\n");

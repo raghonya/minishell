@@ -132,7 +132,7 @@ void	find_absolute_path(char **args, char **paths);
 
 // Redirections
 
-int	check_redirections(t_shell *sh, char *line);
+int	redirections(t_shell *sh, char **line);
 
 
 //void	free_2d(char **s);

@@ -51,6 +51,8 @@ int	check_var_existence(char *add, t_shell *sh)
 		i++;
 	tmp = ft_substr(add, 0, i + 1);
 	err_msg_w_exit(!tmp, 1);
+	//if (tmp[0] == '?')
+	//	return (1);
 	head = sh->env;
 	while (head)
 	{
@@ -87,10 +89,10 @@ int	builtin_export(t_shell *sh, char **add)
 				if (!ft_isalpha((*add)[i]) && !ft_isdigit((*add)[i]) \
 					&& (*add)[i] != '_')
 					break ;
-			if ((*add)[i] && (*add)[i] == '=')
-				ft_lstadd_back(&sh->env, ft_lstnew(ft_strdup(*add++)));
+			if ((*add)[i] == '=')
+				ft_lstadd_back(&sh->env, ft_lstnew(ft_strdup(*add)));
+			add++;
 		}
 	}
-	// printf ("%p\n", sh->env);
 	return (0);
 }
