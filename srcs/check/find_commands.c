@@ -55,55 +55,24 @@ char	**create_envp(t_shell sh)
 	}
 	envp[i] = NULL;
 	return (envp);
-
 }
+// indicator: 0 ... pipe_count
+// imagine we have 3 pipes, 4 cmds, and indicator is 0 ... 3
 
-int	exec_one(t_shell *sh)
-{
-	char		**envp;
-	pid_t		cpid;
-	int			i;
+// sh->pipe = (0 , 1)   (2 , 3)   (4 , 5)
+//             rd  wr    rd  wr    rd  wr
 
-	envp = create_envp(*sh);
-	find_absolute_path(sh->cmd, sh->paths);
-	cpid = fork();
-	if (err_msg (cpid == -1, "Fork error"))
-		return (1);
-	if (!cpid)
-	{
-		err_msg_w_exit(dup2(sh->fdin, 0) == -1, 1);
-		err_msg_w_exit(dup2(sh->fdout, 1) == -1, 1);
-		execve(*sh->cmd, sh->cmd, envp);
-		err_msg_w_exit(1, 1);
-	}
-	i = -1;
-	while (envp[++i])
-		free(envp[i]);
-	free(envp);
-	waitpid(cpid, &sh->status, 0);
-	sh->exit_stat = WEXITSTATUS(sh->status);
-	return (0);
-}
+// indicator = 0, in fdin, out pipe[1]
+// indicator = 1, in pipe[0], out pipe[3]
+// indicator = 2, in pipe[2], out pipe[5]
+// indicator = 3, in pipe[4], out fdout
 
-// exit status when execve fails X
+//ev ayspes, in pipe[(indicator - 1) * 2], out pipe[(indicator - 1) * 2 + 3];
 
-int	one_cmd(t_shell *sh)
+int	call_commands(t_shell *sh, int i, int (*execute)(t_shell *sh, int indicator))
 {
 	int	ret;
-	int	j;
 
-	ret = 0;
-	//printf ("cmd mmd: %s\n", *sh->cmd);
-	if (check_redirections(sh, ft_strdup(sh->spl_pipe[0])))
-		return 1;
-	sh->cmd = split_wout_quotes(sh->spl_pipe[0], ' ');
-	err_msg_w_exit(!sh->cmd, 1);
-	printf ("\nspl line wth spaces 1 hati hamar\n");
-	 j = -1;
-	 while (sh->cmd[++j])
-	 	printf ("'%s'\n", sh->cmd[j]);
-	 printf ("\n");
-	clear_quotes_matrix(sh->cmd);
 	if (!ft_strcmp(*sh->cmd, "echo"))
 		ret = builtin_echo(sh, sh->cmd);
 	else if (!ft_strcmp(*sh->cmd, "cd"))
@@ -119,156 +88,8 @@ int	one_cmd(t_shell *sh)
 	else if (!ft_strcmp(*sh->cmd, "exit"))
 		ret = builtin_exit(sh, sh->cmd);
 	else
-		ret = exec_one(sh);
-	j = -1;
-	while (sh->cmd[++j])
-		free(sh->cmd[j]);
-	free(sh->cmd);
+		ret = execute(sh, i);
 	return (ret);
-}
-
-// indicator: 0 ... pipe_count
-// imagine we have 3 pipes, 4 cmds, and indicator is 0 ... 3
-
-// sh->pipe = (0 , 1)   (2 , 3)   (4 , 5)
-//             rd  wr    rd  wr    rd  wr
-
-// indicator = 0, in fdin, out pipe[1]
-// indicator = 1, in pipe[0], out pipe[3]
-// indicator = 2, in pipe[2], out pipe[5]
-// indicator = 3, in pipe[4], out fdout
-
-//ev ayspes, in pipe[(indicator - 1) * 2], out pipe[(indicator - 1) * 2 + 3];
-
-void	direct_cmd(t_shell *sh, int indicator)
-{
-	if (indicator == 0)
-	{
-		err_msg_w_exit(dup2(sh->fdin, 0) == -1, 1);
-		if (sh->fdout == 1)
-			err_msg_w_exit(dup2(sh->pipe[indicator + 1], 1) == -1, 1);
-		else
-			err_msg_w_exit(dup2(sh->fdout, 1) == -1, 1);
-	}
-	else if (indicator == sh->pipe_count)
-	{
-		if (sh->fdin == 0)
-			err_msg_w_exit(dup2(sh->pipe[(indicator - 1) * 2], 0) == -1, 1);
-		else
-			err_msg_w_exit(dup2(sh->fdin, 0) == -1, 1);	
-		err_msg_w_exit(dup2(sh->fdout, 1) == -1, 1);
-	}
-	else
-	{
-		if (sh->fdin == 0)
-			err_msg_w_exit(dup2(sh->pipe[(indicator - 1) * 2], 0) == -1, 1);
-		else
-			err_msg_w_exit(dup2(sh->fdin, 0) == -1, 1);
-		if (sh->fdout == 1)
-			err_msg_w_exit(dup2(sh->pipe[(indicator - 1) * 2 + 3], 1) == -1, 1);
-		else
-			err_msg_w_exit(dup2(sh->fdout, 1) == -1, 1);
-	}
-	int i = -1;
-	while (++i < sh->pipe_count * 2)
-		close(sh->pipe[i]);
-	free(sh->pipe);
-}
-
-int	exec_multi(t_shell *sh, int indicator)
-{
-	char	**envp;
-	pid_t	cpid;
-	int		i;
-
-	envp = create_envp(*sh);
-	find_absolute_path(sh->cmd, sh->paths);
-	cpid = fork();
-	if (err_msg_w_close (cpid == -1, "Fork error", sh->pipe_count, sh))
-		return (1);
-	if (!cpid)
-	{
-		direct_cmd(sh, indicator);
-		execve(*sh->cmd, sh->cmd, envp);
-		err_msg_w_exit(1, 1);
-	}
-	sh->childs_pid[indicator] = cpid;
-	i = -1;
-	while (envp[++i])
-		free(envp[i]);
-	free(envp);
-	return (0);
-
-}
-
-int	multipipes(t_shell *sh)
-{
-	int	ret;
-	int	i;
-	int	j;
-
-	ret = 0;
-	sh->pipe = malloc(sizeof(int) * (sh->pipe_count * 2));
-	err_msg_w_exit(!sh->pipe, 1);
-	i = -1;
-	while (++i < sh->pipe_count)
-		err_msg_w_close (pipe(sh->pipe + (i * 2)) == -1, "Pipe error", i, sh);
-	sh->childs_pid = malloc(sizeof(int) * (sh->pipe_count + 1));
-	err_msg_w_exit(!sh->childs_pid, 1);
-	i = -1;
-	while (sh->spl_pipe[++i])
-	{
-		if (check_redirections(sh, ft_strdup(sh->spl_pipe[i])))
-			return 1;
-		printf ("splited line wth pipes: %s\n", sh->spl_pipe[i]);
-		sh->cmd = split_wout_quotes(sh->spl_pipe[i], ' ');
-		err_msg_w_exit(!sh->cmd, 1);
-		clear_quotes_matrix(sh->cmd);
-		j = -1;
-		printf ("\nspl line wth spaces\n");
-		while (sh->cmd[++j])
-			printf ("%s\n", sh->cmd[j]);
-		printf ("\n");
-		if (!ft_strcmp(*sh->cmd, "echo"))
-			ret = builtin_echo(sh, sh->cmd);
-		else if (!ft_strcmp(*sh->cmd, "cd"))
-			ret = builtin_cd(sh, sh->cmd, sh->env);
-		else if (!ft_strcmp(*sh->cmd, "pwd"))
-			ret = builtin_pwd(sh);
-		else if (!ft_strcmp(*sh->cmd, "export"))
-			ret = builtin_export(sh, sh->cmd);
-		else if (!ft_strcmp(*sh->cmd, "unset"))
-			ret = builtin_unset(sh, sh->cmd, &sh->env);
-		else if (!ft_strcmp(*sh->cmd, "env"))
-			ret = builtin_env(sh, sh->env);
-		else if (!ft_strcmp(*sh->cmd, "exit"))
-			ret = builtin_exit(sh, sh->cmd);
-		else
-		{
-			ret = exec_multi(sh, i);
-		}
-		j = -1;
-		while (sh->cmd[++j])
-			free(sh->cmd[j]);
-		free(sh->cmd);
-		if (ret)
-		{
-			i = -1;
-			while (++i < sh->pipe_count * 2)
-				close(sh->pipe[i]);
-			free(sh->pipe);
-			return (1);
-		}
-	}
-	i = 0;
-	while (i < sh->pipe_count + 1)
-		waitpid(sh->childs_pid[i++], &sh->status, 0);
-	sh->exit_stat = WEXITSTATUS(sh->status);
-	//printf ("%s\n", *sh->spl_pipe);
-	//	printf ("%d, ", sh->childs_pid[i]);
-	//printf ("\n");
-	//return (0);
-	return (0);
 }
 
 int	check_line(t_shell *sh)

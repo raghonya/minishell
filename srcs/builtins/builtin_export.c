@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-void	export_w_no_arg(t_list *env)
+void	export_w_no_arg(t_shell sh, t_list *env)
 {
 	char	*str;
 	char	*tmp;
@@ -33,7 +33,7 @@ void	export_w_no_arg(t_list *env)
 		str[k++] = '\"';
 		str[k] = 0;
 		tmp = ft_strjoin("declare -x ", str);
-		printf ("%s\n", tmp);
+		ft_putendl_fd (tmp, sh.fdout);
 		free(str);
 		free(tmp);
 		env = env->next;
@@ -71,7 +71,7 @@ int	builtin_export(t_shell *sh, char **add)
 	int		i;
 
 	if (!add[1])
-		export_w_no_arg(sh->env);
+		export_w_no_arg(*sh, sh->env);
 	else
 	{
 		while (*add)

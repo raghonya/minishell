@@ -112,8 +112,6 @@ int	main(int argc, char **argv, char **envp)
 	init_env(&sh, envp);
 	sh.line = NULL;
 	sh.prompt = NULL;
-	sh.fdin = 0;
-	sh.fdout = 1;
 	//sh.exit_stat = 0;
 	while (777)
 	{

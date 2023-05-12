@@ -40,49 +40,60 @@ char	*filename(char *str)
 
 // check filename, arajin elementy inch kara lini
 
-char	*find_filename(char *line)
+int	find_filename(char *line, char **redir, int *index)
 {
-	char	*redir;
 	char	*tmp;
 	int		aft_spc;
 	int		i;
+	int		k;
 
 	i = -1;
 	while (ft_isspace(line[++i]))
 		;
 	aft_spc = i;
-	while (line[i] && (line[i] == '_' || \
+	while (line[i] && !ft_isspace(line[i]))
+	{
+		//(line[i] == '_' || \
 		line[i] == '.' || line[i] == '-' || ft_isalnum(line[i])))
+		if (line[i] == '\"' || line[i] == '\'')
+		{
+			k = i;
+			while (line[++i] != line[k])
+				;
+		}
 		i++;
-	redir = ft_substr(line, aft_spc, i - aft_spc);
-	tmp = redir;
-	redir = ft_strtrim(redir, " \t\n\r\v\f");
+	}
+	*index = i;
+	*redir = ft_substr(line, aft_spc, i - aft_spc);
+	tmp = *redir;
+	*redir = ft_strtrim(*redir, " \t\n\r\v\f");
 	// printf ("aft trim: '%s'\n", redir);
 	free(tmp);
-	return (redir);
+	clear_quotes_line(*redir);
+	printf ("filename:`%s`\n", *redir);
+	return (0);
 }
 
 int	heredoc_or_append(t_shell *sh, char *line, int i)
 {
+	int		to_clear;
 	char	*redir;
 
-	redir = find_filename(line + i + 1);
-	clear_quotes_line(redir);
+	find_filename(line + i + 1, &redir, &to_clear);
+	// clear_quotes_line(redir);
 	printf ("heredoc/append:,,,%s,,,\n", redir);
 	return (0);
 }
 
 int	redirect_io(t_shell *sh, char *line, int i)
 {
+	int		to_clear;
 	char	*redir;
 
-	redir = find_filename(line + i + 1);
-	clear_quotes_line(redir);
-	printf ("filename:`%s`\n", redir);
+	find_filename(line + i + 1, &redir, &to_clear);
 	if (line[i] == '<')
 	{
 		sh->fdin = open(redir, O_RDONLY);
-		// printf ("filename%s\n", redir);
 		free(redir);
 		if (err_msg (sh->fdin == -1, "No such file or directory"))
 			return (1);
@@ -94,16 +105,15 @@ int	redirect_io(t_shell *sh, char *line, int i)
 		if (err_msg (sh->fdout == -1, "No such file or directory"))
 			return (1);
 	}
+	// clear_redirection(i, to_clear);
 	return (0);
 }
 
 int	check_redirections(t_shell *sh, char *line)
 {
-	// char	*name;
 	int		i;
 
 	i = -1;
-	// printf ("line wthout quotes: %s\n", line);
 	while (line[++i])
 	{
 		if (line[i] == '<' || line[i] == '>')

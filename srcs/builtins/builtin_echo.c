@@ -33,11 +33,11 @@ int	builtin_echo(t_shell *sh, char **cmds)
 
 	i = 0;
 	if (!ft_strcmp(cmds[++i], "-n"))
-		print_args(cmds, fd, i + 1);
+		print_args(cmds, sh->fdout, i + 1);
 	else
 	{
-		print_args(cmds, fd, i);
-		ft_putstr_fd ("\n", fd);
+		print_args(cmds, sh->fdout, i);
+		ft_putstr_fd ("\n", sh->fdout);
 	}
 	return (0);
 }

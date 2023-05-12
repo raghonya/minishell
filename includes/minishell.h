@@ -44,6 +44,16 @@ typedef struct s_shell
 }	t_shell;
 
 
+// Execution
+
+int		call_commands(t_shell *sh, int i, int (*execute)(t_shell *sh, int indicator));
+
+int		one_cmd(t_shell *sh);
+
+int		multipipes(t_shell *sh);
+
+char	**create_envp(t_shell sh);
+
 //	BUILTINS
 
 int		builtin_cd(t_shell *sh, char **cmds, t_list *env);
@@ -81,6 +91,8 @@ int		check_quotes(char *line);
 int		check_line(t_shell *sh);
 
 int		check_redirection(t_shell *sh);
+
+int		check_pipes_empty(char **spl_pipe);
 
 void	clear_quotes_matrix(char **lines);
 
