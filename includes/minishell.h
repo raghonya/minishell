@@ -46,6 +46,7 @@ typedef struct s_shell
 	char	**paths;
 	int		*pipe;
 	int		heredoc[2];
+	int		here_closer;
 	int		*childs_pid;
 	int		pipe_count;
 	int		exit_stat;

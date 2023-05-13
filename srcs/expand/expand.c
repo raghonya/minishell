@@ -111,5 +111,7 @@ char	*expand(t_shell *sh, char *line)
 			break ;
 		in_qoutes(sh, line, &i, &j);
 	}
+	//printf ("%s\n", line);
+	free(line);
 	return (sh->str.ret_str);
 }

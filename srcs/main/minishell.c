@@ -21,8 +21,10 @@ void	prompt_and_history(char **line, char **prompt)
 	prev_line = *line;
 	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
 	*line = readline(*prompt);
+	printf ("line hehe:%s\n", *line);
 	if (!*line)
 	{
+		//printf ("WTF???\n");
 		printf ("exit\n");
 		free(prev_line);
 		//system("leaks minishell");

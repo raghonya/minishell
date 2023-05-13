@@ -28,13 +28,12 @@ int	exec_one(t_shell *sh, int indicator)
 	{
 		err_msg_w_exit(dup2(sh->fdin, 0) == -1, 1);
 		err_msg_w_exit(dup2(sh->fdout, 1) == -1, 1);
+		if (sh->here_closer)
+			close(sh->heredoc[0]);
 		execve(*sh->cmd, sh->cmd, envp);
 		err_msg_w_exit(1, 1);
 	}
-	i = -1;
-	while (envp[++i])
-		free(envp[i]);
-	free(envp);
+	double_free(envp);
 	waitpid(cpid, &sh->status, 0);
 	sh->exit_stat = WEXITSTATUS(sh->status);
 	return (0);
@@ -47,8 +46,6 @@ int	one_cmd(t_shell *sh)
 	int	j;
 
 	ret = 0;
-	sh->fdin = 0;
-	sh->fdout = 1;
 	if (redirections(sh, &sh->spl_pipe[0]))
 		return (1);
 	sh->cmd = split_wout_quotes(sh->spl_pipe[0], ' ');
@@ -60,6 +57,8 @@ int	one_cmd(t_shell *sh)
 	printf ("\n");
 	clear_quotes_matrix(sh->cmd);
 	ret = call_commands(sh, -1, &exec_one);
+	if (sh->here_closer)
+		close(sh->heredoc[0]);
 	double_free(sh->cmd);
 	return (ret);
 }
