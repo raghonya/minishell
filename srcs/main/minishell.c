@@ -33,24 +33,24 @@ void	prompt_and_history(char **line, char **prompt)
 	free(prev_line);
 }
 
-void	free_info(t_shell *sh)
+void	double_free(char **info)
 {
 	int	i;
 
 	i = -1;
-	while (sh->spl_pipe[++i])
-		free(sh->spl_pipe[i]);
-	free(sh->spl_pipe);
+	while (info[++i])
+		free(info[i]);
+	free(info);
 }
 
 int	free_and_continue(t_shell *sh)
 {
 	if (check_line(sh))
 	{
-		free_info(sh);
+		double_free(sh->spl_pipe);
 		return (1);
 	}
-	free_info(sh);
+	double_free(sh->spl_pipe);
 	return (0);
 }
 

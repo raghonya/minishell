@@ -12,63 +12,30 @@
 
 #include <minishell.h>
 
-//char	*filename(char *str)
-//{
-//	char	*name;
-//	int		i;
-
-//	// printf ("str do <>: %s\n", str);
-//	i = -1;
-//	while (ft_isspace(str[++i]))
-//		;
-//	str += ++i;
-//	// printf ("str after <>: %s\n", str);
-//	i = 0;
-//	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_' \
-//		|| str[i] == '-' || str[i] == '.'))
-//		i++;
-//	name = malloc(sizeof(char) * (i + 1));
-//	i = 0;
-//	err_msg_w_exit(!name, 1);
-//	while (*str && (ft_isalnum(*str) || *str == '_' \
-//		|| *str == '-' || *str == '.'))
-//		name[i++] = *str++;
-//	name[i] = 0;
-//	// printf ("name of the file: %s\n", name);
-//	return (name);
-//}
-
 // check filename, arajin elementy inch kara lini
 
 int	find_filename(char *line, char **redir, int *index)
 {
 	char	*tmp;
 	int		aft_spc;
-	int		i;
 	int		k;
 
-	i = -1;
-	while (ft_isspace(line[++i]))
+	while (ft_isspace(line[++(*index)]))
 		;
-	aft_spc = i;
-	while (line[i] && !ft_isspace(line[i]))
+	aft_spc = *index;
+	while (line[*index] && !ft_isspace(line[*index]) && (line[*index] == '_' || \
+		line[*index] == '.' || line[*index] == '-' || ft_isalnum(line[*index])))
 	{
-		//(line[i] == '_' || \
-		line[i] == '.' || line[i] == '-' || ft_isalnum(line[i])))
-		if (line[i] == '\"' || line[i] == '\'')
+		if (line[*index] == '\"' || line[*index] == '\'')
 		{
-			k = i;
-			while (line[++i] != line[k])
+			k = *index;
+			while (line[++(*index)] != line[k])
 				;
 		}
-		i++;
+		(*index)++;
 	}
-	*index = i;
-	printf ("index: %d\n", *index);
-	*redir = ft_substr(line, aft_spc, i - aft_spc);
-	tmp = *redir;
-	*redir = ft_strtrim(*redir, " \t\n\r\v\f");
-	// printf ("aft trim: '%s'\n", redir);
+	tmp = ft_substr(line, aft_spc, *index - aft_spc);
+	*redir = ft_strtrim(tmp, " \t\n\r\v\f");
 	free(tmp);
 	clear_quotes_line(*redir);
 	printf ("filename:`%s`\n", *redir);
@@ -110,6 +77,7 @@ int	redirect_io(t_shell *sh, char **line, int i)
 	int		to_clear;
 	char	*redir;
 
+	to_clear = -1;
 	find_filename(*line + i + 1, &redir, &to_clear);
 	if ((*line)[i] == '<')
 	{
@@ -130,6 +98,25 @@ int	redirect_io(t_shell *sh, char **line, int i)
 	return (0);
 }
 
+int	redirect(t_shell *sh, char **line, int *i)
+{
+	if ((*line)[*i] == '<' || (*line)[*i] == '>')
+	{
+		if (err_msg(((*line)[*i] == '<' && (*line)[*i + 1] == '>') \
+			|| ((*line)[*i] == '>' && (*line)[*i + 1] == '<'), \
+			"Syntax error"))
+			return (1);
+		if ((*line)[*i + 1] == (*line)[*i])
+		{
+			if (heredoc_or_append(sh, line, (*i)--))
+				return (1);
+		}
+		else if (redirect_io(sh, line, (*i)--))
+			return (1);
+	}
+	return (0);
+}
+
 int	redirections(t_shell *sh, char **line)
 {
 	int	i;
@@ -145,28 +132,8 @@ int	redirections(t_shell *sh, char **line)
 				;
 			i++;
 		}
-		if ((*line)[i] == '<' || (*line)[i] == '>')
-		{
-			if (err_msg(((*line)[i] == '<' && (*line)[i + 1] == '>') \
-				|| ((*line)[i] == '>' && (*line)[i + 1] == '<'), \
-				"Syntax error"))
-					return (1);
-			printf ("symb: %c\n", (*line)[i]);
-			if ((*line)[i + 1] == (*line)[i])
-			{
-				//printf ("vr mexqis hamar\n");
-				if (heredoc_or_append(sh, line, i--))
-					return (1);
-			}
-			else
-			{
-				printf ("xi ara\n");
-				if (redirect_io(sh, line, i--))
-					return (1);
-			}
-			printf ("verjum i = %d\n", i );
-		}
+		if (redirect (sh, line, &i))
+			return (1);
 	}
-	//free(line);
 	return (0);
 }

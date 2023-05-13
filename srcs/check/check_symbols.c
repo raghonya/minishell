@@ -44,22 +44,24 @@ int	check_quotes(char *line)
 
 int	check_redirection(t_shell *sh)
 {
-	int	i;
+	char	*line;
+	int		i;
 
 	i = 1;
-	if (!sh->line[1])
+	line = sh->line;
+	if (!line[1])
 		return (0);
-	while (sh->line[i + 1])
+	while (line[i + 1])
 	{
 		if (err_msg \
-		((sh->line[i - 1] == '>' && sh->line[i] == '>' && sh->line[i + 1] == '>') \
-		|| (sh->line[i - 1] == '>' && sh->line[i] == '>' && sh->line[i + 1] == '<') \
-		|| (sh->line[i - 1] == '>' && sh->line[i] == '<' && sh->line[i + 1] == '>') \
-		|| (sh->line[i - 1] == '>' && sh->line[i] == '<' && sh->line[i + 1] == '<') \
-		|| (sh->line[i - 1] == '<' && sh->line[i] == '>' && sh->line[i + 1] == '>') \
-		|| (sh->line[i - 1] == '<' && sh->line[i] == '>' && sh->line[i + 1] == '<') \
-		|| (sh->line[i - 1] == '<' && sh->line[i] == '<' && sh->line[i + 1] == '>') \
-		|| (sh->line[i - 1] == '<' && sh->line[i] == '<' && sh->line[i + 1] == '<') \
+		((line[i - 1] == '>' && line[i] == '>' && line[i + 1] == '>') \
+		|| (line[i - 1] == '>' && line[i] == '>' && line[i + 1] == '<') \
+		|| (line[i - 1] == '>' && line[i] == '<' && line[i + 1] == '>') \
+		|| (line[i - 1] == '>' && line[i] == '<' && line[i + 1] == '<') \
+		|| (line[i - 1] == '<' && line[i] == '>' && line[i + 1] == '>') \
+		|| (line[i - 1] == '<' && line[i] == '>' && line[i + 1] == '<') \
+		|| (line[i - 1] == '<' && line[i] == '<' && line[i + 1] == '>') \
+		|| (line[i - 1] == '<' && line[i] == '<' && line[i + 1] == '<') \
 		, "Syntax error near unexpected token `<' || `>'"))
 			return (1);
 		i++;

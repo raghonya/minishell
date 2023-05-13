@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: raghonya <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/13 17:11:11 by raghonya          #+#    #+#             */
+/*   Updated: 2023/05/13 17:11:19 by raghonya         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -43,16 +55,17 @@ typedef struct s_shell
 
 }	t_shell;
 
-
 // Execution
 
-int		call_commands(t_shell *sh, int i, int (*execute)(t_shell *sh, int indicator));
+int		call_commands(t_shell *sh, int i, int (*execute)(t_shell *, int));
 
 int		one_cmd(t_shell *sh);
 
 int		multipipes(t_shell *sh);
 
 char	**create_envp(t_shell sh);
+
+int		init_pipe(t_shell *sh);
 
 //	BUILTINS
 
@@ -70,7 +83,9 @@ int		builtin_unset(t_shell *sh, char **cmds, t_list **env);
 
 int		builtin_export(t_shell *sh, char **cmds);
 
-// Error messages
+// Error messages and free
+
+void	double_free(char **info);
 
 int		err_msg_w_close(int a, char *msg, int count, t_shell *sh);
 
@@ -132,24 +147,6 @@ void	find_absolute_path(char **args, char **paths);
 
 // Redirections
 
-int	redirections(t_shell *sh, char **line);
-
-
-//void	free_2d(char **s);
-
-//void	to_close(int *pipefd, t_args arg);
-
-//void	err_msh(int a, int *pipes, t_args arg);
-
-//char	**paths_finder(char **envp);
-
-//char	*path_check(char **paths, char *cmd);
-
-//void	find_absolute_path(char **args, char **paths);
-
-//void	multipipes(t_args arg, char **paths);
-
-//void	here_doc(t_args arg, char **paths);
-
+int		redirections(t_shell *sh, char **line);
 
 #endif 

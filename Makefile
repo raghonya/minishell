@@ -20,7 +20,6 @@ SRCS	=	srcs/builtins/builtin_export.c \
 			srcs/expand/expand_funcs.c \
 			srcs/expand/var_name.c \
 			srcs/expand/expand.c \
-			srcs/env/init_env.c \
 			srcs/paths/paths.c \
 			srcs/check/check_symbols.c \
 			srcs/check/errors.c \
@@ -30,6 +29,7 @@ SRCS	=	srcs/builtins/builtin_export.c \
 			srcs/execution/execute_multi.c \
 			srcs/execution/clear_quotes.c \
 			srcs/execution/execute_one.c \
+			srcs/main/initialization.c \
 			srcs/main/minishell.c 
 			
 LIB		=	./libft
@@ -48,7 +48,7 @@ OBJS	=	obj/builtin_export.o \
 			obj/expand_funcs.o \
 			obj/var_name.o \
 			obj/expand.o \
-			obj/init_env.o \
+			obj/initialization.o \
 			obj/paths.o \
 			obj/check_symbols.o \
 			obj/errors.o \

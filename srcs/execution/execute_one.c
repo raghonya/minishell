@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute_one.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: raghonya <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/13 17:11:53 by raghonya          #+#    #+#             */
+/*   Updated: 2023/05/13 17:11:53 by raghonya         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <minishell.h>
 
 int	exec_one(t_shell *sh, int indicator)
@@ -29,20 +41,16 @@ int	exec_one(t_shell *sh, int indicator)
 }
 
 // exit status when execve fails X
-
 int	one_cmd(t_shell *sh)
 {
 	int	ret;
 	int	j;
 
 	ret = 0;
-	//printf ("cmd mmd: %s\n", *sh->cmd);
 	sh->fdin = 0;
 	sh->fdout = 1;
 	if (redirections(sh, &sh->spl_pipe[0]))
 		return (1);
-	printf ("one cmd pipe: %s\n", sh->spl_pipe[0]);
-	
 	sh->cmd = split_wout_quotes(sh->spl_pipe[0], ' ');
 	err_msg_w_exit(!sh->cmd, 1);
 	printf ("\nspl line wth spaces 1 hati hamar\n");
@@ -52,9 +60,6 @@ int	one_cmd(t_shell *sh)
 	printf ("\n");
 	clear_quotes_matrix(sh->cmd);
 	ret = call_commands(sh, -1, &exec_one);
-	j = -1;
-	while (sh->cmd[++j])
-		free(sh->cmd[j]);
-	free(sh->cmd);
+	double_free(sh->cmd);
 	return (ret);
 }

@@ -29,7 +29,6 @@ void	st_end(char const *s1, char const *set, int *start, int *end)
 	int	i;
 
 	i = -1;
-
 	while (s1[++i])
 	{
 		if (!check(set, s1[i]))
