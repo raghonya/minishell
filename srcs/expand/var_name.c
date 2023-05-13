@@ -31,9 +31,10 @@ char	*varname(char *s, int *length)
 	int		i;
 
 	i = 0;
+	if (*s == '?')
+		return (ft_strdup("?"));
 	while (s[i] && !ft_isspace(s[i]) && s[i] != '$' && *s != '\"')
 		i++;
-		printf ("in cunc: '%s'\n", s);
 	if (check_varname(s))
 	{	
 		*length = i;
@@ -44,12 +45,9 @@ char	*varname(char *s, int *length)
 	ret = malloc(sizeof(char) * (i + 1));
 	if (!ret)
 		return (ret);
-	i = 0;
-	while (s[i] && !ft_isspace(s[i]) && s[i] != '$' && s[i] != '\"')
-	{
+	i = -1;
+	while (s[++i] && !ft_isspace(s[i]) && s[i] != '$' && s[i] != '\"')
 		ret[i] = s[i];
-		i++;
-	}
 	ret[i] = 0;
 	return (ret);
 }

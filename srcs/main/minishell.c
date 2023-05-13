@@ -12,55 +12,6 @@
 
 #include <minishell.h>
 
-void	clear_quotes_matrix(char **lines)
-{
-	int	i;
-	int	j;
-	int	k;
-
-	i = -1;
-	while (lines[++i])
-	{
-		j = -1;
-		while (lines[i][++j])
-		{
-			if (lines[i][j] && (lines[i][j] == '\"' || lines[i][j] == '\''))
-			{
-				k = j - 1;
-				j = lines[i][j];
-				while (lines[i][++k + 1] != j)
-					lines[i][k] = lines[i][k + 1];
-				j = k-- - 1;
-				while (lines[i][++k + 2])
-					lines[i][k] = lines[i][k + 2];
-				lines[i][k] = 0;
-			}
-		}
-	}
-}
-
-void	clear_quotes_line(char *line)
-{
-	int	i;
-	int	k;
-
-	i = -1;
-	while (line[++i])
-	{
-		if (line[i] && (line[i] == '\"' || line[i] == '\''))
-		{
-			k = i - 1;
-			i = line[i];
-			while (line[++k + 1] != i)
-				line[k] = line[k + 1];
-			i = k-- - 1;
-			while (line[++k + 2])
-				line[k] = line[k + 2];
-			line[k] = 0;
-		}
-	}
-}
-
 void	prompt_and_history(char **line, char **prompt)
 {
 	char	*prev_line;
@@ -112,7 +63,7 @@ int	main(int argc, char **argv, char **envp)
 	init_env(&sh, envp);
 	sh.line = NULL;
 	sh.prompt = NULL;
-	//sh.exit_stat = 0;
+	sh.exit_stat = 0;
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);
@@ -121,12 +72,9 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		sh.line = expand(&sh, sh.line);
 		printf ("expanded line: *%s*\n", sh.line);
-		//printf ("ret: %s\n\n", sh.line);
 		if (free_and_continue(&sh))
 			continue ;
 		// system("leaks minishell");
-		// if (free_and_continue(&sh))
-		// 	continue ;
 	}
 }
 

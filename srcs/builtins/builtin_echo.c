@@ -29,7 +29,6 @@ void	print_args(char **cmds, int fd, int i)
 int	builtin_echo(t_shell *sh, char **cmds)
 {
 	int		i;
-	int	fd = 1;
 
 	i = 0;
 	if (!ft_strcmp(cmds[++i], "-n"))

@@ -51,8 +51,8 @@ int	check_var_existence(char *add, t_shell *sh)
 		i++;
 	tmp = ft_substr(add, 0, i + 1);
 	err_msg_w_exit(!tmp, 1);
-	//if (tmp[0] == '?')
-	//	return (1);
+	if (tmp[0] == '?')
+		return (1);
 	head = sh->env;
 	while (head)
 	{

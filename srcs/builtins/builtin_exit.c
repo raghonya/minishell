@@ -12,7 +12,6 @@
 
 #include <minishell.h>
 
-
 long long	ft_atoll(char *str)
 {
 	long long	num;
@@ -40,7 +39,6 @@ long long	ft_atoll(char *str)
 		exit (255);
 	return (sign * num);
 }
-
 
 int	builtin_exit(t_shell *sh, char **cmds)
 {

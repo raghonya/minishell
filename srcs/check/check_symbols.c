@@ -52,7 +52,7 @@ int	check_redirection(t_shell *sh)
 	while (sh->line[i + 1])
 	{
 		if (err_msg \
-		  ((sh->line[i - 1] == '>' && sh->line[i] == '>' && sh->line[i + 1] == '>') \
+		((sh->line[i - 1] == '>' && sh->line[i] == '>' && sh->line[i + 1] == '>') \
 		|| (sh->line[i - 1] == '>' && sh->line[i] == '>' && sh->line[i + 1] == '<') \
 		|| (sh->line[i - 1] == '>' && sh->line[i] == '<' && sh->line[i + 1] == '>') \
 		|| (sh->line[i - 1] == '>' && sh->line[i] == '<' && sh->line[i + 1] == '<') \
