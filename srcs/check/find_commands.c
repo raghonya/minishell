@@ -28,10 +28,7 @@ int	check_pipes_empty(char **spl_pipe)
 			free(tmp);
 			return (1);
 		}
-		j = -1;
-		while (tmp[++j])
-			free(tmp[j]);
-		free(tmp);
+		double_free(tmp);
 	}
 	return (0);
 }
@@ -73,25 +70,22 @@ char	**create_envp(t_shell sh)
 
 int	call_commands(t_shell *sh, int i, int (*execute)(t_shell *, int))
 {
-	int	ret;
-
 	if (!ft_strcmp(*sh->cmd, "echo"))
-		ret = builtin_echo(sh, sh->cmd);
+		return (builtin_echo(sh, sh->cmd));
 	else if (!ft_strcmp(*sh->cmd, "cd"))
-		ret = builtin_cd(sh, sh->cmd, sh->env);
+		return (builtin_cd(sh, sh->cmd, sh->env));
 	else if (!ft_strcmp(*sh->cmd, "pwd"))
-		ret = builtin_pwd(sh);
+		return (builtin_pwd(sh));
 	else if (!ft_strcmp(*sh->cmd, "export"))
-		ret = builtin_export(sh, sh->cmd);
+		return (builtin_export(sh, sh->cmd));
 	else if (!ft_strcmp(*sh->cmd, "unset"))
-		ret = builtin_unset(sh, sh->cmd, &sh->env);
+		return (builtin_unset(sh, sh->cmd, &sh->env));
 	else if (!ft_strcmp(*sh->cmd, "env"))
-		ret = builtin_env(sh, sh->env);
+		return (builtin_env(sh, sh->env));
 	else if (!ft_strcmp(*sh->cmd, "exit"))
-		ret = builtin_exit(sh, sh->cmd);
+		return (builtin_exit(sh, sh->cmd));
 	else
-		ret = execute(sh, i);
-	return (ret);
+		return (execute(sh, i));
 }
 
 int	check_line(t_shell *sh)
