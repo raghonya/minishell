@@ -90,7 +90,7 @@ void	wait_for_childs(t_shell *sh)
 	i = 0;
 	while (i < sh->pipe_count + 1)
 		waitpid(sh->childs_pid[i++], &sh->status, 0);
-	sh->exit_stat = WEXITSTATUS(sh->status);
+	define_exit_stat (sh);
 }
 
 int	multipipes(t_shell *sh)

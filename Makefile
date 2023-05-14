@@ -29,6 +29,7 @@ SRCS	=	srcs/builtins/builtin_export.c \
 			srcs/execution/execute_multi.c \
 			srcs/execution/clear_quotes.c \
 			srcs/execution/execute_one.c \
+			srcs/execution/exit_status.c \
 			srcs/main/initialization.c \
 			srcs/main/minishell.c 
 			
@@ -58,7 +59,8 @@ OBJS	=	obj/builtin_export.o \
 			obj/redirections.o \
 			obj/execute_multi.o \
 			obj/clear_quotes.o \
-			obj/execute_one.o
+			obj/execute_one.o \
+			obj/exit_status.o
 
 CMD		=	$(MAKECMDGOALS)
 
