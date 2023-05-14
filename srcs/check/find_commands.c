@@ -48,6 +48,7 @@ char	**create_envp(t_shell sh)
 	while (++i < size)
 	{
 		envp[i] = ft_strdup(head->data);
+		err_msg_w_exit(!envp[i], 1);
 		head = head->next;
 	}
 	envp[i] = NULL;
@@ -69,28 +70,33 @@ char	**create_envp(t_shell sh)
 */
 
 int	call_commands(t_shell *sh, int i, int (*execute)(t_shell *, int))
-{
+{	
+	int	ret;
+
 	if (!ft_strcmp(*sh->cmd, "echo"))
-		return (builtin_echo(sh, sh->cmd));
+		ret = builtin_echo(sh, sh->cmd);
 	else if (!ft_strcmp(*sh->cmd, "cd"))
-		return (builtin_cd(sh, sh->cmd, sh->env));
+		ret = builtin_cd(sh, sh->cmd, sh->env);
 	else if (!ft_strcmp(*sh->cmd, "pwd"))
-		return (builtin_pwd(sh));
+		ret = builtin_pwd(sh);
 	else if (!ft_strcmp(*sh->cmd, "export"))
-		return (builtin_export(sh, sh->cmd));
+		ret = builtin_export(sh, sh->cmd);
 	else if (!ft_strcmp(*sh->cmd, "unset"))
-		return (builtin_unset(sh, sh->cmd, &sh->env));
+		ret = builtin_unset(sh, sh->cmd, &sh->env);
 	else if (!ft_strcmp(*sh->cmd, "env"))
-		return (builtin_env(sh, sh->env));
+		ret = builtin_env(sh, sh->env);
 	else if (!ft_strcmp(*sh->cmd, "exit"))
-		return (builtin_exit(sh, sh->cmd));
+		ret = builtin_exit(sh, sh->cmd);
 	else
 		return (execute(sh, i));
+	sh->exit_stat = ret;
+	return (ret);
 }
 
 int	check_line(t_shell *sh)
 {
 	int	*pipes;
+	int	ret;
 	int	i;
 	int	j;
 
@@ -104,9 +110,11 @@ int	check_line(t_shell *sh)
 		;
 	sh->pipe_count = i - 1;
 	if (sh->pipe_count == 0)
-		return (one_cmd(sh));
+		ret = one_cmd(sh);
 	else
-		return (multipipes(sh));
+		ret = multipipes(sh);
+	change_exit_stat(*sh, sh->env);
+	return (ret);
 }
 
 //	echo >a >b >c  -n >d >e >f  barev >a iuytresdfghj

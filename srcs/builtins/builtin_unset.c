@@ -37,6 +37,8 @@ int	builtin_unset(t_shell *sh, char **cmds, t_list **env)
 	tmp_prev = NULL;
 	while (cmds[++i])
 	{
+		if (*cmds[i] == '?')
+			continue ;
 		head = *env;
 		tmp_str = ft_strjoin(cmds[i], "=");
 		while (*env)

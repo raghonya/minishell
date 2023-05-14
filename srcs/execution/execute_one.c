@@ -35,7 +35,9 @@ int	exec_one(t_shell *sh, int indicator)
 	}
 	double_free(envp);
 	waitpid(cpid, &sh->status, 0);
+	printf ("sh->status: %d\n", sh->status);
 	sh->exit_stat = WEXITSTATUS(sh->status);
+	printf ("exit stat: %d\n", sh->exit_stat);
 	return (0);
 }
 

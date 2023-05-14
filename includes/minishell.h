@@ -58,6 +58,8 @@ typedef struct s_shell
 
 // Execution
 
+void	change_exit_stat(t_shell sh, t_list *env);
+
 int		call_commands(t_shell *sh, int i, int (*execute)(t_shell *, int));
 
 int		one_cmd(t_shell *sh);
