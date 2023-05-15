@@ -26,6 +26,7 @@ int	exec_one(t_shell *sh, int indicator)
 		return (1);
 	if (!cpid)
 	{
+		sh->sig.sa_handler = SIG_DFL;
 		err_msg_w_exit(dup2(sh->fdin, 0) == -1, 1);
 		err_msg_w_exit(dup2(sh->fdout, 1) == -1, 1);
 		if (sh->here_closer)

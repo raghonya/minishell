@@ -63,6 +63,7 @@ int	exec_multi(t_shell *sh, int indicator)
 	pid_t	cpid;
 	int		i;
 
+	//g_handle_sigint = 1;
 	envp = create_envp(*sh);
 	find_absolute_path(sh->cmd, sh->paths);
 	cpid = fork();
@@ -70,6 +71,7 @@ int	exec_multi(t_shell *sh, int indicator)
 		return (1);
 	if (!cpid)
 	{
+		sh->sig.sa_handler = SIG_DFL;
 		direct_cmd(sh, indicator);
 		execve(*sh->cmd, sh->cmd, envp);
 		err_msg_w_exit(1, 1);

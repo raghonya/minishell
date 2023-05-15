@@ -42,6 +42,7 @@ typedef struct s_shell
 	t_strs	str;
 	t_list	*env;
 	t_sig	sig;
+	int		*global_var;
 	char	*line;
 	char	*prompt;
 	char	**spl_pipe;
