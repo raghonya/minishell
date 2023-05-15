@@ -35,10 +35,13 @@ typedef struct s_strs
 	char	*ret_str;
 }	t_strs;
 
+typedef struct sigaction	t_sig;
+
 typedef struct s_shell
 {
 	t_strs	str;
 	t_list	*env;
+	t_sig	sig;
 	char	*line;
 	char	*prompt;
 	char	**spl_pipe;
@@ -151,6 +154,10 @@ char	*path_check(char **paths, char *cmd);
 void	find_absolute_path(char **args, char **paths);
 
 // Redirections
+
+int		heredoc_or_append(t_shell *sh, char **line, int i);
+
+int		redirect_io(t_shell *sh, char **line, int i);
 
 int		redirections(t_shell *sh, char **line);
 

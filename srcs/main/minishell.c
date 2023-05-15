@@ -12,6 +12,8 @@
 
 #include <minishell.h>
 
+int	g_handle_sigint = 0;
+
 void	prompt_and_history(char **line, char **prompt)
 {
 	char	*prev_line;
@@ -21,7 +23,6 @@ void	prompt_and_history(char **line, char **prompt)
 	prev_line = *line;
 	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
 	*line = readline(*prompt);
-	printf ("line hehe:%s\n", *line);
 	if (!*line)
 	{
 		//printf ("WTF???\n");
@@ -56,6 +57,15 @@ int	free_and_continue(t_shell *sh)
 	return (0);
 }
 
+void	handle_sigint(int signum)
+{
+	// printf ("%d\n", signum);
+	g_handle_sigint = 1;
+	exit (0);
+	return ;
+}
+
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell		sh;
@@ -66,6 +76,8 @@ int	main(int argc, char **argv, char **envp)
 	sh.line = NULL;
 	sh.prompt = NULL;
 	sh.exit_stat = 0;
+	sh.sig.sa_handler = &handle_sigint;
+	sigaction(SIGINT, &sh.sig, NULL);
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);
@@ -76,6 +88,12 @@ int	main(int argc, char **argv, char **envp)
 		printf ("expanded line: *%s*\n", sh.line);
 		if (free_and_continue(&sh))
 			continue ;
+		
+		if (g_handle_sigint)
+		{
+			g_handle_sigint = 0;
+			continue ;
+		}
 		// system("leaks minishell");
 	}
 }

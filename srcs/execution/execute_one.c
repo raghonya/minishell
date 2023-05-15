@@ -50,11 +50,6 @@ int	one_cmd(t_shell *sh)
 		return (1);
 	sh->cmd = split_wout_quotes(sh->spl_pipe[0], ' ');
 	err_msg_w_exit(!sh->cmd, 1);
-	printf ("\nspl line wth spaces 1 hati hamar\n");
-	j = -1;
-	while (sh->cmd[++j])
-		printf ("'%s'\n", sh->cmd[j]);
-	printf ("\n");
 	clear_quotes_matrix(sh->cmd);
 	ret = call_commands(sh, -1, &exec_one);
 	if (sh->here_closer)
