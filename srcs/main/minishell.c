@@ -59,20 +59,20 @@ int	free_and_continue(t_shell *sh)
 	double_free(sh->spl_pipe);
 	return (0);
 }
+
 void	handle_sigint(int signum)
 {
 	//printf ("xi yani???\n");
 	// printf ("%d\n", signum);
 	//g_handle_sigint = 1;
-	rl_replace_line("", 0);
+	// rl_replace_line("", 0);
 	printf ("\n");
 	rl_on_new_line();
 	//printf ("global in handler: %d\n", g_handle_sigint);
-	//if (!g_handle_sigint)
+	if (wait(NULL) == -1)
 		rl_redisplay();
 	//write (0, "", 1);
 }
-
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -94,7 +94,7 @@ int	main(int argc, char **argv, char **envp)
 		|| check_pipes(&sh) || check_redirection(&sh))
 			continue ;
 		sh.line = expand(&sh, sh.line);
-		printf ("expanded line: *%s*\n", sh.line);
+		// printf ("expanded line: *%s*\n", sh.line);
 		if (free_and_continue(&sh))
 			continue ;
 		// system("leaks minishell");

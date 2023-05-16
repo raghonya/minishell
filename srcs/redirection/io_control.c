@@ -1,6 +1,10 @@
 #include <minishell.h>
 
 // check filename, arajin elementy inch kara lini
+//  && (line[*index] == '_' || 
+// 		line[*index] == '.' || line[*index] == '-' || 
+//	(line[*index]) || line[*index] == '\"' || line[*index] == '\'')
+// animast check
 int	find_filename(char *line, char **redir, int *index)
 {
 	char	*tmp;
@@ -10,8 +14,7 @@ int	find_filename(char *line, char **redir, int *index)
 	while (ft_isspace(line[++(*index)]))
 		;
 	aft_spc = *index;
-	while (line[*index] && !ft_isspace(line[*index]) && (line[*index] == '_' || \
-		line[*index] == '.' || line[*index] == '-' || ft_isalnum(line[*index])))
+	while (line[*index] && !ft_isspace(line[*index]))
 	{
 		if (line[*index] == '\"' || line[*index] == '\'')
 		{
@@ -55,12 +58,12 @@ int	read_heredoc(t_shell *sh, char *redir)
 
 	line = NULL;
 	limiter = ft_strjoin(redir, "\n");
+	printf ("limiter: %s", limiter);
 	err_msg_w_exit (!limiter, 1);
 	while (1)
 	{
 		write(1, "heredoc> ", 9);
 		line = get_next_line(0);
-		// printf ("heredoc line: '%s'\n", line);
 		if (!line || !ft_strcmp(line, limiter))
 			break ;
 		line = expand(sh, line);
@@ -77,10 +80,28 @@ int	heredoc_or_append(t_shell *sh, char **line, int i)
 	int		to_clear;
 	char	*redir;
 
-	i++;
-	find_filename(*line + i + 1, &redir, &to_clear);
-	printf ("heredoc/append:,,,%s,,,\n", redir);
-	*line = clear_redirection(*line, i - 1, to_clear + i - 1);
+	to_clear = -1;
+	find_filename(*line + i + 2, &redir, &to_clear);
+	if (err_msg (!*redir, "syntax error near unexpected token"))
+		return (1);
+	if ((*line)[i] == '<')
+	{
+		if (err_msg_w_close(pipe(sh->heredoc) < 0, "PipError", \
+		sh->pipe_count, sh) || read_heredoc(sh, redir))
+			return (1);
+		sh->fdin = sh->heredoc[0];
+		sh->here_closer = close(sh->heredoc[1]) + 1;
+		free(redir);
+	}
+	else
+	{
+		sh->fdout = open(redir, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		free(redir);
+		if (err_msg (sh->fdout == -1, "No such file or directory"))
+			return (1);
+	}
+	*line = clear_redirection(*line, i, to_clear + i + 1);
+	printf ("aranc redir heredoc: /*%s*/\n", *line);
 	return (0);
 }
 
@@ -106,6 +127,6 @@ int	redirect_io(t_shell *sh, char **line, int i)
 			return (1);
 	}
 	*line = clear_redirection(*line, i, to_clear + i);
-	printf ("aranc redir: %s\n", *line);
+	printf ("aranc redir: '%s'\n", *line);
 	return (0);
 }
