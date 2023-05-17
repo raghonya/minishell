@@ -16,7 +16,6 @@ int	exec_one(t_shell *sh, int indicator)
 {
 	char		**envp;
 	pid_t		cpid;
-	int			i;
 
 	(void)indicator;
 	envp = create_envp(*sh);
@@ -44,9 +43,7 @@ int	exec_one(t_shell *sh, int indicator)
 int	one_cmd(t_shell *sh)
 {
 	int	ret;
-	int	j;
 
-	ret = 0;
 	if (redirections(sh, &sh->spl_pipe[0]))
 		return (1);
 	sh->cmd = split_wout_quotes(sh->spl_pipe[0], ' ');

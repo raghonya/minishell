@@ -22,12 +22,10 @@ void	prompt_and_history(char **line, char **prompt)
 		free(*prompt);
 	prev_line = *line;
 	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
-	// printf ("\"%s\"\n", *prompt);
 	*line = readline(*prompt);
 	printf ("'%s'\n", *line);
 	if (!*line)
 	{
-		printf ("WTF???\n");
 		printf ("exit\n");
 		free(prev_line);
 		//system("leaks minishell");
@@ -55,7 +53,6 @@ int	free_and_continue(t_shell *sh)
 		double_free(sh->spl_pipe);
 		return (1);
 	}
-	//printf ("global in free and cont: %d\n", g_handle_sigint);
 	double_free(sh->spl_pipe);
 	return (0);
 }
@@ -63,17 +60,12 @@ int	free_and_continue(t_shell *sh)
 void	handle_sigint(int signum)
 {
 	char	*prompt;
-	//printf ("xi yani???\n");
-	// printf ("%d\n", signum);
-	//g_handle_sigint = 1;
-	// rl_replace_line("", 0);
+	rl_replace_line("", 0);
 	printf ("\n");
-	// printf ("on new line\n");
 	rl_on_new_line();
-	// printf ("ye\n");
-	prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
-	ft_putstr_fd (prompt, 1);
-	free(prompt);
+	//prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
+	//ft_putstr_fd (prompt, 1);
+	//free(prompt);
 	//printf ("global in handler: %d\n", g_handle_sigint);
 	// if (wait(NULL))
 		rl_redisplay();
@@ -93,6 +85,7 @@ int	main(int argc, char **argv, char **envp)
 	sh.global_var = &g_handle_sigint;
 	sh.sig.sa_handler = &handle_sigint;
 	sigaction(SIGINT, &sh.sig, NULL);
+	//DIR	*dir = opendir("."); 
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);

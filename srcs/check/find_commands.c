@@ -95,13 +95,10 @@ int	call_commands(t_shell *sh, int i, int (*execute)(t_shell *, int))
 
 int	check_line(t_shell *sh)
 {
-	int	*pipes;
 	int	ret;
 	int	i;
-	int	j;
 
 	i = -1;
-	j = -1;
 	sh->spl_pipe = split_wout_quotes(sh->line, '|');
 	err_msg_w_exit(!sh->spl_pipe, 1);
 	if (check_pipes_empty(sh->spl_pipe))

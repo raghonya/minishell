@@ -52,8 +52,6 @@ void	direct_cmd(t_shell *sh, int indicator)
 	}	
 	while (++i < sh->pipe_count * 2)
 		close(sh->pipe[i]);
-	if (sh->here_closer)
-		close(sh->heredoc[0]);
 	free(sh->pipe);
 }
 
@@ -61,9 +59,7 @@ int	exec_multi(t_shell *sh, int indicator)
 {
 	char	**envp;
 	pid_t	cpid;
-	int		i;
 
-	//g_handle_sigint = 1;
 	envp = create_envp(*sh);
 	find_absolute_path(sh->cmd, sh->paths);
 	cpid = fork();
@@ -73,6 +69,8 @@ int	exec_multi(t_shell *sh, int indicator)
 	{
 		sh->sig.sa_handler = SIG_DFL;
 		direct_cmd(sh, indicator);
+		if (sh->here_closer)
+			close(sh->heredoc[0]);
 		execve(*sh->cmd, sh->cmd, envp);
 		err_msg_w_exit(1, 1);
 	}
@@ -89,6 +87,8 @@ void	wait_for_childs(t_shell *sh)
 	while (++i < sh->pipe_count * 2)
 		close(sh->pipe[i]);
 	free(sh->pipe);
+	if (sh->here_closer)
+		close(sh->heredoc[0]);
 	i = 0;
 	while (i < sh->pipe_count + 1)
 		waitpid(sh->childs_pid[i++], &sh->status, 0);
@@ -102,7 +102,6 @@ int	multipipes(t_shell *sh)
 	int	j;
 
 	i = -1;
-	ret = 0;
 	if (init_pipe (sh))
 		return (0);
 	while (sh->spl_pipe[++i])

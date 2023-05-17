@@ -58,7 +58,7 @@ int	read_heredoc(t_shell *sh, char *redir)
 
 	line = NULL;
 	limiter = ft_strjoin(redir, "\n");
-	printf ("limiter: %s", limiter);
+	printf ("%s", limiter);
 	err_msg_w_exit (!limiter, 1);
 	while (1)
 	{

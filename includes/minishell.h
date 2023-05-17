@@ -19,6 +19,7 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <signal.h>
+# include <dirent.h>
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/signal.h>
