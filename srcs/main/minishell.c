@@ -59,17 +59,11 @@ int	free_and_continue(t_shell *sh)
 
 void	handle_sigint(int signum)
 {
-	char	*prompt;
 	rl_replace_line("", 0);
 	printf ("\n");
 	rl_on_new_line();
-	//prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
-	//ft_putstr_fd (prompt, 1);
-	//free(prompt);
-	//printf ("global in handler: %d\n", g_handle_sigint);
-	// if (wait(NULL))
+	if (wait(NULL) == -1)
 		rl_redisplay();
-	//write (0, "", 1);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -82,7 +76,6 @@ int	main(int argc, char **argv, char **envp)
 	sh.line = NULL;
 	sh.prompt = NULL;
 	sh.exit_stat = 0;
-	sh.global_var = &g_handle_sigint;
 	sh.sig.sa_handler = &handle_sigint;
 	sigaction(SIGINT, &sh.sig, NULL);
 	//DIR	*dir = opendir("."); 

@@ -36,9 +36,11 @@ SRCS	=	srcs/builtins/builtin_export.c \
 			
 LIB		=	./libft
 
-IFLAGS	=	-I$(LIB) -Iincludes
+IFLAGS	=	-I$(LIB) -Iincludes -Ireadline-raghonya/include
 
-LFLAGS	=	-L$(LIB) -lft -lreadline
+LFLAGS	=	-L$(LIB) -lft -Lreadline-raghonya/lib -lreadline
+
+PREFIX	=	/Users/raghonya/Desktop/Git/minishell/readline-raghonya
 
 OBJS	=	obj/builtin_export.o \
 			obj/builtin_unset.o \
@@ -89,6 +91,7 @@ fclean: clean
 
 libs:
 	@echo "Helper libs"
+# cd readline-master && ./configure --prefix=$(PREFIX) && make clean && make && make install
 	@$(MAKE) $(CMD) -C $(LIB)
 
 re:	fclean all

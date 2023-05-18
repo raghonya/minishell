@@ -13,10 +13,11 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+// # include <term.h>
 # include <libft.h>
-# include <limits.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <limits.h>
 # include <unistd.h>
 # include <signal.h>
 # include <dirent.h>
@@ -43,7 +44,7 @@ typedef struct s_shell
 	t_strs	str;
 	t_list	*env;
 	t_sig	sig;
-	int		*global_var;
+	int		child_checker;
 	char	*line;
 	char	*prompt;
 	char	**spl_pipe;

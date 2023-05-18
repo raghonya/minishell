@@ -76,7 +76,7 @@ static int	letter_count(char **s, char c, int *count)
 	return (0);
 }
 
-static void	create_lines(char *s, char c, char **split)
+static void	create_line(char *s, char c, char **split)
 {
 	int	count;
 	int	i;
@@ -101,6 +101,6 @@ char	**split_wout_quotes(char *s, char c)
 	split = malloc(sizeof(char *) * (word_count(s, c) + 1));
 	if (!split)
 		return (split);
-	create_lines(s, c, split);
+	create_line(s, c, split);
 	return (split);
 }

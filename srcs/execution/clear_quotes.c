@@ -12,28 +12,28 @@
 
 #include <minishell.h>
 
-void	clear_quotes_matrix(char **lines)
+void	clear_quotes_matrix(char **line)
 {
 	int	i;
 	int	j;
 	int	k;
 
 	i = -1;
-	while (lines[++i])
+	while (line[++i])
 	{
 		j = -1;
-		while (lines[i][++j])
+		while (line[i][++j])
 		{
-			if (lines[i][j] && (lines[i][j] == '\"' || lines[i][j] == '\''))
+			if (line[i][j] && (line[i][j] == '\"' || line[i][j] == '\''))
 			{
 				k = j - 1;
-				j = lines[i][j];
-				while (lines[i][++k + 1] != j)
-					lines[i][k] = lines[i][k + 1];
+				j = line[i][j];
+				while (line[i][++k + 1] != j)
+					line[i][k] = line[i][k + 1];
 				j = k-- - 1;
-				while (lines[i][++k + 2])
-					lines[i][k] = lines[i][k + 2];
-				lines[i][k] = 0;
+				while (line[i][++k + 2])
+					line[i][k] = line[i][k + 2];
+				line[i][k] = 0;
 			}
 		}
 	}

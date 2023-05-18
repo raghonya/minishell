@@ -20,6 +20,7 @@ int	exec_one(t_shell *sh, int indicator)
 	(void)indicator;
 	envp = create_envp(*sh);
 	find_absolute_path(sh->cmd, sh->paths);
+	sh->child_checker = getpid();
 	cpid = fork();
 	if (err_msg (cpid == -1, "Fork error"))
 		return (1);
@@ -33,6 +34,7 @@ int	exec_one(t_shell *sh, int indicator)
 		execve(*sh->cmd, sh->cmd, envp);
 		err_msg_w_exit(1, 1);
 	}
+	sh->child_checker = 0;
 	double_free(envp);
 	waitpid(cpid, &sh->status, 0);
 	define_exit_stat(sh);

@@ -5,6 +5,7 @@
 		"signal.h": "c",
 		"limits.h": "c",
 		"libft.h": "c",
-		"history.h": "c"
+		"history.h": "c",
+		"types.h": "c"
 	}
 }
