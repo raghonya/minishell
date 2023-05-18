@@ -1,4 +1,4 @@
-prefix=/Users/raghonya/Desktop/Git/minishell/readline-raghonya
+prefix=/home/rghonyan/minishell/readline-raghonya
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include

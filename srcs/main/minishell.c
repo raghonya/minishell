@@ -23,7 +23,6 @@ void	prompt_and_history(char **line, char **prompt)
 	prev_line = *line;
 	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
 	*line = readline(*prompt);
-	printf ("'%s'\n", *line);
 	if (!*line)
 	{
 		printf ("exit\n");
@@ -31,6 +30,7 @@ void	prompt_and_history(char **line, char **prompt)
 		//system("leaks minishell");
 		exit(0);
 	}
+	printf ("'%s'\n", *line);
 	if (**line && ft_strcmp(prev_line, *line) && !ft_isspace(**line))
 		add_history(*line);
 	free(prev_line);
@@ -59,11 +59,14 @@ int	free_and_continue(t_shell *sh)
 
 void	handle_sigint(int signum)
 {
-	rl_replace_line("", 0);
-	printf ("\n");
-	rl_on_new_line();
-	if (wait(NULL) == -1)
-		rl_redisplay();
+	if (signum == SIGINT)
+	{
+		rl_replace_line("", 0);
+		printf ("\n");
+		rl_on_new_line();
+		if (wait(NULL) == -1)
+			rl_redisplay();
+	}
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -78,7 +81,7 @@ int	main(int argc, char **argv, char **envp)
 	sh.exit_stat = 0;
 	sh.sig.sa_handler = &handle_sigint;
 	sigaction(SIGINT, &sh.sig, NULL);
-	//DIR	*dir = opendir("."); 
+	//DIR	*dir = opendir(".");
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);

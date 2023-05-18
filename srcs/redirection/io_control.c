@@ -27,6 +27,7 @@ int	find_filename(char *line, char **redir, int *index)
 	tmp = ft_substr(line, aft_spc, *index - aft_spc);
 	err_msg_w_exit (!tmp, 1);
 	*redir = ft_strtrim(tmp, " \t\n\r\v\f");
+	printf ("\"%s\"\n", *redir);
 	err_msg_w_exit (!*redir, 1);
 	free(tmp);
 	clear_quotes_line(*redir);
@@ -67,11 +68,34 @@ int	read_heredoc(t_shell *sh, char *redir)
 		if (!line || !ft_strcmp(line, limiter))
 			break ;
 		line = expand(sh, line);
-		write (sh->heredoc[1], line, ft_strlen(line));
+		ft_putstr_fd(line, sh->heredoc[1]);
+		//write (sh->heredoc[1], line, ft_strlen(line));
 		free(line);
 	}
 	free(line);
 	free(limiter);
+	return (0);
+}
+
+int	redir_symbol_check(t_shell *sh, char **line, char *redir, int i)
+{
+	if ((*line)[i] == '<')
+	{
+		if (err_msg_w_close(pipe(sh->heredoc) < 0, "PipError", \
+		sh->pipe_count, sh) || read_heredoc(sh, redir))
+			return (1);
+		sh->fdin = sh->heredoc[0];
+		close(sh->heredoc[1]);
+		sh->here_closer = 1;
+		free(redir);
+	}
+	else
+	{
+		sh->fdout = open(redir, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		free(redir);
+		if (err_msg (sh->fdout == -1, "No such file or directory"))
+			return (1);
+	}
 	return (0);
 }
 
@@ -83,23 +107,12 @@ int	heredoc_or_append(t_shell *sh, char **line, int i)
 	to_clear = -1;
 	find_filename(*line + i + 2, &redir, &to_clear);
 	if (err_msg (!*redir, "syntax error near unexpected token"))
+	{
+		free(redir);
 		return (1);
-	if ((*line)[i] == '<')
-	{
-		if (err_msg_w_close(pipe(sh->heredoc) < 0, "PipError", \
-		sh->pipe_count, sh) || read_heredoc(sh, redir))
-			return (1);
-		sh->fdin = sh->heredoc[0];
-		sh->here_closer = close(sh->heredoc[1]) + 1;
-		free(redir);
 	}
-	else
-	{
-		sh->fdout = open(redir, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		free(redir);
-		if (err_msg (sh->fdout == -1, "No such file or directory"))
-			return (1);
-	}
+	if (redir_symbol_check(sh, line, redir, i))
+		return (1);
 	*line = clear_redirection(*line, i, to_clear + i + 1);
 	printf ("aranc redir heredoc: /*%s*/\n", *line);
 	return (0);

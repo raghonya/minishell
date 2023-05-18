@@ -40,7 +40,11 @@ IFLAGS	=	-I$(LIB) -Iincludes -Ireadline-raghonya/include
 
 LFLAGS	=	-L$(LIB) -lft -Lreadline-raghonya/lib -lreadline
 
-PREFIX	=	/Users/raghonya/Desktop/Git/minishell/readline-raghonya
+PREFIX	=	$(shell find $(HOME) -name readline-raghonya -type d 2>/dev/null)
+
+RLLIB	=	cd readline-master && ./configure --prefix=$(PREFIX) && make clean && make && make install
+
+#@echo $(PREFIX)
 
 OBJS	=	obj/builtin_export.o \
 			obj/builtin_unset.o \
@@ -68,6 +72,12 @@ OBJS	=	obj/builtin_export.o \
 
 CMD		=	$(MAKECMDGOALS)
 
+ifeq ($(shell uname -s), Linux)
+	RLLIB	=	
+	IFLAGS	=	-I$(LIB) -Iincludes
+	LFLAGS	=	-L$(LIB) -lft -lreadline
+endif
+
 ifeq ($(MAKECMDGOALS), bonus)
 	CMD = all
 endif
@@ -91,7 +101,6 @@ fclean: clean
 
 libs:
 	@echo "Helper libs"
-# cd readline-master && ./configure --prefix=$(PREFIX) && make clean && make && make install
 	@$(MAKE) $(CMD) -C $(LIB)
 
 re:	fclean all

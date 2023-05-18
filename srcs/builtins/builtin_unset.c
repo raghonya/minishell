@@ -19,6 +19,7 @@ int	delete_var(t_list **tmp_prev, t_list **env, t_list **head)
 	tmp = (*env)->next;
 	if (*head == *env)
 		*head = tmp;
+	free((*env)->data);
 	free(*env);
 	*env = tmp;
 	if ((*tmp_prev))

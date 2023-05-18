@@ -68,29 +68,37 @@ int	check_var_existence(char *add, t_shell *sh)
 	return (0);
 }
 
+void	add_variable(t_shell *sh, char **add)
+{
+	int	i;
+
+	if (ft_strchr(*add, '=') && !ft_isdigit(**add) \
+		&& **add != '=' && !check_var_existence(*add, sh))
+	{
+		i = -1;
+		while ((*add)[++i] && (*add)[i] != '=')
+			if (err_msg(!ft_isalpha((*add)[i]) && !ft_isdigit((*add)[i]) \
+				&& (*add)[i] != '_', "not a valid identifier"))
+				break ;
+		if ((*add)[i] == '=')
+			ft_lstadd_back(&sh->env, ft_lstnew(ft_strdup(*add)));
+	}
+	else if (err_msg(ft_isdigit(**add) || **add == '=', \
+		"not a valid identifier"))
+		;
+}
+
 int	builtin_export(t_shell *sh, char **add)
 {
 	int		i;
 
-	if (!add[1])
+	if (!add++[1])
 		export_w_no_arg(*sh, sh->env);
 	else
 	{
 		while (*add)
 		{
-			if (!ft_strchr(*add, '=') || ft_isdigit(**add) \
-				|| **add == '=' || check_var_existence(*add, sh))
-			{
-				add++;
-				continue ;
-			}
-			i = -1;
-			while ((*add)[++i] && (*add)[i] != '=')
-				if (!ft_isalpha((*add)[i]) && !ft_isdigit((*add)[i]) \
-					&& (*add)[i] != '_')
-					break ;
-			if ((*add)[i] == '=')
-				ft_lstadd_back(&sh->env, ft_lstnew(ft_strdup(*add)));
+			add_variable(sh, add);
 			add++;
 		}
 	}
