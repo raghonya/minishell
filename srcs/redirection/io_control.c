@@ -1,10 +1,5 @@
 #include <minishell.h>
 
-// check filename, arajin elementy inch kara lini
-//  && (line[*index] == '_' || 
-// 		line[*index] == '.' || line[*index] == '-' || 
-//	(line[*index]) || line[*index] == '\"' || line[*index] == '\'')
-// animast check
 int	find_filename(char *line, char **redir, int *index)
 {
 	char	*tmp;
@@ -27,7 +22,7 @@ int	find_filename(char *line, char **redir, int *index)
 	tmp = ft_substr(line, aft_spc, *index - aft_spc);
 	err_msg_w_exit (!tmp, 1);
 	*redir = ft_strtrim(tmp, " \t\n\r\v\f");
-	printf ("\"%s\"\n", *redir);
+	// printf ("\"%s\"\n", *redir);
 	err_msg_w_exit (!*redir, 1);
 	free(tmp);
 	clear_quotes_line(*redir);
@@ -129,6 +124,7 @@ int	redirect_io(t_shell *sh, char **line, int i)
 	{
 		sh->fdin = open(redir, O_RDONLY);
 		free(redir);
+		printf ("kjhghbgvhbgvf ghgfghvcfgvhbvghbvg2\n");
 		if (err_msg (sh->fdin == -1, "No such file or directory"))
 			return (1);
 	}
@@ -136,6 +132,7 @@ int	redirect_io(t_shell *sh, char **line, int i)
 	{
 		sh->fdout = open(redir, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		free(redir);
+		printf ("kjhghbgvhbgvf ghgfghvcfgvhbvghbvg3\n");
 		if (err_msg (sh->fdout == -1, "No such file or directory"))
 			return (1);
 	}

@@ -31,7 +31,7 @@ int	exec_one(t_shell *sh, int indicator)
 		if (sh->here_closer)
 			close(sh->heredoc[0]);
 		execve(*sh->cmd, sh->cmd, envp);
-		err_msg_w_exit(1, 1);
+		err_msg_w_exit(1, 127);
 	}
 	double_free(envp);
 	waitpid(cpid, &sh->status, 0);
@@ -39,7 +39,7 @@ int	exec_one(t_shell *sh, int indicator)
 	return (0);
 }
 
-// exit status when execve fails X
+// exit status when execve fails V
 int	one_cmd(t_shell *sh)
 {
 	int	ret;

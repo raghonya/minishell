@@ -72,7 +72,7 @@ int	exec_multi(t_shell *sh, int indicator)
 		if (sh->here_closer)
 			close(sh->heredoc[0]);
 		execve(*sh->cmd, sh->cmd, envp);
-		err_msg_w_exit(1, 1);
+		err_msg_w_exit(1, 127);
 	}
 	sh->childs_pid[indicator] = cpid;
 	double_free(envp);
@@ -103,7 +103,7 @@ int	multipipes(t_shell *sh)
 
 	i = -1;
 	if (init_pipe (sh))
-		return (0);
+		return (1);
 	while (sh->spl_pipe[++i])
 	{
 		if (redirections(sh, &sh->spl_pipe[i]))

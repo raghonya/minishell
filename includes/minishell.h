@@ -164,4 +164,4 @@ int		redirect_io(t_shell *sh, char **line, int i);
 
 int		redirections(t_shell *sh, char **line);
 
-#endif 
+#endif

@@ -23,10 +23,10 @@ int	redirect(t_shell *sh, char **line, int i)
 		if ((*line)[i + 1] == (*line)[i])
 		{
 			if (heredoc_or_append(sh, line, i--))
-				return (-1);
+				return (-7);
 		}
 		else if (redirect_io(sh, line, i--))
-			return (-1);
+			return (-7);
 	}
 	return (i);
 }
@@ -51,7 +51,7 @@ int	redirections(t_shell *sh, char **line)
 			continue ;
 		}
 		i = redirect (sh, line, i);
-		if (i++ == -1)
+		if (i++ == -7)
 			return (1);
 	}
 	return (0);
