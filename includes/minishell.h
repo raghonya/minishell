@@ -68,15 +68,21 @@ void	define_exit_stat(t_shell *sh);
 
 void	change_exit_stat(t_shell sh, t_list *env);
 
-int		call_commands(t_shell *sh, int i, int (*execute)(t_shell *, int));
+void	find_and_execute_1(t_shell *sh);
+
+void	find_and_execute(t_shell *sh, char **envp);
 
 int		one_cmd(t_shell *sh);
 
 int		multipipes(t_shell *sh);
 
-char	**create_envp(t_shell sh);
+char	**envp_for_execve(t_shell sh);
 
 int		init_pipe(t_shell *sh);
+
+void	exec_one(t_shell *sh);
+
+int		exec_multi(t_shell *sh, int indicator);
 
 //	BUILTINS
 
@@ -163,5 +169,9 @@ int		heredoc_or_append(t_shell *sh, char **line, int i);
 int		redirect_io(t_shell *sh, char **line, int i);
 
 int		redirections(t_shell *sh, char **line);
+
+// Signals
+
+void	sig_catcher(t_shell *sh);
 
 #endif

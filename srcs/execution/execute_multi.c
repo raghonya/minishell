@@ -16,6 +16,7 @@ void	direct_first_last(t_shell *sh, int indicator)
 {
 	if (indicator == 0)
 	{
+		printf ("cmd: %s, fdout: %d\n", *sh->cmd, sh->fdout);
 		err_msg_w_exit(dup2(sh->fdin, 0) == -1, 1);
 		if (sh->fdout == 1)
 			err_msg_w_exit(dup2(sh->pipe[indicator + 1], 1) == -1, 1);
@@ -60,8 +61,12 @@ int	exec_multi(t_shell *sh, int indicator)
 	char	**envp;
 	pid_t	cpid;
 
-	envp = create_envp(*sh);
-	find_absolute_path(sh->cmd, sh->paths);
+	envp = envp_for_execve(*sh);
+	if (ft_strcmp(*sh->cmd, "echo") && ft_strcmp(*sh->cmd, "env") \
+		&& ft_strcmp(*sh->cmd, "exit") && ft_strcmp(*sh->cmd, "pwd") \
+		&& ft_strcmp(*sh->cmd, "unset") && ft_strcmp(*sh->cmd, "cd") \
+		&& ft_strcmp(*sh->cmd, "export"))
+		find_absolute_path(sh->cmd, sh->paths);
 	cpid = fork();
 	if (err_msg_w_close (cpid == -1, "Fork error", sh->pipe_count, sh))
 		return (1);
@@ -71,8 +76,7 @@ int	exec_multi(t_shell *sh, int indicator)
 		direct_cmd(sh, indicator);
 		if (sh->here_closer)
 			close(sh->heredoc[0]);
-		execve(*sh->cmd, sh->cmd, envp);
-		err_msg_w_exit(1, 127);
+		find_and_execute(sh, envp);
 	}
 	sh->childs_pid[indicator] = cpid;
 	double_free(envp);
@@ -92,6 +96,7 @@ void	wait_for_childs(t_shell *sh)
 	i = 0;
 	while (i < sh->pipe_count + 1)
 		waitpid(sh->childs_pid[i++], &sh->status, 0);
+	free(sh->childs_pid);
 	define_exit_stat (sh);
 }
 
@@ -111,7 +116,7 @@ int	multipipes(t_shell *sh)
 		sh->cmd = split_wout_quotes(sh->spl_pipe[i], ' ');
 		err_msg_w_exit(!sh->cmd, 1);
 		clear_quotes_matrix(sh->cmd);
-		ret = call_commands(sh, i, &exec_multi);
+		ret = exec_multi(sh, i);
 		if (sh->here_closer)
 			close(sh->heredoc[0]);
 		double_free(sh->cmd);

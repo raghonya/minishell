@@ -23,16 +23,17 @@ SRCS	=	srcs/builtins/builtin_export.c \
 			srcs/paths/paths.c \
 			srcs/check/check_symbols.c \
 			srcs/check/errors.c \
-			srcs/check/find_commands.c \
 			srcs/check/split_wout_quotes.c \
 			srcs/redirection/redirections.c \
 			srcs/redirection/io_control.c \
+			srcs/execution/find_commands.c \
 			srcs/execution/execute_multi.c \
 			srcs/execution/clear_quotes.c \
 			srcs/execution/execute_one.c \
 			srcs/execution/exit_status.c \
 			srcs/main/initialization.c \
-			srcs/main/minishell.c 
+			srcs/main/minishell.c \
+			srcs/signals/signals.c
 			
 LIB		=	./libft
 
@@ -60,7 +61,7 @@ OBJS	=	obj/builtin_export.o \
 			obj/paths.o \
 			obj/check_symbols.o \
 			obj/errors.o \
-			obj/find_commands.o \
+			obj/find_command.o \
 			obj/minishell.o \
 			obj/split_wout_quotes.o \
 			obj/redirections.o \
@@ -68,7 +69,8 @@ OBJS	=	obj/builtin_export.o \
 			obj/execute_multi.o \
 			obj/clear_quotes.o \
 			obj/execute_one.o \
-			obj/exit_status.o
+			obj/exit_status.o \
+			obj/signals.o
 
 CMD		=	$(MAKECMDGOALS)
 

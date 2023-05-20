@@ -89,3 +89,24 @@ int	check_pipes(t_shell *sh)
 		return (err_msg(1, "Pipe at the end of line"));
 	return (0);
 }
+
+int	check_pipes_empty(char **spl_pipe)
+{
+	char	**tmp;
+	int		i;
+	int		j;
+
+	i = -1;
+	while (spl_pipe[++i])
+	{
+		tmp = split_wout_quotes(spl_pipe[i], ' ');
+		err_msg_w_exit(!tmp, 1);
+		if (err_msg(!*tmp, "Syntax error near unexpected token `|'"))
+		{
+			free(tmp);
+			return (1);
+		}
+		double_free(tmp);
+	}
+	return (0);
+}

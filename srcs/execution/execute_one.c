@@ -12,17 +12,16 @@
 
 #include <minishell.h>
 
-int	exec_one(t_shell *sh, int indicator)
+void	exec_one(t_shell *sh)
 {
 	char		**envp;
 	pid_t		cpid;
 
-	(void)indicator;
-	envp = create_envp(*sh);
+	envp = envp_for_execve(*sh);
 	find_absolute_path(sh->cmd, sh->paths);
 	cpid = fork();
 	if (err_msg (cpid == -1, "Fork error"))
-		return (1);
+		return ;
 	if (!cpid)
 	{
 		sh->sig.sa_handler = SIG_DFL;
@@ -36,22 +35,18 @@ int	exec_one(t_shell *sh, int indicator)
 	double_free(envp);
 	waitpid(cpid, &sh->status, 0);
 	define_exit_stat(sh);
-	return (0);
 }
 
-// exit status when execve fails V
 int	one_cmd(t_shell *sh)
 {
-	int	ret;
-
 	if (redirections(sh, &sh->spl_pipe[0]))
 		return (1);
 	sh->cmd = split_wout_quotes(sh->spl_pipe[0], ' ');
 	err_msg_w_exit(!sh->cmd, 1);
 	clear_quotes_matrix(sh->cmd);
-	ret = call_commands(sh, -1, &exec_one);
+	find_and_execute_1(sh);
 	if (sh->here_closer)
 		close(sh->heredoc[0]);
 	double_free(sh->cmd);
-	return (ret);
+	return (0);
 }

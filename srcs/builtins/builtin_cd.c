@@ -58,11 +58,17 @@ char	*find_pwd(t_list *env, char *oldpwd)
 	while (env)
 	{
 		if (!ft_strncmp(env->data, "PWD=", 4))
+		{
+			free(oldpwd);
 			return (ft_strdup(after_symb(env->data, '=')));
+		}
 		env = env->next;
 	}
 	if (count++ == 1)
+	{
+		free(oldpwd);
 		return (ft_strdup(""));
+	}
 	return (oldpwd);
 }
 

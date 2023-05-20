@@ -26,7 +26,7 @@ void	prompt_and_history(char **line, char **prompt)
 	*prompt = ft_strjoin("\033[0;33m", *prompt);
 	free(*line);
 	*line = readline(*prompt);
-	printf ("%s\n", *line);
+	if (*line)printf ("%s\n", *line);
 	if (!*line)
 	{
 		rl_clear_history();
@@ -62,22 +62,6 @@ int	free_and_continue(t_shell *sh)
 	return (0);
 }
 
-void	handle_sigint(int signum)
-{
-	if (signum == SIGINT)
-	{
-		rl_replace_line("", 0);
-		printf ("\n");
-		rl_on_new_line();
-		if (wait(NULL) == -1)
-			rl_redisplay();
-	}
-	else if (signum == SIGQUIT)
-	{
-		g_handle_sig = 1;
-	}
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell		sh;
@@ -88,10 +72,8 @@ int	main(int argc, char **argv, char **envp)
 	sh.line = NULL;
 	sh.prompt = NULL;
 	sh.exit_stat = 0;
-	sh.sig.sa_handler = &handle_sigint;
-	sigaction(SIGINT, &sh.sig, NULL);
-	sigaction(SIGQUIT, &sh.sig, NULL);
-	//DIR	*dir = opendir(".");
+	sig_catcher(&sh);
+	////DIR	*dir = opendir(".");
 	while (777)
 	{
 		// if (g_handle_sig)

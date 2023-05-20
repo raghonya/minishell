@@ -27,31 +27,59 @@ int	delete_var(t_list **tmp_prev, t_list **env, t_list **head)
 	return (1);
 }
 
+int	validation(t_shell *sh, char *var, int *ret)
+{
+	int	i;
+
+	if (var[0] == '?')
+		return (1);
+	i = -1;
+	while (var[++i])
+	{
+		if (err_msg ((i == 0 && ft_isdigit(var[i])) \
+		|| (!ft_isalnum(var[i]) && var[i] != '_'), \
+		"not a valid identifier"))
+		{
+			*ret = 1;
+			return (1);
+		}
+	}
+	return (0);
+}
+
+int	removing(t_list **env, t_list **tmp_prev, char *cmd)
+{
+	char	*tmp_str;
+	t_list	*head;
+
+	head = *env;
+	tmp_str = ft_strjoin(cmd, "=");
+	while (*env)
+	{
+		if (!ft_strncmp((*env)->data, tmp_str, ft_strlen(tmp_str)) \
+			&& delete_var(tmp_prev, env, &head))
+			break ;
+		*tmp_prev = *env;
+		*env = (*env)->next;
+	}
+	*env = head;
+	free(tmp_str);
+}
+
 int	builtin_unset(t_shell *sh, char **cmds, t_list **env)
 {
-	t_list	*head;
 	t_list	*tmp_prev;
-	char	*tmp_str;
+	int		ret;
 	int		i;
 
 	i = 0;
+	ret = 0;
 	tmp_prev = NULL;
 	while (cmds[++i])
 	{
-		if (*cmds[i] == '?')
+		if (validation(sh, cmds[i], &ret))
 			continue ;
-		head = *env;
-		tmp_str = ft_strjoin(cmds[i], "=");
-		while (*env)
-		{
-			if (!ft_strncmp((*env)->data, tmp_str, ft_strlen(tmp_str)) \
-				&& delete_var(&tmp_prev, env, &head))
-				break ;
-			tmp_prev = *env;
-			*env = (*env)->next;
-		}
-		free(tmp_str);
-		*env = head;
+		removing(env, &tmp_prev, cmds[i]);
 	}
-	return (0);
+	return (ret);
 }

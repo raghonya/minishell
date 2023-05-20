@@ -12,28 +12,7 @@
 
 #include <minishell.h>
 
-int	check_pipes_empty(char **spl_pipe)
-{
-	char	**tmp;
-	int		i;
-	int		j;
-
-	i = -1;
-	while (spl_pipe[++i])
-	{
-		tmp = split_wout_quotes(spl_pipe[i], ' ');
-		err_msg_w_exit(!tmp, 1);
-		if (err_msg(!*tmp, "Syntax error near unexpected token `|'"))
-		{
-			free(tmp);
-			return (1);
-		}
-		double_free(tmp);
-	}
-	return (0);
-}
-
-char	**create_envp(t_shell sh)
+char	**envp_for_execve(t_shell sh)
 {
 	char	**envp;
 	t_list	*head;
@@ -69,29 +48,47 @@ char	**create_envp(t_shell sh)
 	//ev ayspes, in pipe[(indicator - 1) * 2], out pipe[(indicator - 1) * 2 + 3];
 */
 
-int	call_commands(t_shell *sh, int i, int (*execute)(t_shell *, int))
-{	
-	int	ret;
-
+void	find_and_execute(t_shell *sh, char **envp)
+{
 	if (!ft_strcmp(*sh->cmd, "echo"))
-		ret = builtin_echo(sh, sh->cmd);
+		exit (builtin_echo(sh, sh->cmd));
 	else if (!ft_strcmp(*sh->cmd, "cd"))
-		ret = builtin_cd(sh, sh->cmd, sh->env);
+		exit (builtin_cd(sh, sh->cmd, sh->env));
 	else if (!ft_strcmp(*sh->cmd, "pwd"))
-		ret = builtin_pwd(sh);
+		exit (builtin_pwd(sh));
 	else if (!ft_strcmp(*sh->cmd, "export"))
-		ret = builtin_export(sh, sh->cmd);
+		exit (builtin_export(sh, sh->cmd));
 	else if (!ft_strcmp(*sh->cmd, "unset"))
-		ret = builtin_unset(sh, sh->cmd, &sh->env);
+		exit (builtin_unset(sh, sh->cmd, &sh->env));
 	else if (!ft_strcmp(*sh->cmd, "env"))
-		ret = builtin_env(sh, sh->env);
+		exit (builtin_env(sh, sh->env));
 	else if (!ft_strcmp(*sh->cmd, "exit"))
-		ret = builtin_exit(sh, sh->cmd);
-	else
-		return (execute(sh, i));
-	sh->exit_stat = ret;
-	return (ret);
+		exit (builtin_exit(sh, sh->cmd));
+	execve(*sh->cmd, sh->cmd, envp);
+	err_msg_w_exit(1, 127);
 }
+
+void	find_and_execute_1(t_shell *sh)
+{	
+	if (!ft_strcmp(*sh->cmd, "echo"))
+		sh->exit_stat = builtin_echo(sh, sh->cmd);
+	else if (!ft_strcmp(*sh->cmd, "cd"))
+		sh->exit_stat = builtin_cd(sh, sh->cmd, sh->env);
+	else if (!ft_strcmp(*sh->cmd, "pwd"))
+		sh->exit_stat = builtin_pwd(sh);
+	else if (!ft_strcmp(*sh->cmd, "export"))
+		sh->exit_stat = builtin_export(sh, sh->cmd);
+	else if (!ft_strcmp(*sh->cmd, "unset"))
+		sh->exit_stat = builtin_unset(sh, sh->cmd, &sh->env);
+	else if (!ft_strcmp(*sh->cmd, "env"))
+		sh->exit_stat = builtin_env(sh, sh->env);
+	else if (!ft_strcmp(*sh->cmd, "exit"))
+		sh->exit_stat = builtin_exit(sh, sh->cmd);
+	else
+		exec_one(sh);
+}
+
+//check exit status erb redirection error ka
 
 int	check_line(t_shell *sh)
 {
@@ -107,9 +104,9 @@ int	check_line(t_shell *sh)
 		;
 	sh->pipe_count = i - 1;
 	if (sh->pipe_count == 0)
-		ret = one_cmd(sh);
+		one_cmd(sh);
 	else
-		ret = multipipes(sh);
+		multipipes(sh);
 	change_exit_stat(*sh, sh->env);
 	return (ret);
 }
