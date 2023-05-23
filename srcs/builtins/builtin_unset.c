@@ -27,7 +27,7 @@ int	delete_var(t_list **tmp_prev, t_list **env, t_list **head)
 	return (1);
 }
 
-int	validation(t_shell *sh, char *var, int *ret)
+int	validation(char *var, int *ret)
 {
 	int	i;
 
@@ -47,7 +47,7 @@ int	validation(t_shell *sh, char *var, int *ret)
 	return (0);
 }
 
-int	removing(t_list **env, t_list **tmp_prev, char *cmd)
+void	removing(t_list **env, t_list **tmp_prev, char *cmd)
 {
 	char	*tmp_str;
 	t_list	*head;
@@ -74,10 +74,11 @@ int	builtin_unset(t_shell *sh, char **cmds, t_list **env)
 
 	i = 0;
 	ret = 0;
+	(void)sh;
 	tmp_prev = NULL;
 	while (cmds[++i])
 	{
-		if (validation(sh, cmds[i], &ret))
+		if (validation(cmds[i], &ret))
 			continue ;
 		removing(env, &tmp_prev, cmds[i]);
 	}

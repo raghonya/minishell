@@ -94,7 +94,6 @@ int	check_pipes_empty(char **spl_pipe)
 {
 	char	**tmp;
 	int		i;
-	int		j;
 
 	i = -1;
 	while (spl_pipe[++i])

@@ -1,6 +1,6 @@
 NAME	=	minishell
 
-CFLAGS	=	#-Wall -Wextra -Werror
+CFLAGS	=	-Wall -Wextra -Werror
 
 f		=	-fsanitize=address -g
 
@@ -24,6 +24,7 @@ SRCS	=	srcs/builtins/builtin_export.c \
 			srcs/check/check_symbols.c \
 			srcs/check/errors.c \
 			srcs/check/split_wout_quotes.c \
+			srcs/redirection/heredoc_funcs.c \
 			srcs/redirection/redirections.c \
 			srcs/redirection/io_control.c \
 			srcs/execution/find_commands.c \
@@ -66,6 +67,7 @@ OBJS	=	obj/builtin_export.o \
 			obj/split_wout_quotes.o \
 			obj/redirections.o \
 			obj/io_control.o \
+			obj/heredoc_funcs.o \
 			obj/execute_multi.o \
 			obj/clear_quotes.o \
 			obj/execute_one.o \

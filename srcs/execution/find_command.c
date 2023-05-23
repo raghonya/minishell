@@ -92,7 +92,6 @@ void	find_and_execute_1(t_shell *sh)
 
 int	check_line(t_shell *sh)
 {
-	int	ret;
 	int	i;
 
 	i = -1;
@@ -108,7 +107,7 @@ int	check_line(t_shell *sh)
 	else
 		multipipes(sh);
 	change_exit_stat(*sh, sh->env);
-	return (ret);
+	return (0);
 }
 
 //	echo >a >b >c  -n >d >e >f  barev >a iuytresdfghj

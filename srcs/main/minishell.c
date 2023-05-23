@@ -76,17 +76,7 @@ int	main(int argc, char **argv, char **envp)
 	////DIR	*dir = opendir(".");
 	while (777)
 	{
-		// if (g_handle_sig)
-		// {
-		// 	g_handle_sig = 0;
-		// 	while (1)
-		// 	{
-		// 		kill (wait (NULL), SIGINT);
-		// 		if (wait(NULL) == -1)
-		// 			break ;
-		// 	}
-		// 	continue ;
-		// }
+		// unset u exit mej sh argumenty hanel
 		prompt_and_history(&sh.line, &sh.prompt);
 		if (!*sh.line || check_quotes(sh.line) \
 		|| check_pipes(&sh) || check_redirection(&sh))

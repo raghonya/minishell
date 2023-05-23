@@ -45,6 +45,7 @@ int	builtin_exit(t_shell *sh, char **cmds)
 	int	i;
 
 	i = -1;
+	(void)sh;
 	while (cmds[++i])
 		if (err_msg(i > 1, "exit: Too many arguments"))
 			return (1);

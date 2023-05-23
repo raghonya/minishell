@@ -164,6 +164,10 @@ void	find_absolute_path(char **args, char **paths);
 
 // Redirections
 
+int	find_filename(char *line, char **redir, int *index);
+
+char	*clear_redirection(char *line, int start, int end);
+
 int		heredoc_or_append(t_shell *sh, char **line, int i);
 
 int		redirect_io(t_shell *sh, char **line, int i);

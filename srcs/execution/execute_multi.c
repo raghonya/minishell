@@ -102,9 +102,7 @@ void	wait_for_childs(t_shell *sh)
 
 int	multipipes(t_shell *sh)
 {
-	int	ret;
 	int	i;
-	int	j;
 
 	i = -1;
 	if (init_pipe (sh))
@@ -116,7 +114,7 @@ int	multipipes(t_shell *sh)
 		sh->cmd = split_wout_quotes(sh->spl_pipe[i], ' ');
 		err_msg_w_exit(!sh->cmd, 1);
 		clear_quotes_matrix(sh->cmd);
-		ret = exec_multi(sh, i);
+		exec_multi(sh, i);
 		if (sh->here_closer)
 			close(sh->heredoc[0]);
 		double_free(sh->cmd);

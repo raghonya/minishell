@@ -68,7 +68,7 @@ int	check_var_existence(char *add, t_shell *sh)
 	return (0);
 }
 
-void	add_variable(t_shell *sh, char **add)
+void	add_variable(t_shell *sh, char **add, int *ret)
 {
 	int	i;
 
@@ -85,22 +85,25 @@ void	add_variable(t_shell *sh, char **add)
 	}
 	else if (err_msg(ft_isdigit(**add) || **add == '=', \
 		"not a valid identifier"))
-		;
+	{
+		*ret = 1;
+	}
 }
 
 int	builtin_export(t_shell *sh, char **add)
 {
-	int		i;
+	int	ret;
 
+	ret = 0;
 	if (!add++[1])
 		export_w_no_arg(*sh, sh->env);
 	else
 	{
 		while (*add)
 		{
-			add_variable(sh, add);
+			add_variable(sh, add, &ret);
 			add++;
 		}
 	}
-	return (0);
+	return (ret);
 }

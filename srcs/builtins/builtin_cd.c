@@ -28,6 +28,7 @@ int	check_home(t_list *env, char **oldpwd)
 		}
 		env = env->next;
 	}
+	free(*oldpwd);
 	return (err_msg(!env, "cd: HOME not set"));
 }
 
