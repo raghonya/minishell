@@ -19,7 +19,7 @@ int	redirect(t_shell *sh, char **line, int i)
 		if (err_msg(((*line)[i] == '<' && (*line)[i + 1] == '>') \
 			|| ((*line)[i] == '>' && (*line)[i + 1] == '<'), \
 			"Syntax error"))
-			return (-1);
+			return (-7);
 		if ((*line)[i + 1] == (*line)[i])
 		{
 			if (heredoc_or_append(sh, line, i--))
