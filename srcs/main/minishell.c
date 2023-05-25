@@ -32,10 +32,8 @@ void	prompt_and_history(char **line, char **prompt)
 		rl_clear_history();
 		printf ("exit\n");
 		free(prev_line);
-		//system("leaks minishell");
 		exit(0);
 	}
-	// printf ("'%s'\n", *line);
 	if (**line && ft_strcmp(prev_line, *line) && !ft_isspace(**line))
 		add_history(*line);
 	free(prev_line);
@@ -46,6 +44,8 @@ void	double_free(char **info)
 	int	i;
 
 	i = -1;
+	if (!info)
+		return ;
 	while (info[++i])
 		free(info[i]);
 	free(info);
@@ -55,9 +55,11 @@ int	free_and_continue(t_shell *sh)
 {
 	if (check_line(sh))
 	{
+		double_free(sh->paths);
 		double_free(sh->spl_pipe);
 		return (1);
 	}
+	double_free(sh->paths);
 	double_free(sh->spl_pipe);
 	return (0);
 }

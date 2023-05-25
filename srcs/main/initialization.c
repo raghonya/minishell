@@ -53,6 +53,5 @@ void	init_env(t_shell *sh, char **envp)
 	}
 	if (find_exit_stat(sh->env))
 		ft_lstadd_back(&sh->env, ft_lstnew(ft_strdup("?=0")));
-	sh->paths = paths_finder(sh->env);
 	//err_msg_w_exit(!sh->paths, 1);
 }

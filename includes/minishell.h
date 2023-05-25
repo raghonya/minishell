@@ -92,11 +92,11 @@ int		builtin_pwd(t_shell *sh);
 
 int		builtin_env(t_shell *sh, t_list *env);
 
-int		builtin_exit(t_shell *sh, char **cmds);
+int		builtin_exit(char **cmds);
 
 int		builtin_echo(t_shell *sh, char **cmds);
 
-int		builtin_unset(t_shell *sh, char **cmds, t_list **env);
+int		builtin_unset(char **cmds, t_list **env);
 
 int		builtin_export(t_shell *sh, char **cmds);
 

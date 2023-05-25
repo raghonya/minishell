@@ -15,20 +15,18 @@
 char	**envp_for_execve(t_shell sh)
 {
 	char	**envp;
-	t_list	*head;
 	int		size;
 	int		i;
 
 	i = -1;
-	head = sh.env;
 	size = ft_lstsize(sh.env);
 	envp = malloc(sizeof(char *) * (size + 1));
 	err_msg_w_exit (!envp, 1);
 	while (++i < size)
 	{
-		envp[i] = ft_strdup(head->data);
+		envp[i] = ft_strdup(sh.env->data);
 		err_msg_w_exit(!envp[i], 1);
-		head = head->next;
+		sh.env = sh.env->next;
 	}
 	envp[i] = NULL;
 	return (envp);
@@ -59,11 +57,11 @@ void	find_and_execute(t_shell *sh, char **envp)
 	else if (!ft_strcmp(*sh->cmd, "export"))
 		exit (builtin_export(sh, sh->cmd));
 	else if (!ft_strcmp(*sh->cmd, "unset"))
-		exit (builtin_unset(sh, sh->cmd, &sh->env));
+		exit (builtin_unset(sh->cmd, &sh->env));
 	else if (!ft_strcmp(*sh->cmd, "env"))
 		exit (builtin_env(sh, sh->env));
 	else if (!ft_strcmp(*sh->cmd, "exit"))
-		exit (builtin_exit(sh, sh->cmd));
+		exit (builtin_exit(sh->cmd));
 	execve(*sh->cmd, sh->cmd, envp);
 	err_msg_w_exit(1, 127);
 }
@@ -79,11 +77,11 @@ void	find_and_execute_1(t_shell *sh)
 	else if (!ft_strcmp(*sh->cmd, "export"))
 		sh->exit_stat = builtin_export(sh, sh->cmd);
 	else if (!ft_strcmp(*sh->cmd, "unset"))
-		sh->exit_stat = builtin_unset(sh, sh->cmd, &sh->env);
+		sh->exit_stat = builtin_unset(sh->cmd, &sh->env);
 	else if (!ft_strcmp(*sh->cmd, "env"))
 		sh->exit_stat = builtin_env(sh, sh->env);
 	else if (!ft_strcmp(*sh->cmd, "exit"))
-		sh->exit_stat = builtin_exit(sh, sh->cmd);
+		sh->exit_stat = builtin_exit(sh->cmd);
 	else
 		exec_one(sh);
 }
@@ -95,6 +93,7 @@ int	check_line(t_shell *sh)
 	int	i;
 
 	i = -1;
+	sh->paths = paths_finder(sh->env);
 	sh->spl_pipe = split_wout_quotes(sh->line, '|');
 	err_msg_w_exit(!sh->spl_pipe, 1);
 	if (check_pipes_empty(sh->spl_pipe))

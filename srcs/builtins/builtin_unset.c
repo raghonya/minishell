@@ -66,7 +66,7 @@ void	removing(t_list **env, t_list **tmp_prev, char *cmd)
 	free(tmp_str);
 }
 
-int	builtin_unset(t_shell *sh, char **cmds, t_list **env)
+int	builtin_unset(char **cmds, t_list **env)
 {
 	t_list	*tmp_prev;
 	int		ret;
@@ -74,7 +74,6 @@ int	builtin_unset(t_shell *sh, char **cmds, t_list **env)
 
 	i = 0;
 	ret = 0;
-	(void)sh;
 	tmp_prev = NULL;
 	while (cmds[++i])
 	{
