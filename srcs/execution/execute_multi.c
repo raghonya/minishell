@@ -72,7 +72,6 @@ int	exec_multi(t_shell *sh, int indicator)
 		return (1);
 	if (!cpid)
 	{
-		sh->sig.sa_handler = SIG_DFL;
 		direct_cmd(sh, indicator);
 		if (sh->here_closer)
 			close(sh->heredoc[0]);

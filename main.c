@@ -5,21 +5,22 @@
 
 int main()
 {
-	int pid = fork();
+	while (1) ;
+	//int pid = fork();
 
-	if (!pid)
-		{
-			sleep(2);
-			exit(0);
-		}
-	else
-	{
-		sleep(1);
-		printf ("gone hasar?\n");
-		printf ("%d\n", waitpid(-1, NULL, WNOHANG));
-		while (waitpid(-1, NULL, WNOHANG) != -1)
-		{
-			printf ("lav\n");
-		}
-	}
+	//if (!pid)
+	//	{
+	//		sleep(2);
+	//		exit(0);
+	//	}
+	//else
+	//{
+	//	sleep(1);
+	//	printf ("gone hasar?\n");
+	//	printf ("%d\n", waitpid(-1, NULL, WNOHANG));
+	//	while (waitpid(-1, NULL, WNOHANG) != -1)
+	//	{
+	//		printf ("lav\n");
+	//	}
+	//}
 }

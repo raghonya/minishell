@@ -35,18 +35,6 @@ SRCS	=	srcs/builtins/builtin_export.c \
 			srcs/main/initialization.c \
 			srcs/main/minishell.c \
 			srcs/signals/signals.c
-			
-LIB		=	./libft
-
-IFLAGS	=	-I$(LIB) -Iincludes -Ireadline-raghonya/include
-
-LFLAGS	=	-L$(LIB) -lft -Lreadline-raghonya/lib -lreadline
-
-PREFIX	=	$(shell find $(HOME) -name readline-raghonya -type d 2>/dev/null)
-
-RLLIB	=	cd readline-master && ./configure --prefix=$(PREFIX) && make clean && make && make install
-
-#@echo $(PREFIX)
 
 OBJS	=	obj/builtin_export.o \
 			obj/builtin_unset.o \
@@ -73,6 +61,16 @@ OBJS	=	obj/builtin_export.o \
 			obj/execute_one.o \
 			obj/exit_status.o \
 			obj/signals.o
+			
+LIB		=	./libft
+
+IFLAGS	=	-I$(LIB) -Iincludes -Ireadline-raghonya/include
+
+LFLAGS	=	-L$(LIB) -lft -Lreadline-raghonya/lib -lreadline
+
+PREFIX	=	$(shell find $(HOME) -name readline-raghonya -type d 2>/dev/null)
+
+RLLIB	=	cd readline-master && ./configure --prefix=$(PREFIX) && make clean && make && make install
 
 CMD		=	$(MAKECMDGOALS)
 
@@ -101,7 +99,7 @@ clean: libs
 	rm -rf $(OBJDIR)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -rf $(NAME)
 
 libs:
 	@echo "Helper libs"

@@ -14,6 +14,11 @@
 
 int	g_handle_sig = 0;
 
+int	readline_break(void)
+{
+	return (0);
+}
+
 void	prompt_and_history(char **line, char **prompt)
 {
 	char	*prev_line;
@@ -70,8 +75,10 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	rl_event_hook = &readline_break;
 	init_env(&sh, envp);
 	sh.line = NULL;
+	sh.paths = NULL;
 	sh.prompt = NULL;
 	sh.exit_stat = 0;
 	sig_catcher(&sh);
