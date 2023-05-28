@@ -26,7 +26,7 @@ void	prompt_and_history(char **line, char **prompt)
 	*prompt = ft_strjoin("\033[0;33m", *prompt);
 	free(*line);
 	*line = readline(*prompt);
-	if (*line)printf ("%s\n", *line);
+	//if (*line)printf ("%s\n", *line);
 	if (!*line)
 	{
 		rl_clear_history();
@@ -84,7 +84,7 @@ int	main(int argc, char **argv, char **envp)
 		|| check_pipes(&sh) || check_redirection(&sh))
 			continue ;
 		sh.line = expand(&sh, sh.line);
-		printf ("expanded line: *%s*\n", sh.line);
+		//printf ("expanded line: *%s*\n", sh.line);
 		if (free_and_continue(&sh))
 			continue ;
 		// system("leaks minishell");

@@ -5,7 +5,7 @@ int	read_heredoc(t_shell *sh, char *limiter)
 	char	*line;
 
 	line = NULL;
-	printf ("%s\n", limiter);
+	//printf ("%s\n", limiter);
 	while (1)
 	{
 		line = readline("heredoc> ");
@@ -56,6 +56,6 @@ int	heredoc_or_append(t_shell *sh, char **line, int i)
 	if (redir_symbol_check(sh, line, redir, i))
 		return (1);
 	*line = clear_redirection(*line, i, to_clear + i + 1);
-	printf ("aranc redir heredoc: /*%s*/\n", *line);
+	//printf ("aranc redir heredoc: /*%s*/\n", *line);
 	return (0);
 }

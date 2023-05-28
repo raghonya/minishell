@@ -24,7 +24,7 @@ void	exec_one(t_shell *sh)
 		return ;
 	if (!cpid)
 	{
-		printf ("ste es\n");
+		//printf ("ste es\n");
 		sh->sig.sa_handler = SIG_DFL;
 		err_msg_w_exit(dup2(sh->fdin, 0) == -1, 1);
 		err_msg_w_exit(dup2(sh->fdout, 1) == -1, 1);

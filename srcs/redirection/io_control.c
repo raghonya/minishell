@@ -69,6 +69,6 @@ int	redirect_io(t_shell *sh, char **line, int i)
 			return (1);
 	}
 	*line = clear_redirection(*line, i, to_clear + i);
-	printf ("aranc redir: '%s'\n", *line);
+	//printf ("aranc redir: '%s'\n", *line);
 	return (0);
 }
