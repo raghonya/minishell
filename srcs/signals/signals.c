@@ -8,11 +8,7 @@ void	handle_signals(int signum)
 		//printf ("ste el hasanq\n");
 		rl_replace_line("", 0);
 		rl_done = 1;
-	}
-	else if (signum == SIGQUIT)
-	{
-		printf ("dcgfvthj");
-		return ;
+		//if (waitpid(-1, NULL, WNOHANG)/
 	}
 	//printf ("funckicayi verj\n");
 }

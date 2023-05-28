@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <minishell.h>
+#include <termios.h>
 
 int	g_handle_sig = 0;
 
@@ -72,7 +73,13 @@ int	free_and_continue(t_shell *sh)
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell		sh;
+	//struct termios	term;
 
+	//tcgetattr(STDIN_FILENO, &term);
+	////term.c_cc[VINTR] = 'z';
+	//term.c_lflag &= ~ECHO;
+	//tcsetattr(STDIN_FILENO, TCSANOW, &term);
+	//tcgetattr(STDIN_FILENO, &term);
 	(void)argc;
 	(void)argv;
 	rl_event_hook = &readline_break;
