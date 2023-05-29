@@ -12,6 +12,22 @@
 
 #include <minishell.h>
 
+int	readline_break(void)
+{
+	return (0);
+}
+
+void	main_inits(t_shell *sh, char **envp)
+{
+	rl_event_hook = &readline_break;
+	init_env(sh, envp);
+	sh->line = NULL;
+	sh->paths = NULL;
+	sh->prompt = NULL;
+	sh->exit_stat = 0;
+	sig_catcher(sh);
+}
+
 int	find_exit_stat(t_list *env)
 {
 	while (env)

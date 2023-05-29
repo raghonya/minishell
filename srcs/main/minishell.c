@@ -11,14 +11,6 @@
 /* ************************************************************************** */
 
 #include <minishell.h>
-#include <termios.h>
-
-int	g_handle_sig = 0;
-
-int	readline_break(void)
-{
-	return (0);
-}
 
 void	prompt_and_history(char **line, char **prompt)
 {
@@ -73,23 +65,10 @@ int	free_and_continue(t_shell *sh)
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell		sh;
-	//struct termios	term;
 
-	//tcgetattr(STDIN_FILENO, &term);
-	////term.c_cc[VINTR] = 'z';
-	//term.c_lflag &= ~ECHO;
-	//tcsetattr(STDIN_FILENO, TCSANOW, &term);
-	//tcgetattr(STDIN_FILENO, &term);
 	(void)argc;
 	(void)argv;
-	rl_event_hook = &readline_break;
-	init_env(&sh, envp);
-	sh.line = NULL;
-	sh.paths = NULL;
-	sh.prompt = NULL;
-	sh.exit_stat = 0;
-	sig_catcher(&sh);
-	////DIR	*dir = opendir(".");
+	main_inits(&sh, envp);
 	while (777)
 	{
 		// unset u exit mej sh argumenty hanel

@@ -62,6 +62,8 @@ typedef struct s_shell
 
 }	t_shell;
 
+void	main_inits(t_shell *sh, char **envp);
+
 // Execution
 
 void	define_exit_stat(t_shell *sh);
