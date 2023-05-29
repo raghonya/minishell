@@ -16,7 +16,6 @@ void	direct_first_last(t_shell *sh, int indicator)
 {
 	if (indicator == 0)
 	{
-		printf ("cmd: %s, fdout: %d\n", *sh->cmd, sh->fdout);
 		err_msg_w_exit(dup2(sh->fdin, 0) == -1, 1);
 		if (sh->fdout == 1)
 			err_msg_w_exit(dup2(sh->pipe[indicator + 1], 1) == -1, 1);

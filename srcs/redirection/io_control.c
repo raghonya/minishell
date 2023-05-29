@@ -25,7 +25,13 @@ int	find_filename(char *line, char **redir, int *index)
 	// printf ("\"%s\"\n", *redir);
 	err_msg_w_exit (!*redir, 1);
 	free(tmp);
+	if (err_msg(!**redir, "syntax error near unexpected token `newline'"))
+	{
+		free(*redir);
+		return (1);
+	}
 	clear_quotes_line(*redir);
+	//printf ("redir: %s\n", *redir);
 	return (0);
 }
 
@@ -53,7 +59,8 @@ int	redirect_io(t_shell *sh, char **line, int i)
 	char	*redir;
 
 	to_clear = -1;
-	find_filename(*line + i + 1, &redir, &to_clear);
+	if (find_filename(*line + i + 1, &redir, &to_clear))
+		return (1);
 	if ((*line)[i] == '<')
 	{
 		sh->fdin = open(redir, O_RDONLY);

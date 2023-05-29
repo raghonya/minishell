@@ -18,8 +18,7 @@ void	handle_signals(int signum)
 {
 	if (signum == SIGINT)
 	{
-		g_sigint_exit = !g_sigint_exit;
-		printf ("handleSig: %d\n", g_sigint_exit);
+		g_sigint_exit = 1;
 		rl_replace_line("", 0);
 		rl_done = 1;
 	}
@@ -33,9 +32,7 @@ void	prompt_and_history(char **line, char **prompt)
 		free(*prompt);
 	prev_line = *line;
 	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
-	*line = *prompt;
-	*prompt = ft_strjoin("\033[0;33m", *prompt);
-	free(*line);
+	printf ("\033[0;33m");
 	*line = readline(*prompt);
 	//if (*line)printf ("%s\n", *line);
 	if (!*line)
