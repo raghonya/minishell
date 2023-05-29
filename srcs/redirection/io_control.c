@@ -1,8 +1,24 @@
 #include <minishell.h>
 
-int	find_filename(char *line, char **redir, int *index)
+int	trim_redir(char **redir, char *line, int aft_spc, int index)
 {
 	char	*tmp;
+
+	tmp = ft_substr(line, aft_spc, index - aft_spc);
+	err_msg_w_exit (!tmp, 1);
+	*redir = ft_strtrim(tmp, " \t\n\r\v\f");
+	err_msg_w_exit (!*redir, 1);
+	free(tmp);
+	if (err_msg(!**redir, "syntax error near unexpected token `newline'"))
+	{
+		free(*redir);
+		return (1);
+	}
+	return (0);
+}
+
+int	find_filename(char *line, char **redir, int *index)
+{
 	int		aft_spc;
 	int		k;
 
@@ -19,17 +35,8 @@ int	find_filename(char *line, char **redir, int *index)
 		}
 		(*index)++;
 	}
-	tmp = ft_substr(line, aft_spc, *index - aft_spc);
-	err_msg_w_exit (!tmp, 1);
-	*redir = ft_strtrim(tmp, " \t\n\r\v\f");
-	// printf ("\"%s\"\n", *redir);
-	err_msg_w_exit (!*redir, 1);
-	free(tmp);
-	if (err_msg(!**redir, "syntax error near unexpected token `newline'"))
-	{
-		free(*redir);
+	if (trim_redir(redir, line, aft_spc, *index))
 		return (1);
-	}
 	clear_quotes_line(*redir);
 	printf ("redir: %s\n", *redir);
 	return (0);

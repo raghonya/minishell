@@ -38,8 +38,8 @@ void	prompt_and_history(char **line, char **prompt)
 	if (!*line)
 	{
 		rl_clear_history();
-		printf ("exit\n");
 		free(prev_line);
+		printf ("exit\n");
 		exit(0);
 	}
 	if (**line && ft_strcmp(prev_line, *line) && !ft_isspace(**line))
