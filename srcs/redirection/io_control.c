@@ -9,7 +9,7 @@ int	find_filename(char *line, char **redir, int *index)
 	while (ft_isspace(line[++(*index)]))
 		;
 	aft_spc = *index;
-	while (line[*index] && !ft_isspace(line[*index]))
+	while (line[*index] && !ft_isspace(line[*index]) && line[*index] != '<' && line[*index] != '>')
 	{
 		if (line[*index] == '\"' || line[*index] == '\'')
 		{
@@ -31,7 +31,7 @@ int	find_filename(char *line, char **redir, int *index)
 		return (1);
 	}
 	clear_quotes_line(*redir);
-	//printf ("redir: %s\n", *redir);
+	printf ("redir: %s\n", *redir);
 	return (0);
 }
 

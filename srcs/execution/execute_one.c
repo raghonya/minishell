@@ -24,11 +24,8 @@ void	exec_one(t_shell *sh)
 		return ;
 	if (!cpid)
 	{
-		dprintf (2, "aaa\n");
 		err_msg_w_exit(dup2(sh->fdin, 0) == -1, 1);
-		dprintf (2, "ббб\n");
 		err_msg_w_exit(dup2(sh->fdout, 1) == -1, 1);
-		dprintf (2, "ццц\n");
 		if (sh->here_closer)
 			close(sh->heredoc[0]);
 		execve(*sh->cmd, sh->cmd, envp);
