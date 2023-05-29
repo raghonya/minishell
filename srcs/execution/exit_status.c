@@ -1,6 +1,6 @@
 #include <minishell.h>
 
-void	change_exit_stat(t_shell sh, t_list *env)
+void	change_exit_stat(int exit_stat, t_list *env)
 {
 	char	*tmp1;
 	char	*tmp2;
@@ -9,7 +9,7 @@ void	change_exit_stat(t_shell sh, t_list *env)
 	{
 		if (!ft_strncmp(env->data, "?=", 2))
 		{
-			tmp1 = ft_itoa(sh.exit_stat);
+			tmp1 = ft_itoa(exit_stat);
 			err_msg_w_exit(!tmp1, 1);
 			tmp2 = ft_strjoin("?=", tmp1);
 			err_msg_w_exit(!tmp2, 1);

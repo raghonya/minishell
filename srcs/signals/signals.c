@@ -1,14 +1,5 @@
 #include <minishell.h>
 
-void	handle_signals(int signum)
-{
-	if (signum == SIGINT)
-	{
-		rl_replace_line("", 0);
-		rl_done = 1;
-	}
-}
-
 void	sig_catcher(t_shell *sh)
 {
 	rl_catch_signals = 0;

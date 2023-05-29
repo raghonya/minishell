@@ -103,6 +103,7 @@ int	check_pipes_empty(char **spl_pipe)
 		if (err_msg(!*tmp, "Syntax error near unexpected token `|'"))
 		{
 			free(tmp);
+			
 			return (1);
 		}
 		double_free(tmp);

@@ -64,11 +64,13 @@ typedef struct s_shell
 
 void	main_inits(t_shell *sh, char **envp);
 
+void	handle_signals(int signum);
+
 // Execution
 
 void	define_exit_stat(t_shell *sh);
 
-void	change_exit_stat(t_shell sh, t_list *env);
+void	change_exit_stat(int exit_stat, t_list *env);
 
 void	find_and_execute_1(t_shell *sh);
 
@@ -166,7 +168,7 @@ void	find_absolute_path(char **args, char **paths);
 
 // Redirections
 
-int	find_filename(char *line, char **redir, int *index);
+int		find_filename(char *line, char **redir, int *index);
 
 char	*clear_redirection(char *line, int start, int end);
 

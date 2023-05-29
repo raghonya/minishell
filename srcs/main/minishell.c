@@ -12,6 +12,19 @@
 
 #include <minishell.h>
 
+int	g_sigint_exit = 0;
+
+void	handle_signals(int signum)
+{
+	if (signum == SIGINT)
+	{
+		g_sigint_exit = !g_sigint_exit;
+		printf ("handleSig: %d\n", g_sigint_exit);
+		rl_replace_line("", 0);
+		rl_done = 1;
+	}
+}
+
 void	prompt_and_history(char **line, char **prompt)
 {
 	char	*prev_line;
@@ -53,12 +66,14 @@ int	free_and_continue(t_shell *sh)
 {
 	if (check_line(sh))
 	{
+		change_exit_stat(2, sh->env);
 		double_free(sh->paths);
 		double_free(sh->spl_pipe);
 		return (1);
 	}
 	double_free(sh->paths);
 	double_free(sh->spl_pipe);
+	g_sigint_exit = 0;
 	return (0);
 }
 
@@ -71,16 +86,22 @@ int	main(int argc, char **argv, char **envp)
 	main_inits(&sh, envp);
 	while (777)
 	{
-		// unset u exit mej sh argumenty hanel
 		prompt_and_history(&sh.line, &sh.prompt);
+		if (g_sigint_exit)
+		{
+			change_exit_stat (1, sh.env);
+			g_sigint_exit = !g_sigint_exit;
+		}
 		if (!*sh.line || check_quotes(sh.line) \
 		|| check_pipes(&sh) || check_redirection(&sh))
+		{
+			change_exit_stat (2, sh.env);
 			continue ;
+		}
 		sh.line = expand(&sh, sh.line);
 		//printf ("expanded line: *%s*\n", sh.line);
 		if (free_and_continue(&sh))
 			continue ;
-		// system("leaks minishell");
 	}
 }
 

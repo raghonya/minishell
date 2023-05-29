@@ -105,7 +105,7 @@ int	check_line(t_shell *sh)
 		one_cmd(sh);
 	else
 		multipipes(sh);
-	change_exit_stat(*sh, sh->env);
+	change_exit_stat(sh->exit_stat, sh->env);
 	return (0);
 }
 
