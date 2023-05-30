@@ -64,8 +64,6 @@ typedef struct s_shell
 
 void	main_inits(t_shell *sh, char **envp);
 
-void	handle_signals(int signum);
-
 // Execution
 
 void	define_exit_stat(t_shell *sh);
@@ -181,5 +179,9 @@ int		redirections(t_shell *sh, char **line);
 // Signals
 
 void	sig_catcher(t_shell *sh);
+
+void	handle_signals(int signum);
+
+void	kill_children(t_shell *sh, int i);
 
 #endif

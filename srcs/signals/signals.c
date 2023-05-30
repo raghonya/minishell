@@ -12,6 +12,12 @@
 
 #include <minishell.h>
 
+void	kill_children(t_shell *sh, int i)
+{
+	while (--i >= 0)
+		kill(SIGKILL, sh->childs_pid[i]);
+}
+
 void	sig_catcher(t_shell *sh)
 {
 	rl_catch_signals = 0;
