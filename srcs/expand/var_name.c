@@ -16,7 +16,7 @@ int	check_varname(char *s)
 {
 	if (!ft_isalpha(*s) && *s != '_')
 		return (1);
-	while (*s && !ft_isspace(*s) && *s != '$' && *s != '\"')
+	while (*s && (ft_isalnum(*s) || *s == '_'))
 	{
 		if (!ft_isdigit(*s) && *s != '_' && !ft_isalpha(*s))
 			return (1);
@@ -33,7 +33,7 @@ char	*varname(char *s, int *length)
 	i = 0;
 	if (*s == '?')
 		return (ft_strdup("?"));
-	while (s[i] && !ft_isspace(s[i]) && s[i] != '$' && *s != '\"')
+	while (s[i] && (ft_isalnum(s[i]) || s[i] == '_'))
 		i++;
 	if (check_varname(s))
 	{	
@@ -46,7 +46,7 @@ char	*varname(char *s, int *length)
 	if (!ret)
 		return (ret);
 	i = -1;
-	while (s[++i] && !ft_isspace(s[i]) && s[i] != '$' && s[i] != '\"')
+	while (s[++i] && (ft_isalnum(s[i]) || s[i] == '_'))
 		ret[i] = s[i];
 	ret[i] = 0;
 	return (ret);

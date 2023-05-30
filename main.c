@@ -26,25 +26,25 @@
 //	term.c_cc[VINTR] = '\0';
 //}
 
-#include <termios.h>
-#include <unistd.h>
-#include <stdio.h>
+// #include <termios.h>
+// #include <unistd.h>
+// #include <stdio.h>
 
-int main() {
-  struct termios term1, term2;
+// int main() {
+//   struct termios term1, term2;
 
-  if (tcgetattr(STDIN_FILENO, &term1) != 0)
-    perror("tcgetattr() error");
-  else {
-    printf("the original intr character is x'%02x'\n",
-           term1.c_cc[VINTR]);
-    term1.c_cc[VINTR] = 'z';
-    if (tcsetattr(STDIN_FILENO, TCSANOW, &term1) != 0)
-      perror("tcsetattr() error");
-    if (tcgetattr(STDIN_FILENO, &term1) != 0)
-      perror("tcgetattr() error");
-    else
-      printf("the new intr character is x'%02x'\n",
-             term1.c_cc[VINTR]);
-  }
-}
+//   if (tcgetattr(STDIN_FILENO, &term1) != 0)
+//     perror("tcgetattr() error");
+//   else {
+//     printf("the original intr character is x'%02x'\n",
+//            term1.c_cc[VINTR]);
+//     term1.c_cc[VINTR] = 'z';
+//     if (tcsetattr(STDIN_FILENO, TCSANOW, &term1) != 0)
+//       perror("tcsetattr() error");
+//     if (tcgetattr(STDIN_FILENO, &term1) != 0)
+//       perror("tcgetattr() error");
+//     else
+//       printf("the new intr character is x'%02x'\n",
+//              term1.c_cc[VINTR]);
+//   }
+// }

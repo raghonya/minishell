@@ -68,14 +68,11 @@ IFLAGS	=	-I$(LIB) -Iincludes -Ireadline-raghonya/include
 
 LFLAGS	=	-L$(LIB) -lft -Lreadline-raghonya/lib -lreadline
 
-PREFIX	=	$(shell find $(HOME) -name readline-raghonya -type d 2>/dev/null)
-
-RLLIB	=	cd readline-master && ./configure --prefix=$(PREFIX) && make clean && make && make install
+# cd readline-master && ./configure --prefix=`find $HOME -name readline-raghonya -type d 2>/dev/null` && make clean && make && make install && cd ..
 
 CMD		=	$(MAKECMDGOALS)
 
 ifeq ($(shell uname -s), Linux)
-	RLLIB	=	
 	IFLAGS	=	-I$(LIB) -Iincludes
 	LFLAGS	=	-L$(LIB) -lft -lreadline
 endif

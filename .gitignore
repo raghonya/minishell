@@ -2,7 +2,6 @@
 *.d
 ./minishell
 minishell
-*.o
 obj
 
 # Object files

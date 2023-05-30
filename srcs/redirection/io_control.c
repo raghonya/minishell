@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   io_control.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: raghonya <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/30 16:27:58 by raghonya          #+#    #+#             */
+/*   Updated: 2023/05/30 16:27:59 by raghonya         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <minishell.h>
 
 int	trim_redir(char **redir, char *line, int aft_spc, int index)
@@ -25,7 +37,8 @@ int	find_filename(char *line, char **redir, int *index)
 	while (ft_isspace(line[++(*index)]))
 		;
 	aft_spc = *index;
-	while (line[*index] && !ft_isspace(line[*index]) && line[*index] != '<' && line[*index] != '>')
+	while (line[*index] && !ft_isspace(line[*index]) \
+		&& line[*index] != '<' && line[*index] != '>')
 	{
 		if (line[*index] == '\"' || line[*index] == '\'')
 		{
@@ -38,7 +51,6 @@ int	find_filename(char *line, char **redir, int *index)
 	if (trim_redir(redir, line, aft_spc, *index))
 		return (1);
 	clear_quotes_line(*redir);
-	printf ("redir: %s\n", *redir);
 	return (0);
 }
 

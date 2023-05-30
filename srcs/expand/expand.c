@@ -84,6 +84,7 @@ void	in_qoutes(t_shell *sh, char *line, int *i, int *j)
 	if (line[*i] == '\"')
 	{
 		create_line(&in_quote, sh->env, &sh->str);
+		// printf ("str: %s\n", sh->str.part);
 		sh->str.ret_str = strjoin_w_free(sh->str.ret_str, sh->str.part);
 		free(sh->str.part);
 	}
@@ -111,7 +112,6 @@ char	*expand(t_shell *sh, char *line)
 			break ;
 		in_qoutes(sh, line, &i, &j);
 	}
-	//printf ("%s\n", line);
 	free(line);
 	return (sh->str.ret_str);
 }

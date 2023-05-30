@@ -120,9 +120,3 @@ int	multipipes(t_shell *sh)
 	wait_for_childs(sh);
 	return (0);
 }
-
-		// j = -1;
-		// printf ("\nspl line wth spaces\n");
-		// while (sh->cmd[++j])
-		// 	printf ("%s\n", sh->cmd[j]);
-		// printf ("\n");

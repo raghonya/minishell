@@ -6,7 +6,7 @@
 /*   By: raghonya <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 13:09:26 by raghonya          #+#    #+#             */
-/*   Updated: 2023/05/01 13:09:28 by raghonya         ###   ########.fr       */
+/*   Updated: 2023/05/30 16:44:54 by raghonya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,8 @@ void	prompt_and_history(char **line, char **prompt)
 		free(*prompt);
 	prev_line = *line;
 	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
-	printf ("\033[0;33m");
+	//printf ("\033[0;33m");
 	*line = readline(*prompt);
-	//if (*line)printf ("%s\n", *line);
 	if (!*line)
 	{
 		rl_clear_history();
@@ -96,10 +95,8 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		sh.line = expand(&sh, sh.line);
-		//printf ("expanded line: *%s*\n", sh.line);
+		printf ("expanded line: *%s*\n", sh.line);
 		if (free_and_continue(&sh))
 			continue ;
 	}
 }
-
-// <a echo <"b" >c barev"ner"sdzezex bayrner | cat srcs/paths/pa"th's".c  | cat >a

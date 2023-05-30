@@ -29,7 +29,6 @@ void	exec_one(t_shell *sh)
 		if (sh->here_closer)
 			close(sh->heredoc[0]);
 		execve(*sh->cmd, sh->cmd, envp);
-		dprintf (2, "kl\n");
 		err_msg_w_exit(1, 127);
 	}
 	double_free(envp);
