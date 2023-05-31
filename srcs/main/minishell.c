@@ -88,14 +88,15 @@ int	main(int argc, char **argv, char **envp)
 			change_exit_stat (1, sh.env);
 			g_sigint_exit = !g_sigint_exit;
 		}
-		if (!*sh.line || check_quotes(sh.line) \
+		if (!*sh.line)
+			continue ;
+		if (check_quotes(sh.line) \
 		|| check_pipes(&sh) || check_redirection(&sh))
 		{
 			change_exit_stat (2, sh.env);
 			continue ;
 		}
 		sh.line = expand(&sh, sh.line);
-		printf ("expanded line: *%s*\n", sh.line);
 		if (free_and_continue(&sh))
 			continue ;
 	}
