@@ -91,10 +91,11 @@ int	redirect_io(t_shell *sh, char **line, int i)
 	{
 		sh->fdout = open(redir, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		free(redir);
+		printf ("fdout : %d\n", sh->fdout);
 		if (err_msg (sh->fdout == -1, "No such file or directory"))
 			return (1);
 	}
 	*line = clear_redirection(*line, i, to_clear + i);
-	//printf ("aranc redir: '%s'\n", *line);
+	printf ("aranc redir: '%s'\n", *line);
 	return (0);
 }

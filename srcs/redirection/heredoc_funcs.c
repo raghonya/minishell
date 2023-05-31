@@ -12,6 +12,14 @@
 
 #include <minishell.h>
 
+void	sigint_heredoc(int signum)
+{
+	if (signum == SIGINT)
+	{
+		
+	}
+}
+
 int	read_heredoc(t_shell *sh, char *limiter)
 {
 	char	*line;
@@ -19,6 +27,8 @@ int	read_heredoc(t_shell *sh, char *limiter)
 	line = NULL;
 	while (1)
 	{
+		sh->sig.sa_handler = &sigint_heredoc;
+		sigaction(SIGINT, &sh->sig, NULL);
 		if (sh->pipe_count)
 			line = readline("pipe heredoc> ");
 		else
@@ -26,10 +36,11 @@ int	read_heredoc(t_shell *sh, char *limiter)
 		if (!line || !ft_strcmp(line, limiter))
 			break ;
 		line = expand(sh, line);
-		ft_putendl_fd(line, sh->heredoc[1]);
+		ft_putstr_fd(line, sh->heredoc[1]);
 		free(line);
 	}
 	free(line);
+	free(limiter);
 	return (0);
 }
 

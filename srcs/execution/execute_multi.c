@@ -114,6 +114,11 @@ int	multipipes(t_shell *sh)
 			return (1);
 		sh->cmd = split_wout_quotes(sh->spl_pipe[i], ' ');
 		err_msg_w_exit(!sh->cmd, 1);
+		if (!*sh->cmd)
+	{
+		free(sh->cmd);
+		continue ;
+	}
 		clear_quotes_matrix(sh->cmd);
 		if (exec_multi(sh, i))
 			return (1);
@@ -124,3 +129,21 @@ int	multipipes(t_shell *sh)
 	wait_for_childs(sh);
 	return (0);
 }
+
+//Direct leak of 20 byte(s) in 5 object(s) allocated from:
+//    #0 0xb7a105d4 in __interceptor_malloc (/lib/i386-linux-gnu/libasan.so.5+0xeb5d4)
+//    #1 0x44b0e5 in split_wout_quotes srcs/check/split_wout_quotes.c:101
+//    #2 0x44f5e8 in one_cmd srcs/execution/execute_one.c:43
+//    #3 0x4499fa in check_line srcs/execution/find_command.c:105
+//    #4 0x449f7e in free_and_continue srcs/main/minishell.c:63
+//    #5 0x44a46c in main srcs/main/minishell.c:100
+//    #6 0xb7717b40 in __libc_start_main ../csu/libc-start.c:308
+
+//Direct leak of 16 byte(s) in 4 object(s) allocated from:
+//    #0 0xb7a105d4 in __interceptor_malloc (/lib/i386-linux-gnu/libasan.so.5+0xeb5d4)
+//    #1 0x44b0e5 in split_wout_quotes srcs/check/split_wout_quotes.c:101
+//    #2 0x44e351 in multipipes srcs/execution/execute_multi.c:115
+//    #3 0x449a0a in check_line srcs/execution/find_command.c:107
+//    #4 0x449f7e in free_and_continue srcs/main/minishell.c:63
+//    #5 0x44a46c in main srcs/main/minishell.c:100
+//    #6 0xb7717b40 in __libc_start_main ../csu/libc-start.c:308

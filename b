@@ -1,0 +1,16 @@
+a
+A
+als
+alsasdasdasd
+b
+git.sh
+hjyufgh
+includes
+libft
+main.c
+Makefile
+minishell
+obj
+readline-master
+readline-raghonya
+srcs

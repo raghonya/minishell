@@ -42,6 +42,11 @@ int	one_cmd(t_shell *sh)
 		return (1);
 	sh->cmd = split_wout_quotes(sh->spl_pipe[0], ' ');
 	err_msg_w_exit(!sh->cmd, 1);
+	if (!*sh->cmd)
+	{
+		free(sh->cmd);
+		return (0);
+	}
 	clear_quotes_matrix(sh->cmd);
 	find_and_execute_1(sh);
 	if (sh->here_closer)
