@@ -44,6 +44,7 @@ int	cd_errors(char **cmds, char **oldpwd, t_list *env)
 	*oldpwd = getcwd(NULL, 0);
 	if (cmds[1] && err_msg(chdir(cmds[1]) == -1, "Cant change directory!!!"))
 	{
+		perror("");
 		free(*oldpwd);
 		return (1);
 	}

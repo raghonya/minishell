@@ -97,7 +97,6 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		sh.line = expand(&sh, sh.line);
-		if (free_and_continue(&sh))
-			continue ;
+		free_and_continue(&sh);
 	}
 }
