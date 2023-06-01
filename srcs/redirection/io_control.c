@@ -50,7 +50,6 @@ int	find_filename(char *line, char **redir, int *index)
 	}
 	if (trim_redir(redir, line, aft_spc, *index))
 		return (1);
-	clear_quotes_line(*redir);
 	return (0);
 }
 
@@ -80,6 +79,7 @@ int	redirect_io(t_shell *sh, char **line, int i)
 	to_clear = -1;
 	if (find_filename(*line + i + 1, &redir, &to_clear))
 		return (1);
+	clear_quotes_line(redir);
 	if ((*line)[i] == '<')
 	{
 		sh->fdin = open(redir, O_RDONLY);
@@ -91,7 +91,6 @@ int	redirect_io(t_shell *sh, char **line, int i)
 	{
 		sh->fdout = open(redir, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		free(redir);
-		printf ("fdout : %d\n", sh->fdout);
 		if (err_msg (sh->fdout == -1, "No such file or directory"))
 			return (1);
 	}

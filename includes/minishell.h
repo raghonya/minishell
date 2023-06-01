@@ -27,6 +27,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+extern char	*g_sigint_exit;
+
 typedef struct s_strs
 {
 	char	*until_dlr;

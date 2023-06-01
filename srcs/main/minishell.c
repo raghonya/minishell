@@ -12,13 +12,13 @@
 
 #include <minishell.h>
 
-int	g_sigint_exit = 0;
+char	*g_sigint_exit = "";
 
 void	handle_signals(int signum)
 {
 	if (signum == SIGINT)
 	{
-		g_sigint_exit = 1;
+		g_sigint_exit = "1";
 		rl_replace_line("", 0);
 		rl_done = 1;
 	}
@@ -32,8 +32,9 @@ void	prompt_and_history(char **line, char **prompt)
 		free(*prompt);
 	prev_line = *line;
 	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
-	//printf ("\033[0;33m");
+	printf ("\033[0;33m");
 	*line = readline(*prompt);
+	printf ("\033[0;32m");
 	if (!*line)
 	{
 		rl_clear_history();
@@ -69,7 +70,7 @@ int	free_and_continue(t_shell *sh)
 	}
 	double_free(sh->paths);
 	double_free(sh->spl_pipe);
-	g_sigint_exit = 0;
+	g_sigint_exit = "";
 	return (0);
 }
 
@@ -83,10 +84,11 @@ int	main(int argc, char **argv, char **envp)
 	while (777)
 	{
 		prompt_and_history(&sh.line, &sh.prompt);
-		if (g_sigint_exit)
+		sig_catcher(&sh);
+		if (*g_sigint_exit)
 		{
 			change_exit_stat (1, sh.env);
-			g_sigint_exit = !g_sigint_exit;
+			g_sigint_exit = "";
 		}
 		if (!*sh.line)
 			continue ;

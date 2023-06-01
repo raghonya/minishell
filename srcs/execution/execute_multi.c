@@ -115,10 +115,10 @@ int	multipipes(t_shell *sh)
 		sh->cmd = split_wout_quotes(sh->spl_pipe[i], ' ');
 		err_msg_w_exit(!sh->cmd, 1);
 		if (!*sh->cmd)
-	{
-		free(sh->cmd);
-		continue ;
-	}
+		{
+			free(sh->cmd);
+			continue ;
+		}
 		clear_quotes_matrix(sh->cmd);
 		if (exec_multi(sh, i))
 			return (1);
