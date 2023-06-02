@@ -63,8 +63,9 @@ void	before_quotes(t_shell *sh, char *line, int *i, int *j)
 	err_msg_w_exit(!until_quote, 1);
 	sh->str.to_free = until_quote;
 	*i = *j;
+	printf ("until: %s\n", until_quote);
 	create_line(&until_quote, sh->env, &sh->str);
-	if (line[*j - 1] == '$' && (line[*j] == '\'' || line[*j] == '\"'))
+	if (*j > 0 && line[*j - 1] == '$' && (line[*j] == '\'' || line[*j] == '\"'))
 		sh->str.part[ft_strlen(sh->str.part) - 1] = 0;
 	sh->str.ret_str = strjoin_w_free(sh->str.ret_str, sh->str.part);
 	err_msg_w_exit(!sh->str.ret_str, 1);
@@ -76,7 +77,7 @@ void	in_qoutes(t_shell *sh, char *line, int *i, int *j)
 {
 	char	*in_quote;
 
-	while (line[++(*j)] != line[*i])
+	while (line[++(*j)] && line[(*j)] != line[*i])
 		;
 	in_quote = ft_substr(line, *i, *j - *i + 1);
 	err_msg_w_exit(!in_quote, 1);
@@ -88,7 +89,7 @@ void	in_qoutes(t_shell *sh, char *line, int *i, int *j)
 		sh->str.ret_str = strjoin_w_free(sh->str.ret_str, sh->str.part);
 		free(sh->str.part);
 	}
-	else
+	else if (line[*i] == '\'')
 		sh->str.ret_str = strjoin_w_free(sh->str.ret_str, in_quote);
 	err_msg_w_exit(!sh->str.ret_str, 1);
 	free(sh->str.to_free);
@@ -100,17 +101,19 @@ char	*expand(t_shell *sh, char *line)
 	int		i;
 	int		j;
 
-	i = -1;
+	i = 0;
 	j = -1;
 	if (find_dollar(line) == -1)
 		return (line);
 	sh->str.ret_str = NULL;
-	while (line[++i])
+	while (1)
 	{
 		before_quotes(sh, line, &i, &j);
 		if (!line[j])
 			break ;
 		in_qoutes(sh, line, &i, &j);
+		if (!line[i++])
+			break ;
 	}
 	free(line);
 	return (sh->str.ret_str);

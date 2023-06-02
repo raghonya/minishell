@@ -63,7 +63,8 @@ void	find_and_execute(t_shell *sh, char **envp)
 	else if (!ft_strcmp(*sh->cmd, "exit"))
 		exit (builtin_exit(sh->cmd));
 	execve(*sh->cmd, sh->cmd, envp);
-	err_msg_w_exit(1, 127);
+	printf ("minishell: Error: command nor found\n");
+		exit (127);
 }
 
 void	find_and_execute_1(t_shell *sh)

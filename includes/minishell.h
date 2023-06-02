@@ -39,28 +39,26 @@ typedef struct s_strs
 	char	*ret_str;
 }	t_strs;
 
-typedef struct sigaction	t_sig;
-
 typedef struct s_shell
 {
-	t_strs	str;
-	t_list	*env;
-	t_sig	sig;
-	int		child_checker;
-	char	*line;
-	char	*prompt;
-	char	**spl_pipe;
-	char	**cmd;
-	char	**paths;
-	int		*pipe;
-	int		heredoc[2];
-	int		here_closer;
-	int		*childs_pid;
-	int		pipe_count;
-	int		exit_stat;
-	int		status;
-	int		fdin;
-	int		fdout;
+	struct sigaction	sig;
+	t_strs				str;
+	t_list				*env;
+	int					child_checker;
+	char				*line;
+	char				*prompt;
+	char				**spl_pipe;
+	char				**cmd;
+	char				**paths;
+	int					*pipe;
+	int					heredoc[2];
+	int					here_closer;
+	int					*childs_pid;
+	int					pipe_count;
+	int					exit_stat;
+	int					status;
+	int					fdin;
+	int					fdout;
 
 }	t_shell;
 
@@ -151,6 +149,8 @@ int		find_dollar(char *s);
 int		check_varname(char *s);
 
 char	*varname(char *s, int *length);
+
+char	*expand_heredoc(t_shell *sh, char *line);
 
 char	*expand(t_shell *sh, char *line);
 

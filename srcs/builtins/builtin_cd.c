@@ -42,6 +42,8 @@ int	cd_errors(char **cmds, char **oldpwd, t_list *env)
 			|| err_msg(i > 2, "too many arguments"))
 			return (1);
 	*oldpwd = getcwd(NULL, 0);
+	if (err_msg (!*oldpwd, "getcwd() error"))
+		return (1);
 	if (cmds[1] && err_msg(chdir(cmds[1]) == -1, "Cant change directory!!!"))
 	{
 		perror("");

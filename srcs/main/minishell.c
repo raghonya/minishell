@@ -34,12 +34,11 @@ void	prompt_and_history(char **line, char **prompt)
 	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
 	printf ("\033[0;33m");
 	*line = readline(*prompt);
-	printf ("\033[0;32m");
 	if (!*line)
 	{
 		rl_clear_history();
 		free(prev_line);
-		printf ("exit\n");
+		printf ("exit\033[0;97m\n");
 		exit(0);
 	}
 	if (**line && ft_strcmp(prev_line, *line) && !ft_isspace(**line))

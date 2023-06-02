@@ -16,11 +16,26 @@ void	sigint_heredoc(int signum)
 {
 	if (signum == SIGINT)
 	{
-		//printf ("%s\n", g_sigint_exit);
 		rl_replace_line(g_sigint_exit, 0);
 		rl_done = 1;
 		g_sigint_exit = "";
 	}
+}
+
+int	exit_heredoc(t_shell *sh, char *line, char *limiter, int expand)
+{
+	if (!line || !ft_strcmp(line, limiter))
+	{
+		if (!line)
+			printf ("minishell: warning: here-document %s`%s')", \
+			"delimited by end-of-file (wanted ", limiter);
+		return (1);
+	}
+	if (expand)
+		line = expand_heredoc(sh, line);
+	ft_putendl_fd(line, sh->heredoc[1]);
+	free(line);
+	return (0);
 }
 
 int	read_heredoc(t_shell *sh, char *limiter, int expand_sign)
@@ -45,19 +60,8 @@ int	read_heredoc(t_shell *sh, char *limiter, int expand_sign)
 			close(sh->heredoc[1]);
 			return (1);
 		}
-		if (!line || !ft_strcmp(line, limiter))
-		{
-			if (!line)
-			{
-				printf ("minishell: warning: here-document ");
-				printf ("delimited by end-of-file (wanted `%s')", limiter);
-			}
+		if (exit_heredoc(sh, line, limiter, expand_sign))
 			break ;
-		}
-		if (expand_sign)
-			line = expand(sh, line);
-		ft_putendl_fd(line, sh->heredoc[1]);
-		free(line);
 	}
 	free(line);
 	return (0);
@@ -67,7 +71,6 @@ int	redir_symbol_check(t_shell *sh, char **line, char *redir, int i)
 {
 	int	expand_sign;
 
-	printf ("redir: %s\n", redir);
 	expand_sign = 1;
 	if (ft_strchr(redir, '\"') || ft_strchr(redir, '\''))
 		expand_sign = 0;
