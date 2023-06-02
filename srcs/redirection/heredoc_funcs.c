@@ -27,7 +27,6 @@ int	read_heredoc(t_shell *sh, char *limiter, int expand_sign)
 {
 	char	*line;
 
-	line = NULL;
 	g_sigint_exit = limiter;
 	while (1)
 	{
@@ -39,12 +38,22 @@ int	read_heredoc(t_shell *sh, char *limiter, int expand_sign)
 			line = readline("heredoc> ");
 		if (!*g_sigint_exit)
 		{
+			sh->exit_stat = 1;
 			free(line);
 			free(limiter);
+			close(sh->heredoc[0]);
+			close(sh->heredoc[1]);
 			return (1);
 		}
 		if (!line || !ft_strcmp(line, limiter))
+		{
+			if (!line)
+			{
+				printf ("minishell: warning: here-document ");
+				printf ("delimited by end-of-file (wanted `%s')", limiter);
+			}
 			break ;
+		}
 		if (expand_sign)
 			line = expand(sh, line);
 		ft_putendl_fd(line, sh->heredoc[1]);
