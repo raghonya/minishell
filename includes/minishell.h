@@ -114,7 +114,7 @@ void	err_msg_w_exit(int a, int code);
 
 // Parsing
 
-char	*parse_line(t_shell *sh);
+void	ignore_quotes(char *line, int *i);
 
 void	check_symbols(t_shell *sh);
 
@@ -168,7 +168,11 @@ void	find_absolute_path(char **args, char **paths);
 
 // Redirections
 
-int		find_filename(char *line, char **redir, int *index);
+char	*new_string(char *line, int start, int end);
+
+char	*heredoc_change(char *line);
+
+int		find_filename(char *line, char **redir, int *index, int here);
 
 char	*clear_redirection(char *line, int start, int end);
 

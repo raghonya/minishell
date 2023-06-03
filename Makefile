@@ -2,7 +2,7 @@ NAME	=	minishell
 
 CFLAGS	=	-Wall -Wextra -Werror
 
-f		=	-fsanitize=address -g
+f		=	#-fsanitize=address -g
 
 DEP		=	Makefile includes/minishell.h
 
@@ -20,6 +20,7 @@ SRCS	=	srcs/builtins/builtin_export.c \
 			srcs/expand/expand_funcs.c \
 			srcs/expand/var_name.c \
 			srcs/expand/expand_heredoc.c \
+			srcs/expand/ignore_expand.c \
 			srcs/expand/expand.c \
 			srcs/paths/paths.c \
 			srcs/check/check_symbols.c \
@@ -47,6 +48,7 @@ OBJS	=	obj/builtin_export.o \
 			obj/expand_funcs.o \
 			obj/var_name.o \
 			obj/expand_heredoc.o \
+			obj/ignore_expand.o \
 			obj/expand.o \
 			obj/initialization.o \
 			obj/paths.o \

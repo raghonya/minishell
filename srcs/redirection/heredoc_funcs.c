@@ -18,7 +18,7 @@ void	sigint_heredoc(int signum)
 	{
 		rl_replace_line(g_sigint_exit, 0);
 		rl_done = 1;
-		g_sigint_exit = "";
+		g_sigint_exit = "\v";
 	}
 }
 
@@ -43,6 +43,7 @@ int	read_heredoc(t_shell *sh, char *limiter, int expand_sign)
 	char	*line;
 
 	g_sigint_exit = limiter;
+	printf ("lim: %s\n", limiter);
 	while (1)
 	{
 		sh->sig.sa_handler = &sigint_heredoc;
@@ -51,7 +52,7 @@ int	read_heredoc(t_shell *sh, char *limiter, int expand_sign)
 			line = readline("pipe heredoc> ");
 		else
 			line = readline("heredoc> ");
-		if (!*g_sigint_exit)
+		if (*g_sigint_exit == '\v')
 		{
 			sh->exit_stat = 1;
 			free(line);
@@ -101,10 +102,9 @@ int	heredoc_or_append(t_shell *sh, char **line, int i)
 	char	*redir;
 
 	to_clear = -1;
-	if (find_filename(*line + i + 2, &redir, &to_clear) \
+	if (find_filename(*line + i + 2, &redir, &to_clear, '<') \
 		|| redir_symbol_check(sh, line, redir, i))
 		return (1);
 	*line = clear_redirection(*line, i, to_clear + i + 1);
-	//printf ("aranc redir heredoc: /*%s*/\n", *line);
 	return (0);
 }

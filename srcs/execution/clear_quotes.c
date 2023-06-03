@@ -12,6 +12,19 @@
 
 #include <minishell.h>
 
+void	ignore_quotes(char *line, int *i)
+{
+	int	k;
+
+	if (line[*i] == '\"' || line[*i] == '\'')
+	{
+		k = *i;
+		while (line[++(*i)] != line[k])
+			;
+	}
+	(*i)++;
+}
+
 void	clear_quotes_matrix(char **line)
 {
 	int	i;

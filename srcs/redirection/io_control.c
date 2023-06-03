@@ -12,44 +12,46 @@
 
 #include <minishell.h>
 
-int	trim_redir(char **redir, char *line, int aft_spc, int index)
+void	remove_single_quote(char *line)
 {
-	char	*tmp;
+	int	i;
 
-	tmp = ft_substr(line, aft_spc, index - aft_spc);
-	err_msg_w_exit (!tmp, 1);
-	*redir = ft_strtrim(tmp, " \t\n\r\v\f");
-	err_msg_w_exit (!*redir, 1);
-	free(tmp);
-	if (err_msg(!**redir, "syntax error near unexpected token `newline'"))
+	i = 0;
+	while (line[i] != '\'')
+		i++;
+	line[i] = line[i + 1];
+	while (line[i + 1] != '\'')
 	{
-		free(*redir);
-		return (1);
+		line[i] = line[i + 1];
+		i++;
 	}
-	return (0);
+	line[i] = 0;
+	printf ("innnnnnn +%s+\n", line);
 }
 
-int	find_filename(char *line, char **redir, int *index)
+int	find_filename(char *line, char **redir, int *index, int here)
 {
 	int		aft_spc;
-	int		k;
+	char	*tmp;
 
 	while (ft_isspace(line[++(*index)]))
 		;
 	aft_spc = *index;
 	while (line[*index] && !ft_isspace(line[*index]) \
-		&& line[*index] != '<' && line[*index] != '>')
+	&& line[*index] != '<' && line[*index] != '>')
+		ignore_quotes(line, index);
+	tmp = ft_substr(line, aft_spc, *index - aft_spc);
+	err_msg_w_exit (!tmp, 1);
+	*redir = ft_strtrim(tmp, " \t\n\r\v\f");
+	err_msg_w_exit (!*redir, 1);
+	free(tmp);
+	if (here == '<')
+		remove_single_quote(*redir);
+	if (err_msg(!**redir, "syntax error near unexpected token `newline'"))
 	{
-		if (line[*index] == '\"' || line[*index] == '\'')
-		{
-			k = *index;
-			while (line[++(*index)] != line[k])
-				;
-		}
-		(*index)++;
-	}
-	if (trim_redir(redir, line, aft_spc, *index))
+		free(*redir);
 		return (1);
+	}
 	return (0);
 }
 
@@ -77,7 +79,7 @@ int	redirect_io(t_shell *sh, char **line, int i)
 	char	*redir;
 
 	to_clear = -1;
-	if (find_filename(*line + i + 1, &redir, &to_clear))
+	if (find_filename(*line + i + 1, &redir, &to_clear, 0))
 		return (1);
 	clear_quotes_line(redir);
 	if ((*line)[i] == '<')
