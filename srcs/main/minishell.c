@@ -101,6 +101,6 @@ int	main(int argc, char **argv, char **envp)
 		sh.line = expand(&sh, sh.line);
 		printf ("aft exp: %s\n", sh.line);
 		free_and_continue(&sh);
-		system("leaks minishell");
+		//system("leaks minishell");
 	}
 }
