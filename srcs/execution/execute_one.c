@@ -29,7 +29,9 @@ void	exec_one(t_shell *sh)
 		if (sh->here_closer)
 			close(sh->heredoc[0]);
 		execve(*sh->cmd, sh->cmd, envp);
-		printf ("minishell: Error: command nor found\n");
+		ft_putstr_fd ("\033[0;31mminishell: ", 2);
+		ft_putstr_fd (*sh->cmd + 1, 2);
+		ft_putstr_fd (": command not found\n", 2);
 		exit (127);
 	}
 	double_free(envp);

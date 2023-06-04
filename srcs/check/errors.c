@@ -16,7 +16,7 @@ void	err_msg_w_exit(int a, int code)
 {
 	if (a)
 	{
-		perror ("minishell: Error");
+		perror ("\033[0;31mminishell: Error");
 		exit (code);
 	}
 }
@@ -31,7 +31,7 @@ int	err_msg_w_close(int a, char *msg, int count, t_shell *sh)
 		while (++i < count * 2)
 			close (sh->pipe[i]);
 		free(sh->pipe);
-		ft_putstr_fd ("minishell: Error: ", 2);
+		ft_putstr_fd ("\033[0;31mminishell: Error: ", 2);
 		ft_putendl_fd (msg, 2);
 		return (1);
 	}
@@ -42,7 +42,7 @@ int	err_msg(int a, char *msg)
 {
 	if (a)
 	{
-		ft_putstr_fd ("minishell: Error: ", 2);
+		ft_putstr_fd ("\033[0;31mminishell: Error: ", 2);
 		ft_putendl_fd (msg, 2);
 		return (1);
 	}

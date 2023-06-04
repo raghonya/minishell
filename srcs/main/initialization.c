@@ -63,9 +63,12 @@ void	init_env(t_shell *sh, char **envp)
 	sh->env = NULL;
 	while (envp[++i])
 	{
-		tmp = ft_strdup(envp[i]);
-		err_msg_w_exit (!tmp, 1);
-		ft_lstadd_back(&sh->env, ft_lstnew(tmp));
+		if (ft_strncmp(envp[i], "OLDPWD=", 7))
+		{
+			tmp = ft_strdup(envp[i]);
+			err_msg_w_exit (!tmp, 1);
+			ft_lstadd_back(&sh->env, ft_lstnew(tmp));
+		}
 	}
 	if (find_exit_stat(sh->env))
 		ft_lstadd_back(&sh->env, ft_lstnew(ft_strdup("?=0")));

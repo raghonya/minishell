@@ -63,7 +63,9 @@ void	find_and_execute(t_shell *sh, char **envp)
 	else if (!ft_strcmp(*sh->cmd, "exit"))
 		exit (builtin_exit(sh->cmd));
 	execve(*sh->cmd, sh->cmd, envp);
-	printf ("minishell: Error: command nor found\n");
+	ft_putstr_fd ("\033[0;31mminishell: ", 2);
+	ft_putstr_fd (*sh->cmd + 1, 2);
+	ft_putstr_fd (": command not found\n", 2);
 	exit (127);
 }
 
@@ -103,11 +105,8 @@ int	check_line(t_shell *sh)
 		;
 	sh->pipe_count = i - 1;
 	if (sh->pipe_count == 0)
-		one_cmd(sh);
-	else
-		multipipes(sh);
-	change_exit_stat(sh->exit_stat, sh->env);
-	return (0);
+		return (one_cmd(sh));
+	return (multipipes(sh));
 }
 
 //	echo >a >b >c  -n >d >e >f  barev >a iuytresdfghj

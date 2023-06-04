@@ -34,11 +34,12 @@ void	prompt_and_history(char **line, char **prompt)
 	*prompt = strjoin_w_free(getcwd(NULL, 0), "$ ");
 	printf ("\033[0;33m");
 	*line = readline(*prompt);
+	printf ("\033[0;97m");
 	if (!*line)
 	{
 		rl_clear_history();
 		free(prev_line);
-		printf ("exit\033[0;97m\n");
+		printf ("exit\n");
 		exit(0);
 	}
 	if (**line && ft_strcmp(prev_line, *line) && !ft_isspace(**line))
@@ -58,19 +59,22 @@ void	double_free(char **info)
 	free(info);
 }
 
-int	free_and_continue(t_shell *sh)
+void	free_and_continue(t_shell *sh)
 {
 	if (check_line(sh))
 	{
 		change_exit_stat(2, sh->env);
+		if (*g_sigint_exit == '\v')
+			change_exit_stat(1, sh->env);
 		double_free(sh->paths);
 		double_free(sh->spl_pipe);
-		return (1);
+		g_sigint_exit = "";
+		return ;
 	}
+	change_exit_stat(sh->exit_stat, sh->env);
 	double_free(sh->paths);
 	double_free(sh->spl_pipe);
 	g_sigint_exit = "";
-	return (0);
 }
 
 int	main(int argc, char **argv, char **envp)

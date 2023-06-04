@@ -43,15 +43,14 @@ int	read_heredoc(t_shell *sh, char *limiter, int expand_sign)
 	char	*line;
 
 	g_sigint_exit = limiter;
-	printf ("lim: %s\n", limiter);
 	while (1)
 	{
 		sh->sig.sa_handler = &sigint_heredoc;
 		sigaction(SIGINT, &sh->sig, NULL);
 		if (sh->pipe_count)
-			line = readline("pipe heredoc> ");
+			line = readline("\033[0;36mpipe heredoc> ");
 		else
-			line = readline("heredoc> ");
+			line = readline("\033[0;36mheredoc> ");
 		if (*g_sigint_exit == '\v')
 		{
 			sh->exit_stat = 1;
@@ -81,6 +80,7 @@ int	redir_symbol_check(t_shell *sh, char **line, char *redir, int i)
 		if (err_msg_w_close(pipe(sh->heredoc) < 0, "PipError", \
 		sh->pipe_count, sh) || read_heredoc(sh, redir, expand_sign))
 			return (1);
+		printf ("\033[0;97m");
 		sh->fdin = sh->heredoc[0];
 		close(sh->heredoc[1]);
 		sh->here_closer = 1;

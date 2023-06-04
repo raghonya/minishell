@@ -18,17 +18,14 @@ void	remove_single_quote(char *line)
 
 	i = 0;
 	printf ("demic innnnnnn +%s+\n", line);
-	//if (line[0])
 	line[ft_strlen(line) - 1] = 0;
 	while (line[i] != '\'')
 		i++;
-	//line[i] = line[i + 1];
 	while (line[i])
 	{
 		line[i] = line[i + 1];
 		i++;
 	}
-	//line[i] = 0;
 	printf ("innnnnnn +%s+\n", line);
 }
 
