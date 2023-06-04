@@ -94,6 +94,7 @@ void	wait_for_childs(t_shell *sh)
 	free(sh->pipe);
 	if (sh->here_closer)
 		close(sh->heredoc[0]);
+	sh->here_closer = 0;
 	i = 0;
 	while (i < sh->pipe_count + 1)
 		waitpid(sh->childs_pid[i++], &sh->status, 0);
@@ -121,9 +122,16 @@ int	multipipes(t_shell *sh)
 		}
 		clear_quotes_matrix(sh->cmd);
 		if (exec_multi(sh, i))
+		{
+			if (sh->here_closer)
+				close(sh->heredoc[0]);
+			sh->here_closer = 0;
+			double_free(sh->cmd);
 			return (1);
+		}
 		if (sh->here_closer)
 			close(sh->heredoc[0]);
+		sh->here_closer = 0;
 		double_free(sh->cmd);
 	}
 	wait_for_childs(sh);

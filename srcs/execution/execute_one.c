@@ -54,6 +54,7 @@ int	one_cmd(t_shell *sh)
 	find_and_execute_1(sh);
 	if (sh->here_closer)
 		close(sh->heredoc[0]);
+	sh->here_closer = 0;
 	double_free(sh->cmd);
 	return (0);
 }
