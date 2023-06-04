@@ -66,12 +66,9 @@ void	free_and_continue(t_shell *sh)
 		change_exit_stat(2, sh->env);
 		if (*g_sigint_exit == '\v')
 			change_exit_stat(1, sh->env);
-		double_free(sh->paths);
-		double_free(sh->spl_pipe);
-		g_sigint_exit = "";
-		return ;
 	}
-	change_exit_stat(sh->exit_stat, sh->env);
+	else
+		change_exit_stat(sh->exit_stat, sh->env);
 	double_free(sh->paths);
 	double_free(sh->spl_pipe);
 	g_sigint_exit = "";
@@ -103,8 +100,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		sh.line = heredoc_change(sh.line);
 		sh.line = expand(&sh, sh.line);
-		printf ("aft exp: %s\n", sh.line);
+		printf ("aft exp: '%s'\n", sh.line);
 		free_and_continue(&sh);
-		//system("leaks minishell");
 	}
 }

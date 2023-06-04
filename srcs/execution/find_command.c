@@ -104,6 +104,8 @@ int	check_line(t_shell *sh)
 	while (sh->spl_pipe[++i])
 		;
 	sh->pipe_count = i - 1;
+	if (sh->pipe_count < 0)
+		return (1);
 	if (sh->pipe_count == 0)
 		return (one_cmd(sh));
 	return (multipipes(sh));

@@ -38,8 +38,7 @@ int	cd_errors(char **cmds, char **oldpwd, t_list *env)
 
 	i = -1;
 	while (cmds[++i])
-		if (err_msg (i == 2 && !cmds[i + 1], "cd: string not in pwd") \
-			|| err_msg(i > 2, "too many arguments"))
+		if (err_msg(i > 1, "too many arguments"))
 			return (1);
 	*oldpwd = getcwd(NULL, 0);
 	if (err_msg (!*oldpwd, "getcwd() error"))

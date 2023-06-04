@@ -21,6 +21,7 @@ void	main_inits(t_shell *sh, char **envp)
 {
 	rl_event_hook = &readline_break;
 	init_env(sh, envp);
+	change_exit_stat(0, sh->env);
 	sh->line = NULL;
 	sh->paths = NULL;
 	sh->prompt = NULL;

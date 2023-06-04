@@ -16,7 +16,7 @@ int	builtin_env(t_shell *sh, t_list *env)
 {
 	while (env)
 	{
-		if (*env->data != '?')
+		//if (*env->data != '?')
 			ft_putendl_fd (env->data, sh->fdout);
 		env = env->next;
 	}
