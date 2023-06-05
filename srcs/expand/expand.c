@@ -63,7 +63,6 @@ void	before_quotes(t_shell *sh, char *line, int *i, int *j)
 	err_msg_w_exit(!until_quote, 1);
 	sh->str.to_free = until_quote;
 	*i = *j;
-	printf ("until: %s\n", until_quote);
 	create_line(&until_quote, sh->env, &sh->str);
 	if (*j > 0 && line[*j - 1] == '$' && (line[*j] == '\'' || line[*j] == '\"'))
 		sh->str.part[ft_strlen(sh->str.part) - 1] = 0;
@@ -85,7 +84,6 @@ void	in_qoutes(t_shell *sh, char *line, int *i, int *j)
 	if (line[*i] == '\"')
 	{
 		create_line(&in_quote, sh->env, &sh->str);
-		// printf ("str: %s\n", sh->str.part);
 		sh->str.ret_str = strjoin_w_free(sh->str.ret_str, sh->str.part);
 		free(sh->str.part);
 	}

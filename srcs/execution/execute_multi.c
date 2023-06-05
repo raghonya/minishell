@@ -121,14 +121,8 @@ int	multipipes(t_shell *sh)
 			continue ;
 		}
 		clear_quotes_matrix(sh->cmd);
-		if (exec_multi(sh, i))
-		{
-			if (sh->here_closer)
-				close(sh->heredoc[0]);
-			sh->here_closer = 0;
-			double_free(sh->cmd);
+		if (fork_err_check(sh, i))
 			return (1);
-		}
 		if (sh->here_closer)
 			close(sh->heredoc[0]);
 		sh->here_closer = 0;

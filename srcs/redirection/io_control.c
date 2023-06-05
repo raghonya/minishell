@@ -17,7 +17,6 @@ void	remove_single_quote(char *line)
 	int	i;
 
 	i = 0;
-	printf ("demic innnnnnn +%s+\n", line);
 	line[ft_strlen(line) - 1] = 0;
 	while (line[i] != '\'')
 		i++;
@@ -26,7 +25,6 @@ void	remove_single_quote(char *line)
 		line[i] = line[i + 1];
 		i++;
 	}
-	printf ("innnnnnn +%s+\n", line);
 }
 
 int	find_filename(char *line, char **redir, int *index, int here)
@@ -97,6 +95,5 @@ int	redirect_io(t_shell *sh, char **line, int i)
 			return (1);
 	}
 	*line = clear_redirection(*line, i, to_clear + i);
-	printf ("aranc redir: '%s'\n", *line);
 	return (0);
 }

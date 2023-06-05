@@ -82,7 +82,6 @@ void	in_qoutes_heredoc(t_shell *sh, char *line, int *i, int *j)
 	err_msg_w_exit(!in_quote, 1);
 	sh->str.to_free = in_quote;
 	create_line_heredoc(&in_quote, sh->env, &sh->str);
-	// printf ("str: %s\n", sh->str.part);
 	sh->str.ret_str = strjoin_w_free(sh->str.ret_str, sh->str.part);
 	free(sh->str.part);
 	free(sh->str.to_free);
@@ -106,7 +105,6 @@ char	*expand_heredoc(t_shell *sh, char *line)
 		if (!line[j])
 			break ;
 		in_qoutes_heredoc(sh, line, &i, &j);
-		printf ("i = %d\n", i);
 		if (!line[i++])
 			break ;
 	}

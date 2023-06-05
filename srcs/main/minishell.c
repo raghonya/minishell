@@ -80,6 +80,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	printf ("%ld\n", LONG_MAX);
 	main_inits(&sh, envp);
 	while (777)
 	{
@@ -100,7 +101,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		sh.line = heredoc_change(sh.line);
 		sh.line = expand(&sh, sh.line);
-		printf ("aft exp: '%s'\n", sh.line);
 		free_and_continue(&sh);
 	}
 }

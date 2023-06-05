@@ -27,7 +27,7 @@ int	exit_heredoc(t_shell *sh, char *line, char *limiter, int expand)
 	if (!line || !ft_strcmp(line, limiter))
 	{
 		if (!line)
-			printf ("minishell: warning: here-document %s`%s')", \
+			printf ("minishell: warning: here-document %s`%s')\n", \
 			"delimited by end-of-file (wanted ", limiter);
 		return (1);
 	}

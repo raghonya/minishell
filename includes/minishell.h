@@ -13,7 +13,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-// # include <term.h>
 # include <libft.h>
 # include <fcntl.h>
 # include <stdio.h>
@@ -106,11 +105,13 @@ int		builtin_export(t_shell *sh, char **cmds);
 
 void	double_free(char **info);
 
-int		err_msg_w_close(int a, char *msg, int count, t_shell *sh);
-
 int		err_msg(int a, char *msg);
 
 void	err_msg_w_exit(int a, int code);
+
+int		fork_err_check(t_shell *sh, int i);
+
+int		err_msg_w_close(int a, char *msg, int count, t_shell *sh);
 
 // Parsing
 

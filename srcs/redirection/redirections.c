@@ -54,6 +54,5 @@ int	redirections(t_shell *sh, char **line)
 		if (i++ == -7)
 			return (1);
 	}
-	printf ("Line wtht redir: '%s'\n", *line);
 	return (0);
 }

@@ -48,3 +48,16 @@ int	err_msg(int a, char *msg)
 	}
 	return (0);
 }
+
+int	fork_err_check(t_shell *sh, int i)
+{
+	if (exec_multi(sh, i))
+	{
+		if (sh->here_closer)
+			close(sh->heredoc[0]);
+		sh->here_closer = 0;
+		double_free(sh->cmd);
+		return (1);
+	}
+	return (0);
+}
