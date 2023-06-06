@@ -12,24 +12,41 @@
 
 #include <minishell.h>
 
-void	remove_single_quote(char *line)
-{
-	int	i;
+//void	remove_single_quote(char *line)
+//{
+//	int	i;
 
-	i = 0;
-	printf ("demic innnnnnn +%s+\n", line);
-	line[ft_strlen(line) - 1] = 0;
-	while (line[i] != '\'')
-		i++;
-	while (line[i])
-	{
-		line[i] = line[i + 1];
-		i++;
-	}
-	printf ("innnnnnn +%s+\n", line);
-}
+//	i = 0;
+//	printf ("demic innnnnnn +%s+\n", line);
+//	while (line[i])
+//	{
+//		if (line[i] && line[i + 1] && line[i] == '<' && line[i + 1] == '<')
+//		{
+//			i += 2;
+//			while (line[i] && ft_isspace(line[i]))
+//				i++;
+			
+//			//while (line[i] && !ft_isspace(line[i]) 
+//			//&& line[i] != '<' && line[i] != '>')
+//			//	ignore_quotes(line, &i);
+//			//end_ind = i;
+//			//line = new_string(line, start_ind, end_ind);
+//		}
+//		i++;
+//	}
 
-int	find_filename(char *line, char **redir, int *index, int here)
+//	//line[ft_strlen(line) - 1] = 0;
+//	//while (line[i] != '\'')
+//	//	i++;
+//	//while (line[i])
+//	//{
+//	//	line[i] = line[i + 1];
+//	//	i++;
+//	//}
+//	printf ("innnnnnn +%s+\n", line);
+//}
+
+int	find_filename(char *line, char **redir, int *index)
 {
 	int		aft_spc;
 	char	*tmp;
@@ -45,8 +62,7 @@ int	find_filename(char *line, char **redir, int *index, int here)
 	*redir = ft_strtrim(tmp, " \t\n\r\v\f");
 	err_msg_w_exit (!*redir, 1);
 	free(tmp);
-	if (here == '<')
-		remove_single_quote(*redir);
+	printf ("redir in find: %s\n", *redir);
 	if (err_msg(!**redir, "syntax error near unexpected token `newline'"))
 	{
 		free(*redir);
@@ -79,7 +95,7 @@ int	redirect_io(t_shell *sh, char **line, int i)
 	char	*redir;
 
 	to_clear = -1;
-	if (find_filename(*line + i + 1, &redir, &to_clear, 0))
+	if (find_filename(*line + i + 1, &redir, &to_clear))
 		return (1);
 	clear_quotes_line(redir);
 	if ((*line)[i] == '<')
