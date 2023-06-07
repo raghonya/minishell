@@ -115,11 +115,8 @@ int	multipipes(t_shell *sh)
 			return (1);
 		sh->cmd = split_wout_quotes(sh->spl_pipe[i], ' ');
 		err_msg_w_exit(!sh->cmd, 1);
-		if (!*sh->cmd)
-		{
-			free(sh->cmd);
+		if (empty_cmd(sh))
 			continue ;
-		}
 		clear_quotes_matrix(sh->cmd);
 		if (fork_err_check(sh, i))
 			return (1);

@@ -101,8 +101,12 @@ char	*expand(t_shell *sh, char *line)
 
 	i = 0;
 	j = -1;
+	line = heredoc_change(line);
 	if (find_dollar(line) == -1)
+	{
+		remove_single_quote(line);
 		return (line);
+	}
 	sh->str.ret_str = NULL;
 	while (1)
 	{
@@ -114,5 +118,7 @@ char	*expand(t_shell *sh, char *line)
 			break ;
 	}
 	free(line);
+	remove_single_quote(sh->str.ret_str);
+	printf ("[%s]\n", sh->str.ret_str);
 	return (sh->str.ret_str);
 }

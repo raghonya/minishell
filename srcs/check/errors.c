@@ -49,6 +49,16 @@ int	err_msg(int a, char *msg)
 	return (0);
 }
 
+int	empty_cmd(t_shell *sh)
+{
+	if (!*sh->cmd)
+	{
+		free(sh->cmd);
+		return (1);
+	}
+	return (0);
+}
+
 int	fork_err_check(t_shell *sh, int i)
 {
 	if (exec_multi(sh, i))

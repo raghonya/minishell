@@ -65,41 +65,43 @@ void	main_inits(t_shell *sh, char **envp);
 
 // Execution
 
-void	define_exit_stat(t_shell *sh);
-
-void	change_exit_stat(int exit_stat, t_list *env);
-
-void	find_and_execute_1(t_shell *sh);
-
-void	find_and_execute(t_shell *sh, char **envp);
-
 int		one_cmd(t_shell *sh);
+
+void	exec_one(t_shell *sh);
+
+int		empty_cmd(t_shell *sh);
+
+int		init_pipe(t_shell *sh);
 
 int		multipipes(t_shell *sh);
 
 char	**envp_for_execve(t_shell sh);
 
-int		init_pipe(t_shell *sh);
+void	define_exit_stat(t_shell *sh);
 
-void	exec_one(t_shell *sh);
+void	find_and_execute_1(t_shell *sh);
 
 int		exec_multi(t_shell *sh, int indicator);
 
-//	BUILTINS
+void	find_and_execute(t_shell *sh, char **envp);
 
-int		builtin_cd(t_shell *sh, char **cmds, t_list *env);
+void	change_exit_stat(int exit_stat, t_list *env);
+
+//	BUILTINS
 
 int		builtin_pwd(t_shell *sh);
 
-int		builtin_env(t_shell *sh, t_list *env);
-
 int		builtin_exit(char **cmds);
+
+int		builtin_env(t_shell *sh, t_list *env);
 
 int		builtin_echo(t_shell *sh, char **cmds);
 
 int		builtin_unset(char **cmds, t_list **env);
 
 int		builtin_export(t_shell *sh, char **cmds);
+
+int		builtin_cd(t_shell *sh, char **cmds, t_list *env);
 
 // Error messages and free
 
@@ -115,21 +117,13 @@ int		err_msg_w_close(int a, char *msg, int count, t_shell *sh);
 
 // Parsing
 
-void	ignore_quotes(char *line, int *i);
-
-void	check_symbols(t_shell *sh);
+int		check_line(t_shell *sh);
 
 int		check_pipes(t_shell *sh);
 
 int		check_quotes(char *line);
 
-int		check_line(t_shell *sh);
-
-int		check_redirection(t_shell *sh);
-
-int		check_pipes_empty(char **spl_pipe);
-
-void	clear_quotes_matrix(char **lines);
+char	*after_symb(char *s, char c);
 
 void	clear_quotes_line(char *line);
 
@@ -137,7 +131,13 @@ void	clear_quotes_line(char *line);
 
 char	*until_symb(char *s, char *c);
 
-char	*after_symb(char *s, char c);
+int		check_redirection(t_shell *sh);
+
+void	clear_quotes_matrix(char **lines);
+
+void	ignore_quotes(char *line, int *i);
+
+int		check_pipes_empty(char **spl_pipe);
 
 char	*strjoin_w_free(char*s1, char *s2);
 
@@ -151,11 +151,11 @@ int		check_varname(char *s);
 
 char	*varname(char *s, int *length);
 
-char	*expand_heredoc(t_shell *sh, char *line);
-
 char	*expand(t_shell *sh, char *line);
 
 void	init_env(t_shell *sh, char **env);
+
+char	*expand_heredoc(t_shell *sh, char *line);
 
 char	*check_env(char *line, t_list *env, int length);
 
@@ -169,19 +169,21 @@ void	find_absolute_path(char **args, char **paths);
 
 // Redirections
 
-char	*new_string(char *line, int start, int end);
-
 char	*heredoc_change(char *line);
 
-int		find_filename(char *line, char **redir, int *index);
+void	remove_single_quote(char *line);
+
+int		redirections(t_shell *sh, char **line);
+
+char	*new_string(char *line, int start, int end);
+
+int		redirect_io(t_shell *sh, char **line, int i);
 
 char	*clear_redirection(char *line, int start, int end);
 
 int		heredoc_or_append(t_shell *sh, char **line, int i);
 
-int		redirect_io(t_shell *sh, char **line, int i);
-
-int		redirections(t_shell *sh, char **line);
+int		find_filename(char *line, char **redir, int *index);
 
 // Signals
 

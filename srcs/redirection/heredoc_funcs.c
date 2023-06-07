@@ -72,17 +72,15 @@ int	redir_symbol_check(t_shell *sh, char **line, char *redir, int i)
 	int	expand_sign;
 
 	expand_sign = 1;
-	if (ft_strchr(redir, '\"') || ft_strchr(redir, '\''))
+	if (ft_strchr(redir, '\"') || ft_strchr(redir, '\'') \
+		|| ft_strchr(redir, '`'))
 		expand_sign = 0;
-	printf ("do: %s\n", redir);
 	clear_quotes_line(redir);
-	printf ("posle: %s\n", redir);
 	if ((*line)[i] == '<')
 	{
 		if (err_msg_w_close(pipe(sh->heredoc) < 0, "PipError", \
 		sh->pipe_count, sh) || read_heredoc(sh, redir, expand_sign))
 			return (1);
-		printf ("\033[0;97m");
 		sh->fdin = sh->heredoc[0];
 		close(sh->heredoc[1]);
 		sh->here_closer = 1;
