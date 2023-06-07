@@ -18,7 +18,7 @@ char	*new_string(char *line, int start, int end)
 	int		j;
 	int		k;
 
-	new = malloc(sizeof(char) * (ft_strlen(line) + 3));
+	new = malloc(sizeof(char) * (ft_strlen(line) + 4));
 	err_msg_w_exit(!new, 1);
 	j = 0;
 	k = 0;
@@ -28,6 +28,7 @@ char	*new_string(char *line, int start, int end)
 	while (j < end)
 		new[k++] = line[j++];
 	new[k++] = '\'';
+	new[k++] = '\v';
 	while (line[j])
 		new[k++] = line[j++];
 	new[k] = 0;

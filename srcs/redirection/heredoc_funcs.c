@@ -74,7 +74,9 @@ int	redir_symbol_check(t_shell *sh, char **line, char *redir, int i)
 	expand_sign = 1;
 	if (ft_strchr(redir, '\"') || ft_strchr(redir, '\''))
 		expand_sign = 0;
+	printf ("do: %s\n", redir);
 	clear_quotes_line(redir);
+	printf ("posle: %s\n", redir);
 	if ((*line)[i] == '<')
 	{
 		if (err_msg_w_close(pipe(sh->heredoc) < 0, "PipError", \
@@ -102,7 +104,7 @@ int	heredoc_or_append(t_shell *sh, char **line, int i)
 	char	*redir;
 
 	to_clear = -1;
-	if (find_filename(*line + i + 2, &redir, &to_clear, (*line)[i]) \
+	if (find_filename(*line + i + 2, &redir, &to_clear) \
 		|| redir_symbol_check(sh, line, redir, i))
 		return (1);
 	*line = clear_redirection(*line, i, to_clear + i + 1);

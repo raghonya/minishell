@@ -173,7 +173,7 @@ char	*new_string(char *line, int start, int end);
 
 char	*heredoc_change(char *line);
 
-int		find_filename(char *line, char **redir, int *index, int here);
+int		find_filename(char *line, char **redir, int *index);
 
 char	*clear_redirection(char *line, int start, int end);
 
