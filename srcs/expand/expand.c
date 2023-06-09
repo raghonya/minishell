@@ -119,6 +119,5 @@ char	*expand(t_shell *sh, char *line)
 	}
 	free(line);
 	remove_single_quote(sh->str.ret_str);
-	printf ("[%s]\n", sh->str.ret_str);
 	return (sh->str.ret_str);
 }

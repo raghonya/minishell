@@ -28,7 +28,6 @@ int	find_filename(char *line, char **redir, int *index)
 	*redir = ft_strtrim(tmp, " \t\n\r\v\f");
 	err_msg_w_exit (!*redir, 1);
 	free(tmp);
-	printf ("redir in find: %s\n", *redir);
 	if (err_msg(!**redir, "syntax error near unexpected token `newline'"))
 	{
 		free(*redir);
